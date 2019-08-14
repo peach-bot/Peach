@@ -1,7 +1,7 @@
 # Cuddler
  ##### A Discord server management and chat bot written in Python.
 [![star this repo](http://githubbadges.com/star.svg?user=juliscrazy&repo=Cuddler&style=flat)](https://github.com/juliscrazy/Cuddler)
-[![fork this repo](http://githubbadges.com/fork.svg?user=juliscrazy&repo=Cuddler&style=flat)](https://github.com/juliscrazy/Cuddler/fork)
+[![GitHub version](https://badge.fury.io/gh/juliscrazy%2FCuddler.svg)](https://github.com/juliscrazy/Cuddler/issues)
 [![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/juliscrazy/Cuddler)
  
 ### Features
