@@ -1,0 +1,16 @@
+body {
+    background-image: url("https://www.wallpaperflare.com/static/259/933/309/ruby-development-gradient-geometry-wallpaper.jpg");
+    background-color: #333333;
+    background-blend-mode: normal;
+    color: #ffffff;
+    padding: 1%;
+}
+button {
+    padding: 10px;
+}
+svg {
+    stroke: #a666ff;
+}
+a, a:hover {
+    color: #a666ff;
+}
