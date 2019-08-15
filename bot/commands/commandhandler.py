@@ -1,5 +1,5 @@
 """Assigns the command name to the right function call."""
-from bot.commands import cmd_clear, cmd_help
+from commands import cmd_clear, cmd_help
 
 class commandSelector:
     def __init__(self):
