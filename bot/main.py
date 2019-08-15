@@ -18,10 +18,12 @@ def rabbitreceiver():
     channel.start_consuming()
 
 async def main(auth):
+    print("before")
     await asyncio.gather(
-        asyncio.run(rabbitreceiver()),
         bot.run(json.load(auth)['TOKEN']),
+        asyncio.run(rabbitreceiver()),
     )
+    print("after")
 
 @bot.event
 async def on_ready():
