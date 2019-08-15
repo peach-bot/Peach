@@ -5,7 +5,7 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
       <h1 class="h2">Dashboard</h1>
       <div class="btn-toolbar mb-2 mb-md-0">
-        {% if not botrunning %}
+        {% if botrunning %}
           <a href="/functions/dashboard/stop"><button type="button" class="btn btn-danger">⯀ Stop</button></a>
         {% else %}
           <a href="/functions/dashboard/start"><button type="button" class="btn btn-success">⮞ Start</button></a>
