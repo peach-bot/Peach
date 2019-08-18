@@ -9,6 +9,8 @@ from commands import commandhandler
 import discord
 from aiohttp import client_exceptions
 
+from namekostuff import BotService
+
 bot = discord.Client()
 
 @bot.event
@@ -44,7 +46,6 @@ if __name__ == "__main__":
             pass
 
     log.info('Starting bot')
-                      on_message_callback=callback)
 
     with open("auth.json") as auth:
         try:
