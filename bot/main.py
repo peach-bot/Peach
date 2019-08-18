@@ -11,24 +11,6 @@ from aiohttp import client_exceptions
 
 bot = discord.Client()
 
-<<<<<<< HEAD
-def callback(ch, method, properties, body):
-    log.info(" [x] Received %r" % body)
-
-
-def rabbitreceiver():
-    channel.start_consuming()
-
-async def main(auth):
-    print("before")
-    await asyncio.gather(
-        bot.run(json.load(auth)['TOKEN']),
-        asyncio.run(rabbitreceiver()),
-    )
-    print("after")
-
-=======
->>>>>>> pika
 @bot.event
 async def on_ready():
     global CommandSelector
