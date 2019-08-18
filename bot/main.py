@@ -1,27 +1,15 @@
-import json
 import asyncio
+import concurrent.futures
+import json
 import logging
 import os
+import time
 from commands import commandhandler
 
 import discord
-import pika
 from aiohttp import client_exceptions
 
 bot = discord.Client()
-
-def callback(ch, method, properties, body):
-    log.info(" [x] Received %r" % body)
-
-
-def rabbitreceiver():
-    channel.start_consuming()
-
-async def main(auth):
-    await asyncio.gather(
-        asyncio.run(rabbitreceiver()),
-        bot.run(json.load(auth)['TOKEN']),
-    )
 
 @bot.event
 async def on_ready():
@@ -56,16 +44,10 @@ if __name__ == "__main__":
             pass
 
     log.info('Starting bot')
-
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-    channel = connection.channel()
-    channel.queue_declare(queue='interface')
-    channel.basic_consume(queue='interface',
-                      auto_ack=True,
                       on_message_callback=callback)
 
     with open("auth.json") as auth:
         try:
-            asyncio.run(main(auth))
+            bot.run(json.load(auth)['TOKEN'])
         except client_exceptions.ClientConnectorError:
             log.error("No connection to discordapp.com available.")

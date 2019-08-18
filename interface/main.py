@@ -2,7 +2,6 @@ import random
 import logging
 
 import flask
-import pika
 
 app = flask.Flask(__name__)
 app.debug = False
@@ -32,9 +31,6 @@ def stop():
     global botrunning    
     log.info("Attempting to stop the bot")
     botrunning = False
-    channel.basic_publish(exchange='',
-                      routing_key='interface',
-                      body='stop')
     return flask.redirect(flask.url_for("index"), code=302)
     #return flask.render_template("dashboard.html")
 
@@ -58,10 +54,7 @@ if __name__ == "__main__":
             pass
     
     botrunning = random.choice([True, False])
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-    channel = connection.channel()
-    channel.queue_declare(queue='interface')
-    #log.info('Starting flask')
+    log.info('Starting flask')
     try:
         app.run(host="0.0.0.0")
     except KeyboardInterrupt:
