@@ -1,6 +1,5 @@
 import random
 import logging
-import pika
 
 import flask
 
@@ -30,20 +29,16 @@ def logs():
 @app.route("/functions/dashboard/stop/")
 def stop():
     global botrunning
-    print("stop")
     botrunning = False
-    print(botrunning)
-    channel.basic_publish(exchange='', routing_key='interface', body='stopbot')
+    log.info("Attempting to stop bot")
     return flask.redirect(flask.url_for("index"), code=302)
     #return flask.render_template("dashboard.html")
 
 @app.route("/functions/dashboard/start/")
 def start():  
     global botrunning
-    print("start")
     botrunning = True
-    print(botrunning)
-    channel.basic_publish(exchange='', routing_key='interface', body='startbot')
+    log.info("Attempting to start bot")
     return flask.redirect(flask.url_for("index"), code=302)
     #return flask.render_template("dashboard.html")
 
@@ -56,14 +51,7 @@ if __name__ == "__main__":
             logging.getLogger(loggers).disabled = True
         else:
             pass
-
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-    channel = connection.channel()
-    channel.queue_declare(queue='interface')
     
     botrunning = random.choice([True, False])
     log.info('Starting flask')
-    try:
-        app.run(host="0.0.0.0")
-    except KeyboardInterrupt:
-        connection.close()
+    app.run(host="0.0.0.0")
