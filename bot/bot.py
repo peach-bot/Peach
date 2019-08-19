@@ -3,14 +3,14 @@ import asyncio
 import pika
 from commands import commandhandler
 
-def callback(ch, method, properties, body):
-    bot.log.info(" [x] Received %r" % body)
-
-
 class Cuddler(discord.Client):
     def bind(self, bot, log):
         self.bot = bot
         self.log = log
+
+    def callback(self, ch, method, properties, body):
+        print("less")
+        self.log.info(" [x] Received %r" % body)
 
     async def on_ready(self):
         self.CommandSelector = commandhandler.commandSelector()
@@ -29,15 +29,17 @@ class Cuddler(discord.Client):
     async def rabbitreceiver(self):
         connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
         channel = connection.channel()
-        queue_state = channel.queue_declare(queue='interface', durable=True, passive=True)
-        queue_empty = queue_state.method.message_count == 0
         await self.wait_until_ready()
         self.log.info("rabbit: starting consumption")
         while True:
+            queue_state = channel.queue_declare(queue='interface', durable=True, passive=True)
+            queue_empty = queue_state.method.message_count == 0
             if not queue_empty:
-                method, properties, body = channel.basic_get(queue='interface', no_ack=True)
-                callback(channel, method, properties, body)
+                print("yeah")
+                method, properties, body = channel.basic_get(queue='interface', callback=callback, auto_ack=False)
+                self.callback(channel, method, properties, body)
             await asyncio.sleep(2)
+            print("loop")
 
     async def on_member_join(self, member):
         # Welcome message

@@ -7,7 +7,7 @@ import time
 
 import discord
 from aiohttp import client_exceptions
-from bot import Cuddler, callback
+from bot import Cuddler
 
 if __name__ == "__main__":
 
