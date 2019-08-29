@@ -122,5 +122,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-bot/auth.json
-.gitignore
+peach_bot/auth.json
