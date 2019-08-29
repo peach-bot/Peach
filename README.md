@@ -8,6 +8,7 @@
  - Webinterface
    - Bot Statistics
    - Enable and Disable Commands
+   - Access logs
  - Easy Command Expansion
  - Easy Feature Integration
  
