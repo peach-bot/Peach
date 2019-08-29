@@ -65,7 +65,7 @@ WantedBy=default.target
 ```
 Save and Exit.....
 
-Repeat this for all 3 services (change the `ExecStart` filepath and the Description respectably)
+Repeat this for all 3 services (change the `ExecStart` filepath and the `Description` respectably)
 you should end up with:
 
    - peach_interface.service
