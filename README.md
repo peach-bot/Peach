@@ -13,5 +13,5 @@
  
 ### Technologies
  - Flask
-       --> Use of HTML, CSS, Bootstrap
+   - Use of HTML, CSS, Bootstrap
  - RabbitMQ
