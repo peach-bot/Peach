@@ -1,4 +1,4 @@
-# Cuddler
+# Peach
  ##### A Discord server management and chat bot written in Python.
 [![GitHub version](https://badge.fury.io/gh/juliscrazy%2FCuddler.svg)](https://github.com/juliscrazy/Cuddler/issues)
 [![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/juliscrazy/Cuddler)
@@ -15,6 +15,7 @@
 ##### How to host the bot on a raspberrypi / Linux machine
 Disclaimer: I usually work on Linux. This is the way I did it. There might be better ways to do it. That's fine, nice for you. I however don't know any better and in this case I'm fine with that.
 
+#### Downloading the code
 Clone the Repository:
 ```
 cd ~/Documents
@@ -34,6 +35,8 @@ Back on the pi in `~/Documents/Apps/Peach` create a json file `nano auth.json` a
 {"TOKEN": "<token>"}
 ```
 Save and exit (replace the `<token>` with the token you copied (duh...) )
+
+#### Setting up the services
 
 To set up the bot we'll need to create 3 system services:
    - one for the tcp server
@@ -81,6 +84,8 @@ and then start the services (I recommend starting the tcp server first):
 `systemctl --user start peach_tcp_server` (To check the status afterwards: `systemctl --user status peach_tcp_server`)
 
 Your Bot should now be up and running
+
+#### Accessing the interface
 
 You can access the interface through a computer in the same network with a browser (duh)
 
