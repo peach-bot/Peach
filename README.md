@@ -3,7 +3,7 @@
 [![GitHub version](https://badge.fury.io/gh/juliscrazy%2FCuddler.svg)](https://github.com/juliscrazy/Cuddler/issues)
 [![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/juliscrazy/Cuddler)
  
-### Features
+## Features
  - Webinterface
    - Bot Statistics
    - Enable and Disable Commands
@@ -11,7 +11,7 @@
  - Easy Command Expansion
  - Easy Feature Integration
 
-### Setup
+## Setup
 ##### How to host the bot on a raspberrypi / Linux machine
 Disclaimer: I usually work on Linux. This is the way I did it. There might be better ways to do it. That's fine, nice for you. I however don't know any better and in this case I'm fine with that.
 
@@ -86,7 +86,7 @@ You can access the interface through a computer in the same network with a brows
 
 As URL enter `<ip>:5000` (again, replace the ip with the host machines ip)
 
-### Technologies
+## Technologies
  - Flask
    - HTML, CSS, Bootstrap
  - RabbitMQ
