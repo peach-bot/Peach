@@ -90,8 +90,3 @@ Your Bot should now be up and running
 You can access the interface through a computer in the same network with a browser (duh)
 
 As URL enter `<ip>:5000` (again, replace the ip with the host machines ip)
-
-## Technologies
- - Flask
-   - HTML, CSS, Bootstrap
- - RabbitMQ
