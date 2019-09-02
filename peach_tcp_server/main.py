@@ -23,4 +23,5 @@ if __name__ == "__main__":
             conn, addr = s.accept()
             with conn:
                 log.info("Connected by {0}".format(addr))
-            s.sendall(conn.recv(2000))
+            data = conn.recv(2000)
+            s.sendall(data)
