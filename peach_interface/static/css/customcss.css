@@ -1,5 +1,5 @@
 body {
-    background-image: url("https://www.wallpaperflare.com/static/259/933/309/ruby-development-gradient-geometry-wallpaper.jpg");
+    background-image: url("https://imgur.com/GCPCUFO.jpg");
     background-color: #333333;
     background-blend-mode: normal;
     color: #ffffff;
@@ -9,8 +9,8 @@ button {
     padding: 10px;
 }
 svg {
-    stroke: #a666ff;
+    stroke: #e4a075; 
 }
 a, a:hover {
-    color: #a666ff;
+    color: #e4a075;
 }
