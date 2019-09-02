@@ -34,6 +34,7 @@ def stop():
     global botrunning
     botrunning = False
     log.info("Attempting to stop bot")
+    requests.stop_bot()
     return flask.redirect(flask.url_for("index"), code=302)
     #return flask.render_template("dashboard.html")
 
