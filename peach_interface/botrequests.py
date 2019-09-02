@@ -9,6 +9,4 @@ class requests:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((self.HOST, self.PORT))
             s.sendall(b'stop the bot')
-            while True:
-                data = s.recv(1024)
-                print(data.decode("utf-8"))
+            s.close()
