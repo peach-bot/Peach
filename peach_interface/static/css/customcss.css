@@ -14,3 +14,6 @@ svg {
 a, a:hover {
     color: #e4a075;
 }
+.loading {
+    text-align: center;
+}
