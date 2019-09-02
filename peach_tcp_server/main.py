@@ -18,7 +18,9 @@ if __name__ == "__main__":
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
         while True:
+            log.info("Listening")
             s.listen()
             conn, addr = s.accept()
             with conn:
                 log.info("Connected by {0}".format(addr))
+            s.sendall(conn.recv(2000))
