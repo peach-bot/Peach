@@ -1,10 +1,13 @@
 import random
 import logging
 
+import botrequests
+
 import flask
 
 app = flask.Flask(__name__)
 app.debug = False
+requests = botrequests.requests()
 
 @app.route("/")
 def index():

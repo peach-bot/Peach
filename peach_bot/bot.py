@@ -14,7 +14,9 @@ class Peach(discord.Client):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((self.HOST, self.PORT))
             s.sendall(b'Hello, world')
-            data = s.recv(1024)
+            while True:
+                data = s.recv(1024)
+                self.log.info(data.decode("utf-8"))
 
     async def on_ready(self):
         self.CommandSelector = commandhandler.commandSelector()
