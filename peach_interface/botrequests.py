@@ -6,10 +6,10 @@ class requests:
         self.HOST = '127.0.0.1'
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.connect((self.HOST, self.PORT))
-        self.s.sendall(b'-auth: interface')
+        self.s.sendall(b'-auth interface')
 
     def stop_bot(self):
-        self.s.sendall(b'-relay: stop bot')
+        self.s.sendall(b'-relay stop bot')
    
     def start_bot(self):
-        self.s.sendall(b'-relay: start bot')
+        self.s.sendall(b'-relay start bot')
