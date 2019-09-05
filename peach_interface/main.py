@@ -43,6 +43,7 @@ def start():
     global botrunning
     botrunning = True
     log.info("Attempting to start bot")
+    requests.start_bot()
     return flask.redirect(flask.url_for("index"), code=302)
     #return flask.render_template("dashboard.html")
 

@@ -13,16 +13,17 @@ class Peach(discord.Client):
         self.HOST = '127.0.0.1'
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((self.HOST, self.PORT))
-            s.sendall(b'Hello, world')
+            s.sendall(b'-auth: bot')
             while True:
                 data = s.recv(1024)
                 self.log.info(data.decode("utf-8"))
 
     async def on_ready(self):
         self.CommandSelector = commandhandler.commandSelector()
-        self.log.info('{0.user} is logged in and online.'.format(self.bot))
+        self.log.info('{0.user} is logged in and online'.format(self.bot))
         self.log.info("Creating tcp connection")
         self.connection_task = self.loop.create_task(self.tcploop())
+        self.log.info('Done')
 
     async def on_message(self, message):
         if message.author == self.bot.user:
