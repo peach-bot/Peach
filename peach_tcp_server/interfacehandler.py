@@ -21,8 +21,9 @@ class InterfaceHandler:
         self.log.info("Received from interface: {}".format(data))
 
         if data != "":
-            self.log.info("Relaying")
-            if self.botconn != None:
-                self.botconn.sendto(bytes(data, "utf-8"), self.botaddr)
-            else:
-                self.log.info("No bot connection")
+            if data.split(" ")[0] == "-relay":
+                self.log.info("Relaying")
+                if self.botconn != None:
+                    self.botconn.sendto(bytes(" ".join(data.split(" ")[1:]), "utf-8"), self.botaddr)
+                else:
+                    self.log.info("No bot connection")

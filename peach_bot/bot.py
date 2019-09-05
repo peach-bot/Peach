@@ -2,6 +2,7 @@ import discord
 import socket
 import asyncio
 from commands import commandhandler
+from interface import tcpresponse
 
 class Peach(discord.Client):
     def bind(self, bot, log):
@@ -11,9 +12,11 @@ class Peach(discord.Client):
     async def tcploop(self):
         self.PORT = 42069
         self.HOST = '127.0.0.1'
+        self.responder = tcpresponse(self.log)
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((self.HOST, self.PORT))
-            s.sendall(b'-auth: bot')
+            s.sendall(b'-auth bot')
+            self.log.info("tcploop is listening")
             while True:
                 data = s.recv(1024)
                 self.log.info(data.decode("utf-8"))

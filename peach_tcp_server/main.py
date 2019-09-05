@@ -28,7 +28,7 @@ if __name__ == "__main__":
             s.listen()
             conn, addr = s.accept()
             data = conn.recv(4096).decode("utf-8")
-            if data.startswith("-auth:"):
+            if data.startswith("-auth"):
                 splitdatastr = data.split(" ")
                 if splitdatastr[1] == "interface":
                     log.info("New interface connection")
