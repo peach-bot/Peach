@@ -1,15 +1,19 @@
-import discord
-import socket
 import asyncio
+import socket
 from commands import commandhandler
+
+import discord
+
+import _thread as thread
 from interface import tcpresponse
+
 
 class Peach(discord.Client):
     def bind(self, bot, log):
         self.bot = bot
         self.log = log
 
-    async def tcploop(self):
+    def tcploop(self):
         self.PORT = 42069
         self.HOST = '127.0.0.1'
         self.responder = tcpresponse(self.log)
@@ -25,7 +29,7 @@ class Peach(discord.Client):
         self.CommandSelector = commandhandler.commandSelector()
         self.log.info('{0.user} is logged in and online'.format(self.bot))
         self.log.info("Creating tcp connection")
-        self.connection_task = self.loop.create_task(self.tcploop())
+        thread.start_new_thread(self.tcploop, ())
         self.log.info('Done')
 
     async def on_message(self, message):

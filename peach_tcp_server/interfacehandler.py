@@ -1,6 +1,7 @@
 import time
 
 class InterfaceHandler:
+    """Handles the connection to the interface and deals with its requests."""
 
     def __init__(self, log):
         self.log = log
@@ -8,6 +9,7 @@ class InterfaceHandler:
         self.botaddr = None
 
     def loop(self, conn, s, botconn, botaddr):
+        """Listener loop"""
         self.botconn = botconn
         self.botaddr = botaddr
         self.conn = conn
@@ -16,6 +18,7 @@ class InterfaceHandler:
             self.receive()
 
     def receive(self):
+        """blocking listening function n stuff"""
         data = self.conn.recv(4096).decode("utf-8")
         if not data: pass
         self.log.info("Received from interface: {}".format(data))

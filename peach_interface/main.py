@@ -7,7 +7,6 @@ import flask
 
 app = flask.Flask(__name__)
 app.debug = False
-requests = botrequests.requests()
 
 @app.route("/")
 def index():
@@ -34,18 +33,16 @@ def stop():
     global botrunning
     botrunning = False
     log.info("Attempting to stop bot")
-    requests.stop_bot()
+    request.stop_bot()
     return flask.redirect(flask.url_for("index"), code=302)
-    #return flask.render_template("dashboard.html")
 
 @app.route("/functions/dashboard/start/")
 def start():  
     global botrunning
     botrunning = True
     log.info("Attempting to start bot")
-    requests.start_bot()
+    request.start_bot()
     return flask.redirect(flask.url_for("index"), code=302)
-    #return flask.render_template("dashboard.html")
 
 if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s', level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
@@ -56,6 +53,8 @@ if __name__ == "__main__":
             logging.getLogger(loggers).disabled = True
         else:
             pass
+
+    request = botrequests.Request(log)
     
     botrunning = random.choice([True, False])
     log.info('Starting flask')
