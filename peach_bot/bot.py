@@ -1,6 +1,6 @@
 import asyncio
 import socket
-from commands import commandhandler
+import commandhandler
 
 import discord
 
@@ -26,7 +26,7 @@ class Peach(discord.Client):
                 self.log.info(data.decode("utf-8"))
 
     async def on_ready(self):
-        self.CommandSelector = commandhandler.commandSelector()
+        self.CommandHandler = commandhandler.CommandHandler()
         self.log.info('{0.user} is logged in and online'.format(self.bot))
         self.log.info("Creating tcp connection")
         thread.start_new_thread(self.tcploop, ())
@@ -38,7 +38,7 @@ class Peach(discord.Client):
 
         if message.content.startswith('!'):
             command = message.content.split()[0][1:]
-            await getattr(self.CommandSelector, command)(message)
+            await getattr(self.CommandHandler, command)(message)
 
     async def on_member_join(self, member):
         # Welcome message
