@@ -41,12 +41,18 @@ class PluginHandler:
             #run command
             if has_perms:
                 response = await plugin.run(message, self.bot)
-                responsemessage = await message.channel.send(response)
-                await asyncio.sleep(5)
-                await responsemessage.delete()
+                if response != None:
+                    responsemessage = await message.channel.send(response)
+                    await asyncio.sleep(5)
+                    await responsemessage.delete()
             
             # if user doesn't have sufficient permissions
             else:
                 refusalmessage = await message.channel.send("I'm sorry. You do not have sufficient permissions to use this command. :pensive:")
                 await asyncio.sleep(5)
                 await refusalmessage.delete()
+
+    async def man(self, message):
+        #filter the command they invoked
+        command = message.content.split()[1]
+        await message.channel.send(embed = await self.commandlink[command][0].man())

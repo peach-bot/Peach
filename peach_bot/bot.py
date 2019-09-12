@@ -36,8 +36,12 @@ class Peach(discord.Client):
         if message.author == self.bot.user:
             return
 
-        if message.content.startswith('!'):
+        if message.content.startswith('!man'):
+            await self.pluginhandler.man(message)
+
+        elif message.content.startswith('!'):
             await self.pluginhandler.runcommand(message)
+
 
     async def on_member_join(self, member):
         # Welcome message
