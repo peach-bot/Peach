@@ -58,3 +58,13 @@ class PluginHandler:
         #filter the command they invoked
         command = message.content.split()[1]
         await message.channel.send(embed = await self.commandlink[command][0].man())
+
+    async def updatestate(self, message):
+
+        #When invoked from chat
+        if message != None:
+            pass
+
+        #invoked by interface
+        else:
+            pass
