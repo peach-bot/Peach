@@ -5,10 +5,13 @@ def define():
     plugindef = {
         "chatinvoke": "example", #string that invokes the command (prefix is defined in bot.py, leave out)
         "permreq": [], #list of required permissions
-        "rolereq": 2, #int of required role level (0: Owner, 1: Admin, 2: Mod, 3: Trusted, 4: Verified, 5: Member, 6: Jail)
-    }
+        }
     return plugindef
 
-async def run():
+async def run(message, bot):
     """The actual command that runs upon invoke"""
-    pass
+    return "This is an example for a command plugin. It doesn't really do anything (duh)."
+
+async def man():
+    """This defines the commands manual page."""
+    return "WIP"

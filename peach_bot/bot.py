@@ -7,7 +7,6 @@ import discord
 import _thread as thread
 from interface import tcpresponse
 
-
 class Peach(discord.Client):
     """Main class"""
     def bind(self, bot, log):
@@ -27,7 +26,7 @@ class Peach(discord.Client):
                 self.log.info(data.decode("utf-8"))
 
     async def on_ready(self):
-        self.pluginhandler = pluginhandler.PluginHandler()
+        self.pluginhandler = pluginhandler.PluginHandler(self.bot, self.log)
         self.log.info('{0.user} is logged in and online'.format(self.bot))
         self.log.info("Creating tcp connection")
         thread.start_new_thread(self.tcploop, ())
@@ -38,7 +37,7 @@ class Peach(discord.Client):
             return
 
         if message.content.startswith('!'):
-            self.pluginhandler.runcommand(message)
+            await self.pluginhandler.runcommand(message)
 
     async def on_member_join(self, member):
         # Welcome message

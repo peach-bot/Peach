@@ -1,9 +1,14 @@
 """Assigns the command name to the right function call."""
 import pluginimporter
+import asyncio
 
 class PluginHandler:
     """"""
-    def __init__(self):
+    def __init__(self, bot, log):
+        # bind bot and logger
+        self.bot = bot
+        self.log = log
+
         # load all modules in plugins folder
         plugins = pluginimporter.load_plugins()
 
@@ -16,9 +21,32 @@ class PluginHandler:
                 self.commandlink[plugindef["chatinvoke"]] = (plugin, plugindef)
 
     async def runcommand(self, message):
+        #delete invoke from channel
+        await message.delete()
+        #filter the command they invoked
         command = message.content.split()[0][1:]
-        await self.commandlink[command][0](message)
 
-if __name__ == "__main__":
-    # debug stuff
-    plguinhandler = PluginHandler()
+        #look if command exists
+        if  command in self.commandlink:
+            #get authors permissions
+            permissions = message.author.permissions_in(message.channel)
+            #grab module from linkdict
+            plugin, plugindef = self.commandlink[command]
+            #check if author's permissions are sufficient
+            has_perms = True
+            for required in plugindef["permreq"]:
+                if not getattr(permissions, required):
+                    has_perms = False
+            
+            #run command
+            if has_perms:
+                response = await plugin.run(message, self.bot)
+                responsemessage = await message.channel.send(response)
+                await asyncio.sleep(5)
+                await responsemessage.delete()
+            
+            # if user doesn't have sufficient permissions
+            else:
+                refusalmessage = await message.channel.send("I'm sorry. You do not have sufficient permissions to use this command. :pensive:")
+                await asyncio.sleep(5)
+                await refusalmessage.delete()
