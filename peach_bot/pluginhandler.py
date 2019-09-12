@@ -53,6 +53,8 @@ class PluginHandler:
                 await refusalmessage.delete()
 
     async def man(self, message):
+        #delete invoke from channel
+        await message.delete()
         #filter the command they invoked
         command = message.content.split()[1]
         await message.channel.send(embed = await self.commandlink[command][0].man())
