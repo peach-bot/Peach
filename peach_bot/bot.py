@@ -2,12 +2,21 @@ import asyncio
 import pluginhandler
 
 import discord
+import json
 
 import _thread as thread
 import interfacehandler
 
 class Peach(discord.Client):
     """Main class"""
+    async def loadconfig(self):
+        with open("config.json") as f:
+            config = json.load(f)
+
+    async def updatepresence(self, presence):
+        #await self.bot.change_presence(status=discord.Status.online, activity=discord.Streaming(name="Code", url="https://www.twitch.tv/jul_is_lazy", details="Coding"))
+        await self.bot.change_presence(status=discord.Status.online, activity=discord.Game(name="with eggplants", details="all day long"))
+
     def bind(self, bot, log):
         self.bot = bot
         self.log = log
@@ -18,7 +27,9 @@ class Peach(discord.Client):
         self.log.info('{0.user} is logged in and online'.format(self.bot))
         self.log.info("Creating tcp connection")
         thread.start_new_thread(self.interfacehandler.tcploop, ())
-        self.log.info('Done')
+        self.log.info("Loading config")
+        await self.updatepresence("idle")
+        self.log.info('Startup complete!')
 
     async def on_message(self, message):
         if message.author == self.bot.user:

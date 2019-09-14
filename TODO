@@ -1,7 +1,18 @@
 
+TO DO:
 
-Planned supported plugin times:
+- docker
+- database
+
+
+
+
+Planned supported plugin types:
 
 - Chronos
     - chr_<name>.py
     - runs on interval
+
+Plugin Ideas:
+
+- Github linker

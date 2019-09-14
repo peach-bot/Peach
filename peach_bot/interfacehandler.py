@@ -2,6 +2,11 @@ import socket
 
 class InterfaceHandler:
     """This class manages the responses and actions taken from commands sent by the interface."""
+
+    tcpresponses = {
+        
+    }
+
     def __init__(self, log, bot, pluginhandler):
         self.log = log
         self.bot = bot

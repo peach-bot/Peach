@@ -15,7 +15,7 @@ async def run(message, bot):
 
 async def man():
     """This defines the commands manual page."""
-    embed = discord.Embed(title="Example manual - !example", description="How to use this command:", color=0x9eff82)
+    embed = discord.Embed(title="Example manual - !example", description="How to use this command:", color=0xff886b)
     embed.add_field(name="!example", value="Explain what the command does here.", inline=False)
     embed.add_field(name="!example [attribute_1] [attribute_2]", value="List commands that use attributes like this.", inline=False)
     embed.set_footer(text="brought to you by Peach") #leave the footer like this
