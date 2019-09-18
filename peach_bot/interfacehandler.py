@@ -1,5 +1,6 @@
 import socket
 
+
 class InterfaceHandler:
     """This class manages the responses and actions taken from commands sent by the interface."""
 
@@ -22,4 +23,3 @@ class InterfaceHandler:
                 while True:
                     data = s.recv(1024)
                     self.log.info("Received from interface:", data.decode("utf-8"))
-    

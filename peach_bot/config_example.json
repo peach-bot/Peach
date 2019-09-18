@@ -1,18 +1,13 @@
 {
+    "TOKEN": "",
+    "database": {
+        "DBHOST": "",
+        "DBUSER": "",
+        "DBPASSWORD": ""
+    },
     "statistics": {
         "runtime": 632.534835,
         "servers": [32600838240238942, 2938190238019921],
         "executed_commands": 3561
-    },
-    "plugins" : {
-        "plugin_1" : {
-            "state" : true,
-            "option_1" : true,
-            "option_2" : "hello world"
-        },
-        "plugin_2" : {
-            "state" : false,
-            "option_1" : 59123
-        }
     }
 }

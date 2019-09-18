@@ -1,6 +1,7 @@
 """This file serves as a template for building chat command plugins."""
 import discord
 
+
 def define():
     """This function defines the commands configuration"""
     plugindef = {

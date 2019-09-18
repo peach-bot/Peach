@@ -1,6 +1,8 @@
 """Assigns the command name to the right function call."""
-import pluginimporter
 import asyncio
+
+import pluginimporter
+
 
 class PluginHandler:
     """"""

@@ -1,5 +1,6 @@
 import discord
 
+
 def define():
     """This function defines the commands configuration"""
     plugindef = {

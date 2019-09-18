@@ -1,38 +1,34 @@
 import asyncio
-import pluginhandler
+import json
 
 import discord
-import json
 
 import _thread as thread
 import interfacehandler
+import pluginhandler
+
 
 class Peach(discord.Client):
     """Main class"""
-    async def loadconfig(self):
-        with open("config.json") as f:
-            config = json.load(f)
 
-    async def updatepresence(self, presence):
-        #await self.bot.change_presence(status=discord.Status.online, activity=discord.Streaming(name="Code", url="https://www.twitch.tv/jul_is_lazy", details="Coding"))
-        await self.bot.change_presence(status=discord.Status.online, activity=discord.Game(name="with eggplants", details="all day long"))
+    async def updatepresence(self):
+        await self.change_presence(status=discord.Status.online, activity=discord.Game(name="with eggplants", details="all day long"))
 
-    def bind(self, bot, log):
-        self.bot = bot
+    def bind(self, log):
         self.log = log
 
     async def on_ready(self):
-        self.pluginhandler = pluginhandler.PluginHandler(self.bot, self.log)
-        self.interfacehandler = interfacehandler.InterfaceHandler(self.log, self.bot, self.pluginhandler)
-        self.log.info('{0.user} is logged in and online'.format(self.bot))
+        self.pluginhandler = pluginhandler.PluginHandler(self, self.log)
+        self.interfacehandler = interfacehandler.InterfaceHandler(self.log, self, self.pluginhandler)
+        self.log.info('{0.user} is logged in and online'.format(self))
         self.log.info("Creating tcp connection")
         thread.start_new_thread(self.interfacehandler.tcploop, ())
         self.log.info("Loading config")
-        await self.updatepresence("idle")
+        await self.updatepresence()
         self.log.info('Startup complete!')
 
     async def on_message(self, message):
-        if message.author == self.bot.user:
+        if message.author == self.user:
             return
 
         if message.content.startswith('!man'):
@@ -48,6 +44,6 @@ class Peach(discord.Client):
         self.log.info('{0.mention} joined the server.'.format(member))
 
     async def shutdown(self):
-        self.bot.logout()
+        self.logout()
 
         quit()
