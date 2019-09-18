@@ -1,1 +1,3 @@
+Flask
 discord.py
+mysql-connector
