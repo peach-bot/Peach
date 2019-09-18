@@ -21,12 +21,15 @@ if __name__ == "__main__":
             logging.getLogger(loggers).disabled = True
         else:
             pass
+    
+    with open("config.json") as config:
+        config = json.load(config)
 
-    bot.bind(bot, log)
+    bot.log = log
     log.info('Starting bot')
 
-    with open("auth.json") as auth:
-        try:
-            bot.run(json.load(auth)['TOKEN'])
-        except client_exceptions.ClientConnectorError:
-            log.error("No connection to discordapp.com available.")
+    
+    try:
+        bot.run(config['TOKEN'])
+    except client_exceptions.ClientConnectorError:
+        log.error("No connection to discordapp.com available.")
