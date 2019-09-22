@@ -22,7 +22,7 @@ if __name__ == "__main__":
         else:
             pass
     
-    with open("config.json") as config:
+    with open("peach_bot/config.json") as config:
         config = json.load(config)
 
     bot.log = log

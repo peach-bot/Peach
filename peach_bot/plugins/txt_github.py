@@ -16,7 +16,7 @@ async def run(message, bot):
         subcommands.add(message.author.id, message.content.split()[2], bot.db)
 
     else:
-        messagelen = len(message.content.split(" "))    
+        messagelen == len(message.content.split(" "))    
         #if no other user is mentioned
         if messagelen = 2:
             #userid = author's id
