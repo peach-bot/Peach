@@ -125,3 +125,4 @@ dmypy.json
 peach_bot/auth.json
 peach_bot/config.json
 test.py
+.vscode

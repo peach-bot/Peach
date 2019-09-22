@@ -1,18 +1,24 @@
 """This file serves as a template for building chat command plugins."""
 import discord
 
-
 def define():
     """This function defines the commands configuration"""
     plugindef = {
+        "type": "mlt", #mark as a plugin invoked by multiple triggers
         "chatinvoke": "example", #string that invokes the command (prefix is defined in bot.py, leave out)
+        "eventhooks": [], #list of events that invoke the plugin (e.g.: ["on_message", "on_member_join"])
+        "deleteinvoke": True, #delete the invoking message
         "permreq": [], #list of required permissions
         }
     return plugindef
 
-async def run(message, bot):
+async def run_txt(message, bot):
     """The actual command that runs upon invoke"""
     return "This is an example for a command plugin. It doesn't really do anything (duh)." #Returns a response message that displays for 5 seconds or None
+
+async def on_message(message, bot):
+    """Example of the on_message event hook"""
+    bot.log("New message: {0.author}: {0.content}".format(message))
 
 async def man():
     """This defines the commands manual page."""
