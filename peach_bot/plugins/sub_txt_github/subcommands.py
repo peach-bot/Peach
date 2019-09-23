@@ -10,3 +10,4 @@ async def pull(author):
     #create embed
 
     #send embed
+    pass

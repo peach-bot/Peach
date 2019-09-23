@@ -1,5 +1,5 @@
 import discord
-from sub_txt_github import subcommands
+import plugins.sub_txt_github.subcommands as subcommands
 
 
 def define():
@@ -18,7 +18,7 @@ async def run(message, bot):
     else:
         messagelen == len(message.content.split(" "))    
         #if no other user is mentioned
-        if messagelen = 2:
+        if messagelen == 2:
             #userid = author's id
             userid = message.author.id
             subcommands.pull(message.author, userid)

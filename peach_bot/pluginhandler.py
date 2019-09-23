@@ -12,15 +12,18 @@ class PluginHandler:
         self.log = log
 
         # load all modules in plugins folder
+        self.log.info("Loading plugins...")
         plugins = pluginimporter.load_plugins()
+        self.log.info("Loading plugins complete")
 
+        self.log.info("Linking plugins...")
         # create command dict
         self.commandlink = {}
         for plugin in plugins:
             pluginname = plugin.__name__[8:]
-            if pluginname.startswith("cmd_"):
-                plugindef = getattr(plugin, "define")()
-                self.commandlink[plugindef["chatinvoke"]] = (plugin, plugindef)
+            plugindef = getattr(plugin, "define")()
+            self.commandlink[plugindef["chatinvoke"]] = (plugin, plugindef)
+        self.log.info("Linking plugins complete")
 
     async def runcommand(self, message):
         #delete invoke from channel

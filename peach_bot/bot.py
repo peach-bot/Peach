@@ -23,7 +23,6 @@ class Peach(discord.Client):
         self.log.info('{0.user} is logged in and online'.format(self))
         self.log.info("Creating tcp connection")
         thread.start_new_thread(self.interfacehandler.tcploop, ())
-        self.log.info("Loading config")
         await self.updatepresence()
         self.log.info('Startup complete!')
 

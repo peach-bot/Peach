@@ -1,18 +1,56 @@
 
-TO DO:
+Docker:
+    ☐ secrets @1h
+    ☐ pi setup @2h
+    ☐ check build stuff @3h
+    ☐ logging @2h
 
-- docker
-- database
 
 
 
+Plugin stuff:
+    Event hooks:
+        ☐ on_connect
+        ☐ on_disconnect
+        ☐ on_ready
+            e.g. plugin setup function
+        ☐ on_resumed
+        ☐ on_typing(channel, user, when)
+            channel (abc.Messageable) – The location where the typing originated from.
+            user (Union[User, Member]) – The user that started typing.
+            when (datetime.datetime) – When the typing started as a naive datetime in UTC.
+        ☐ on_message(message)
+            make more dynamic
+            message (Message) – The current message.
+        ☐ on_message_delete(message)
+            message (Message) – The deleted message.
+        ☐ on_bulk_message_delete(messages)
+            messages (List[Message]) – The messages that have been deleted.
+        ☐ on_message_edit(before, after)
+            before (Message) – The previous version of the message.
+            after (Message) – The current version of the message.
+        ☐ on_reaction_add(reaction, user)
+            reaction (Reaction) – The current state of the reaction.
+            user (Union[Member, User]) – The user who added the reaction.
+        ☐ on_reaction_remove(reaction, user)
+            reaction (Reaction) – The current state of the reaction.
+            user (Union[Member, User]) – The user who added the reaction.
+        ☐ on_reaction_clear(message, reactions)
+            message (Message) – The message that had its reactions cleared.
+            reactions (List[Reaction]) – The reactions that were removed.
+        ☐ discord.on_private_channel_delete(channel)
+            channel (abc.PrivateChannel) – The channel that got deleted or created.
+        ☐ discord.on_private_channel_create(channel)
+            ^
+        ☐ discord.on_guild_channel_delete(channel)
+            ^
+        ☐ discord.on_guild_channel_create(channel)
+            ^
 
-Planned supported plugin types:
 
-- Chronos
-    - chr_<name>.py
-    - runs on interval
-
-Plugin Ideas:
-
-- Github linker
+    ☐ Chronos @2h
+        - chr_<name>.py
+        - runs on interval
+    
+    ☐ third party
+        - trd_<name>.py
