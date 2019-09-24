@@ -6,10 +6,16 @@ Docker:
     ☐ logging @2h
 
 
+Interface:
+    ☐ forms
+        ☐ switch buttons
+        ☐ string entries
+    ☐ discord auth
+    ☐ server switching
 
 
-Plugin stuff:
-    Event hooks:
+Plugin handling:
+    Event hooks: 
         ☐ on_connect
         ☐ on_disconnect
         ☐ on_ready
@@ -46,11 +52,20 @@ Plugin stuff:
             ^
         ☐ discord.on_guild_channel_create(channel)
             ^
+        ☐ 
 
+
+    
+    ☐ alias/invoke hierarchy @3h
 
     ☐ Chronos @2h
-        - chr_<name>.py
-        - runs on interval
+    - chr_<name>.py
+    - runs on interval
     
     ☐ third party
         - trd_<name>.py
+
+
+Plugins:
+    Server stats:
+        ☐ 
