@@ -1,13 +1,8 @@
-FROM alpine:latest
+FROM python:latest
 
-RUN apk add --no-cache python3-dev=3.7.3-r0 \
-    && pip3 install --upgrade pip \
-    && apk update \
-    && apk add bash
+WORKDIR /usr/src/app
 
-WORKDIR /app
-
-COPY . /app
+COPY . .
 
 RUN pip3 --no-cache-dir install -r requirements.txt --trusted-host pypi.python.org                                                     
 
