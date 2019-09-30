@@ -2,7 +2,6 @@ Database: @nextrelease
     ☐ setup database server on pi
     ☐ integrate to bot
 
-
 ✘ Setup script: @cancelled(19-09-28 15:21)
     ✘ check for python3.7 @cancelled(19-09-28 15:21)
     ✘ download requirements @cancelled(19-09-28 15:21)
@@ -23,6 +22,7 @@ Interface:
         ☐ string entries
     ☐ discord auth
     ☐ server switching
+    ☐ analytics
 
 
 Plugin handling:
@@ -124,7 +124,14 @@ Plugin handling:
             user (User) – The user that got unbanned.
         
     ☐ alias/invoke hierarchy @3h @nextrelease 
-        1. 
+        1. main ivoke
+            if duplicate
+                builtins get overwritten
+                alias fallback
+        2. alias
+            lower list index wins
+                if draw --> pass
+            builtins handled as above
     ☐ Chronos @2h
         chr_<name>.py
         runs on interval
