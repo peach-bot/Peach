@@ -12,6 +12,7 @@ class Peach(discord.Client):
     """Main class"""
 
     async def updatepresence(self):
+        self.log.info("Updated Rich Presence")
         await self.change_presence(status=discord.Status.online, activity=discord.Game(name="with eggplants", details="all day long"))
 
     def bind(self, log):

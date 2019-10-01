@@ -13,9 +13,9 @@ if __name__ == "__main__":
 
     bot = Peach()
 
-    logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s', level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
-    log = logging.getLogger('peach-logger')
-    allowedloggers = ['peach-logger']
+    logging.basicConfig(format='%(name)s @ %(asctime)s - %(levelname)s: %(message)s', level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
+    log = logging.getLogger('peach/bot')
+    allowedloggers = ['peach/bot', 'peach/tcpserver', 'peach/interface']
     for loggers in logging.Logger.manager.loggerDict:
         if loggers not in allowedloggers:
             logging.getLogger(loggers).disabled = True
