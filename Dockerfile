@@ -2,7 +2,9 @@ FROM python:3.7
 
 RUN apt update
 
-RUN apt install nodejs -y
+RUN apt install nodejs npm -y
+
+RUN npm i -g yarn
 
 WORKDIR /app
 
@@ -10,8 +12,8 @@ COPY . /app
 
 RUN pip3 --no-cache-dir install -r requirements.txt
 
-RUN npm i -g nodemon
+RUN yarn
 
 EXPOSE 5000
 
-ENTRYPOINT [ "npm", "run", "dev" ]
+ENTRYPOINT [ "yarn", "dev" ]
