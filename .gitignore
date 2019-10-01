@@ -128,3 +128,5 @@ test.py
 .vscode
 .dockerimages
 /node_modules
+.saddockerignore
+.dockerignore
