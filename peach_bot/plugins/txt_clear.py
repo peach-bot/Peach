@@ -15,6 +15,7 @@ async def run(message, bot):
         if 0 < amount <= 50:
             cleared = await message.channel.purge(limit = amount)
             return "Cleared **{0}** messages for you. :slight_smile:".format(len(cleared))
+            bot.log.info("Plugin txt_clear: cleared {0} messages".format(len(cleared)))
         else:
             return "I was unable to clear that amount of messages for you. A maximum of 50 messages is allowed."
     except IndexError:
