@@ -1,8 +1,18 @@
+Database: @nextrelease 
+    ☐ setup database server on pi
+    ☐ integrate to bot
 
-Docker:
+✘ Setup script: @cancelled(19-09-28 15:21)
+    ✘ check for python3.7 @cancelled(19-09-28 15:21)
+    ✘ download requirements @cancelled(19-09-28 15:21)
+    ✘ copy service files @cancelled(19-09-28 15:21)
+    ✘ start service @cancelled(19-09-28 15:21)
+
+
+Docker: @nextrelease 
+    ✔ pi setup @2h @done(19-09-28 15:57)
     ☐ secrets @1h
-    ☐ pi setup @2h
-    ☐ check build stuff @3h
+    ☐ check build stuff @3h @today 
     ☐ logging @2h
 
 
@@ -12,15 +22,16 @@ Interface:
         ☐ string entries
     ☐ discord auth
     ☐ server switching
+    ☐ analytics
 
 
 Plugin handling:
-    Event hooks: 
-        ☐ on_connect
-        ☐ on_disconnect
-        ☐ on_ready
+    Event hooks: @nextrelease 
+        ☐ on_connect()
+        ☐ on_disconnect()
+        ☐ on_ready()
             e.g. plugin setup function
-        ☐ on_resumed
+        ☐ on_resumed()
         ☐ on_typing(channel, user, when)
             channel (abc.Messageable) – The location where the typing originated from.
             user (Union[User, Member]) – The user that started typing.
@@ -44,28 +55,94 @@ Plugin handling:
         ☐ on_reaction_clear(message, reactions)
             message (Message) – The message that had its reactions cleared.
             reactions (List[Reaction]) – The reactions that were removed.
-        ☐ discord.on_private_channel_delete(channel)
+        ☐ on_private_channel_delete(channel)
             channel (abc.PrivateChannel) – The channel that got deleted or created.
-        ☐ discord.on_private_channel_create(channel)
+        ☐ on_private_channel_create(channel)
             ^
-        ☐ discord.on_guild_channel_delete(channel)
+        ☐ on_guild_channel_delete(channel)
             ^
-        ☐ discord.on_guild_channel_create(channel)
+        ☐ on_guild_channel_create(channel)
             ^
-        ☐ 
-
-
-    
-    ☐ alias/invoke hierarchy @3h
-
+        ☐ on_guild_channel_update(before, after)
+            before (abc.GuildChannel) – The updated guild channel’s old info.
+            after (abc.GuildChannel) – The updated guild channel’s new info.
+        ☐ on_guild_channel_pins_update(channel, last_pin)
+            channel (abc.GuildChannel) – The guild channel that had its pins updated.
+            last_pin (Optional[datetime.datetime]) – The latest message that was pinned as a naive datetime in UTC. Could be None.
+        ☐ on_guild_integrations_update(guild)
+            guild (Guild) – The guild that had its integrations updated.
+        ☐ on_webhooks_update(channel)
+            channel (abc.GuildChannel) – The channel that had its webhooks updated.
+        ☐ on_member_join(member)
+            member (Member) – The member who joined or left.
+        ☐ on_member_remove(member)
+            ^
+        ☐ on_member_update(before, after)
+            (status, activity, nickname, roles)
+            before (Member) – The updated member’s old info.
+            after (Member) – The updated member’s updated info.
+        ☐ on_user_update(before, after)
+            (avatar, username, discriminator)
+            before (User) – The updated user’s old info.
+            after (User) – The updated user’s updated info.
+        ☐ on_guild_join(guild)
+            when bot joins a guild
+            guild (Guild) – The guild that was joined. 
+        ☐ on_guild_remove(guild)
+            when bot leaves guild
+            guild (Guild) – The guild that was left.
+        ☐ on_guild_update(before, after)
+            (Changed name, Changed AFK channel, Changed AFK timeout, etc)
+            before (Guild) – The guild prior to being updated.
+            after (Guild) – The guild after being updated.
+        ☐ on_guild_role_create(role)
+            role (Role) – The role that was created or deleted.
+        ☐ on_guild_role_delete(role)
+            ^
+        ☐ on_guild_role_update(before, after)
+            before (Role) – The updated role’s old info.
+            after (Role) – The updated role’s updated info.
+        ☐ on_guild_emojis_update(guild, before, after)
+            guild (Guild) – The guild who got their emojis updated.
+            before (List[Emoji]) – A list of emojis before the update.
+            after (List[Emoji]) – A list of emojis after the update.
+        ☐ on_guild_available(guild)
+            guild – The Guild that has changed availability.
+        ☐ on_guild_unavailable(guild)
+            ^ 
+        ☐ on_voice_state_update(member, before, after)
+            (join, leave, muted, deafened by themselves, ebd. by administrator)
+            member (Member) – The member whose voice states changed.
+            before (VoiceState) – The voice state prior to the changes.
+            after (VoiceState) – The voice state after to the changes.
+        ☐ on_member_ban(guild, user)
+            guild (Guild) – The guild the user got banned from.
+            user (Union[User, Member]) – The user that got banned. Can be either User or Member depending if the user was in the guild or not at the time of removal.
+        ☐ on_member_unban(guild, user)
+            Called when a User gets unbanned from a Guild.
+            guild (Guild) – The guild the user got unbanned from.
+            user (User) – The user that got unbanned.
+        
+    ☐ alias/invoke hierarchy @3h @nextrelease 
+        1. main ivoke
+            if duplicate
+                builtins get overwritten
+                alias fallback
+        2. alias
+            lower list index wins
+                if draw --> pass
+            builtins handled as above
     ☐ Chronos @2h
-    - chr_<name>.py
-    - runs on interval
-    
-    ☐ third party
-        - trd_<name>.py
+        chr_<name>.py
+        runs on interval
+        f.e. api check interval
 
 
 Plugins:
-    Server stats:
-        ☐ 
+    Server analytics:
+        ☐ Member history
+        ☐ Channel activity
+    Github:
+        ☐ Store usernames in db
+        ☐ Pull usernames from db
+        ☐ Release tracker
