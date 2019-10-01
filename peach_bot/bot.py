@@ -28,6 +28,8 @@ class Peach(discord.Client):
         self.log.info('Startup complete!')
 
     async def on_message(self, message):
+        self.log.info("Received message:", message)
+
         if message.author == self.user:
             return
 
