@@ -127,3 +127,4 @@ peach_bot/config.json
 test.py
 .vscode
 .dockerimages
+/node_modules

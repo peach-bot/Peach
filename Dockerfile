@@ -1,16 +1,19 @@
-FROM alpine:latest
+FROM python:3.7
 
-RUN apk add --no-cache python3-dev=3.7.3-r0 \
-    && pip3 install --upgrade pip \
-    && apk update \
-    && apk add bash
+RUN apt update
+
+RUN apt install nodejs npm -y
+
+RUN npm i -g yarn
 
 WORKDIR /app
 
 COPY . /app
 
-RUN pip3 --no-cache-dir install -r requirements.txt --trusted-host pypi.python.org                                                     
+RUN pip3 --no-cache-dir install -r requirements.txt
+
+RUN yarn
 
 EXPOSE 5000
 
-CMD ./start.sh
+ENTRYPOINT [ "yarn", "dev" ]
