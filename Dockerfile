@@ -1,16 +1,17 @@
-FROM alpine:latest
+FROM python:3.7
 
-RUN apk add --no-cache python3-dev=3.7.3-r0 \
-    && pip3 install --upgrade pip \
-    && apk update \
-    && apk add bash
+RUN apt update
+
+RUN apt install nodejs -y
 
 WORKDIR /app
 
 COPY . /app
 
-RUN pip3 --no-cache-dir install -r requirements.txt --trusted-host pypi.python.org                                                     
+RUN pip3 --no-cache-dir install -r requirements.txt
+
+RUN npm i -g nodemon
 
 EXPOSE 5000
 
-CMD ./start.sh
+ENTRYPOINT [ "npm", "run", "dev" ]
