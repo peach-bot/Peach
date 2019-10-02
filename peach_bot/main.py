@@ -7,7 +7,8 @@ import time
 
 import discord
 from aiohttp import client_exceptions
-from bot import Peach
+
+from source.bothandler import Peach
 
 if __name__ == "__main__":
 

@@ -1,5 +1,6 @@
 import socket
 
+
 class Request:
 
     def __init__(self, log):

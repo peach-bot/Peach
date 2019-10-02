@@ -1,5 +1,6 @@
 import time
 
+
 class InterfaceHandler:
     """Handles the connection to the interface and deals with its requests."""
 

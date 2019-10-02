@@ -140,8 +140,10 @@ Plugin handling:
 
 Plugins:
     Server analytics:
-        ☐ Member history
+        ☐ chronological analytics
         ☐ Channel activity
+        ☐ activity reports
+        ☐ Plugin usage
     Github:
         ☐ Store usernames in db
         ☐ Pull usernames from db

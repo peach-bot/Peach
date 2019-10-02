@@ -1,7 +1,8 @@
-import socket
 import logging
-import interfacehandler
+import socket
+
 import _thread as thread
+from source import interfacehandler
 
 HOST = "127.0.0.1"
 PORT = 42069
@@ -42,4 +43,3 @@ if __name__ == "__main__":
                     ifhandler.botconn = botconn
                     botaddr = addr
                     ifhandler.botaddr = botaddr
-

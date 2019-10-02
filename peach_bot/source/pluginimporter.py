@@ -1,7 +1,8 @@
-import os
-import sys
-import re
 import importlib
+import os
+import re
+import sys
+
 
 def load_plugins():
     """loads all modules in plugins folder"""

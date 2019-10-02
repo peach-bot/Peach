@@ -1,9 +1,9 @@
-import random
 import logging
-
-import botrequests
+import random
 
 import flask
+
+from source import botrequests
 
 app = flask.Flask(__name__)
 app.debug = False
