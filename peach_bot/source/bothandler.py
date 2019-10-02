@@ -4,7 +4,7 @@ import json
 import discord
 
 import _thread as thread
-from source import interfacehandler, pluginhandler
+from source import interfacehandler, pluginhandler, databasehandler
 
 
 class Peach(discord.Client):
@@ -20,11 +20,15 @@ class Peach(discord.Client):
         self.log = log
 
     async def on_ready(self):
-        self.pluginhandler = pluginhandler.PluginHandler(self, self.log)
-        self.interfacehandler = interfacehandler.InterfaceHandler(self.log, self, self.pluginhandler)
         self.log.info('{0.user} is logged in and online'.format(self))
-        self.log.info("Creating tcp connection")
+        #load plugins
+        self.pluginhandler = pluginhandler.PluginHandler(self, self.log)
+        #establish connection to interface
+        self.interfacehandler = interfacehandler.InterfaceHandler(self.log, self, self.pluginhandler)
         thread.start_new_thread(self.interfacehandler.tcploop, ())
+        #load database connection
+        self.db = databasehandler.DatabaseHandler(self)
+        #update rich presence
         await self.updatepresence("with eggplants")
         self.log.info('Startup complete!')
 
@@ -41,6 +45,8 @@ class Peach(discord.Client):
         #try to run a command in message starts with prefix
         elif message.content.startswith('!'):
             await self.pluginhandler.runcommand(message)
+
+        #add to analytics
 
 
     async def on_member_join(self, member):

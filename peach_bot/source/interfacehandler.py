@@ -14,6 +14,7 @@ class InterfaceHandler:
         self.pluginhandler = pluginhandler
 
     def tcploop(self):
+            self.log.info("Creating tcp connection")
             self.PORT = 42069
             self.HOST = '127.0.0.1'
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
