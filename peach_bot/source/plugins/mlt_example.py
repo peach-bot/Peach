@@ -6,9 +6,11 @@ def define():
     plugindef = {
         "type": "mlt", #mark as a plugin invoked by multiple triggers
         "chatinvoke": "example", #string that invokes the command (prefix is defined in bot.py, leave out)
+        "aliases": "", #other strings that invoke the command (for further explenation look in the docs under invoke hierarchy)
         "eventhooks": [], #list of events that invoke the plugin (e.g.: ["on_message", "on_member_join"])
         "deleteinvoke": True, #delete the invoking message
         "permreq": [], #list of required permissions
+        "interval": 60, #chrono interval in minutes
         }
     return plugindef
 

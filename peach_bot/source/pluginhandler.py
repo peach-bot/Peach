@@ -1,11 +1,11 @@
 """Assigns the command name to the right function call."""
 import asyncio
 
-from source import pluginimporter
+from source import pluginimporter, eventrelayer
 
 
-class PluginHandler:
-    """"""
+class PluginHandler(eventrelayer.EventRelayer):
+    """Handles plugin importing and execution."""
     def __init__(self, bot, log):
         # bind bot and logger
         self.bot = bot
@@ -13,16 +13,24 @@ class PluginHandler:
 
         # load all modules in plugins folder
         self.log.info("Loading plugins...")
-        plugins = pluginimporter.load_plugins()
+        plugins = pluginimporter.load_plugins(self.log)
         self.log.info("Loading plugins complete")
 
         self.log.info("Linking plugins...")
         # create command dict
+        #invoke linking
         self.commandlink = {}
+        self.eventlink = {}
         for plugin in plugins:
-            pluginname = plugin.__name__[8:]
+            pluginname = plugin.__name__[15:]
             plugindef = getattr(plugin, "define")()
             self.commandlink[plugindef["chatinvoke"]] = (plugin, plugindef)
+            #link events
+            for event in plugindef["eventhooks"]:
+                try:
+                    self.eventlink[event].append(plugin)
+                except KeyError:
+                    self.eventlink[event] = [plugin]
         self.log.info("Linking plugins complete")
 
     async def runcommand(self, message):
@@ -63,13 +71,3 @@ class PluginHandler:
         #filter the command they invoked
         command = message.content.split()[1]
         await message.channel.send(embed = await self.commandlink[command][0].man())
-
-    async def updatestate(self, message):
-
-        #When invoked from chat
-        if message != None:
-            pass
-
-        #invoked by interface
-        else:
-            pass

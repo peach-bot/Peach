@@ -6,6 +6,7 @@ def define():
     plugindef = {
         "chatinvoke": "clear",
         "permreq": ["manage_messages"],
+        "eventhooks": [],
     }
     return plugindef
 
