@@ -5,9 +5,13 @@ import source.plugins.sub_txt_github.subcommands as subcommands
 def define():
     """This function defines the commands configuration"""
     plugindef = {
+        "type": "txt",
         "chatinvoke": "github",
+        "eventhooks": [],
+        "deleteinvoke": True,
         "permreq": [],
-    }
+        "interval": 60,
+        }
     return plugindef
 
 async def run(message, bot):

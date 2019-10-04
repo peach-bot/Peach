@@ -14,8 +14,15 @@ class EventHandler:
         elif message.content.startswith('!'):
             await self.pluginhandler.runcommand(message)
 
+        await self.pluginhandler.on_message(message)
+
 
     async def on_member_join(self, member):
         # Welcome message
         await member.guild.system_channel.send('{0.mention} felt cute.'.format(member))
         self.log.info('{0.mention} joined {0.guild.name}'.format(member))
+
+        await self.pluginhandler.on_member_join(member)
+
+    async def on_message_delete(self, message):
+        await self.pluginhandler.on_message_delete(message)

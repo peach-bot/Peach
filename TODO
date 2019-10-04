@@ -1,8 +1,9 @@
 Database: @nextrelease
-    servers(id bigint PRIMARY KEY,  ownerid bigint, <pluginid> json)
+    servers(id bigint PRIMARY KEY,  ownerid bigint, <pluginname> json)
     analytics(date timestamp [ (p) ] with time zone PRIMARY KEY, <serverid> json)
-    users(id bigint PRIMARY KEY, <pluginid> json)
-    ☐ setup database server on pi
+    users(id bigint PRIMARY KEY, <pluginname> json)
+    <pluginname> will we user/<plugin> from github
+    ☐ add to docker compose
     ☐ integrate to bot
 
 ✘ Setup script: @cancelled(19-09-28 15:21)
@@ -32,17 +33,17 @@ Plugin handling:
     Event hooks: @nextrelease 
         ☐ on_connect()
         ☐ on_disconnect()
-        ☐ on_ready()
+        ✔ on_ready() @done(19-10-04 13:52)
             e.g. plugin setup function
         ☐ on_resumed()
         ☐ on_typing(channel, user, when)
             channel (abc.Messageable) – The location where the typing originated from.
             user (Union[User, Member]) – The user that started typing.
             when (datetime.datetime) – When the typing started as a naive datetime in UTC.
-        ☐ on_message(message)
+        ✔ on_message(message) @done(19-10-04 13:53)
             make more dynamic
             message (Message) – The current message.
-        ☐ on_message_delete(message)
+        ✔ on_message_delete(message) @done(19-10-04 14:00)
             message (Message) – The deleted message.
         ☐ on_bulk_message_delete(messages)
             messages (List[Message]) – The messages that have been deleted.
@@ -76,7 +77,7 @@ Plugin handling:
             guild (Guild) – The guild that had its integrations updated.
         ☐ on_webhooks_update(channel)
             channel (abc.GuildChannel) – The channel that had its webhooks updated.
-        ☐ on_member_join(member)
+        ✔ on_member_join(member) @done(19-10-04 14:00)
             member (Member) – The member who joined or left.
         ☐ on_member_remove(member)
             ^
@@ -125,8 +126,10 @@ Plugin handling:
             Called when a User gets unbanned from a Guild.
             guild (Guild) – The guild the user got unbanned from.
             user (User) – The user that got unbanned.
-        
-    ☐ alias/invoke hierarchy @3h @nextrelease 
+        @3h
+
+
+    ☐ alias/invoke hierarchy @2h @nextrelease 
         1. main ivoke
             if duplicate
                 builtins get overwritten
@@ -135,7 +138,7 @@ Plugin handling:
             lower list index wins
                 if draw --> pass
             builtins handled as above
-    ☐ Chronos @2h
+    ☐ Chronos @3h
         chr_<name>.py
         runs on interval
         f.e. api check interval
@@ -143,10 +146,9 @@ Plugin handling:
 
 Plugins:
     Server analytics:
-        ☐ chronological analytics
-        ☐ Channel activity
-        ☐ activity reports
-        ☐ Plugin usage
+        ☐ Channel activity @2h
+        ☐ Plugin usage @3h
+        ☐ Cool graphs @4h
     Github:
         ☐ Store usernames in db
         ☐ Pull usernames from db

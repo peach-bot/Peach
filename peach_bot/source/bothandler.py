@@ -27,6 +27,7 @@ class Peach(discord.Client, eventhandler.EventHandler):
         thread.start_new_thread(self.interfacehandler.tcploop, ())
         await self.updatepresence("with eggplants")
         self.log.info('Startup complete!')
+        await self.pluginhandler.on_ready()
 
     async def shutdown(self):
         self.logout()
