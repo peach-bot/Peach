@@ -29,7 +29,7 @@ Plugin handling:
     Event hooks: @nextrelease 
         ☐ on_connect()
         ☐ on_disconnect()
-        ☐ on_ready()
+        ✔ on_ready() @done(19-10-04 14:08)
             e.g. plugin setup function
         ☐ on_resumed()
         ☐ on_typing(channel, user, when)
