@@ -1,4 +1,7 @@
-Database: @nextrelease 
+Database: @nextrelease
+    servers(id bigint PRIMARY KEY,  ownerid bigint, <pluginid> json)
+    analytics(date timestamp [ (p) ] with time zone PRIMARY KEY, <serverid> json)
+    users(id bigint PRIMARY KEY, <pluginid> json)
     ☐ setup database server on pi
     ☐ integrate to bot
 

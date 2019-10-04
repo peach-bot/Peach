@@ -4,7 +4,7 @@ import re
 import sys
 
 
-def load_plugins():
+def load_plugins(logger):
     """loads all modules in plugins folder"""
     # casually taken from https://copyninja.info/blog/dynamic-module-loading.html
     pysearchre = re.compile('.py$', re.IGNORECASE)
@@ -12,10 +12,12 @@ def load_plugins():
     form_module = lambda fp: '.' + os.path.splitext(fp)[0]
     plugins = map(form_module, pluginfiles)
     # import parent module / namespace
-    importlib.import_module('plugins')
+    importlib.import_module('source.plugins')
     modules = []
     for plugin in plugins:
-             if not plugin.startswith('__'):
-                 modules.append(importlib.import_module(plugin, package="plugins"))
+        if not plugin.startswith('__'):
+            modules.append(importlib.import_module(plugin, package="source.plugins"))
+
+    logger.info("Found {0} plugins".format(len(modules)))
 
     return modules

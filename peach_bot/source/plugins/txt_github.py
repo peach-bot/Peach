@@ -1,5 +1,5 @@
 import discord
-import plugins.sub_txt_github.subcommands as subcommands
+import source.plugins.sub_txt_github.subcommands as subcommands
 
 
 def define():

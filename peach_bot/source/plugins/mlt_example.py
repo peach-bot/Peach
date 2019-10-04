@@ -9,6 +9,7 @@ def define():
         "eventhooks": [], #list of events that invoke the plugin (e.g.: ["on_message", "on_member_join"])
         "deleteinvoke": True, #delete the invoking message
         "permreq": [], #list of required permissions
+        "interval": 60, #chrono interval in minutes
         }
     return plugindef
 
@@ -18,7 +19,7 @@ async def run_txt(message, bot):
 
 async def on_message(message, bot):
     """Example of the on_message event hook"""
-    bot.log("New message: {0.author}: {0.content}".format(message))
+    #bot.log("New message: {0.author}: {0.content}".format(message))
 
 async def man():
     """This defines the commands manual page."""

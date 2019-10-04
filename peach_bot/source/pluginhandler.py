@@ -13,7 +13,7 @@ class PluginHandler:
 
         # load all modules in plugins folder
         self.log.info("Loading plugins...")
-        plugins = pluginimporter.load_plugins()
+        plugins = pluginimporter.load_plugins(self.log)
         self.log.info("Loading plugins complete")
 
         self.log.info("Linking plugins...")
