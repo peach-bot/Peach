@@ -4,7 +4,7 @@ import json
 import discord
 
 import _thread as thread
-from source import interfacehandler, pluginhandler, eventhandler
+from source import interfacehandler, pluginhandler, databasehandler, eventhandler
 
 
 class Peach(discord.Client, eventhandler.EventHandler):
@@ -20,11 +20,15 @@ class Peach(discord.Client, eventhandler.EventHandler):
         self.log = log
 
     async def on_ready(self):
-        self.pluginhandler = pluginhandler.PluginHandler(self, self.log)
-        self.interfacehandler = interfacehandler.InterfaceHandler(self.log, self, self.pluginhandler)
         self.log.info('{0.user} is logged in and online'.format(self))
-        self.log.info("Creating tcp connection")
+        #load plugins
+        self.pluginhandler = pluginhandler.PluginHandler(self, self.log)
+        #establish connection to interface
+        self.interfacehandler = interfacehandler.InterfaceHandler(self.log, self, self.pluginhandler)
         thread.start_new_thread(self.interfacehandler.tcploop, ())
+        #load database connection
+        self.db = databasehandler.DatabaseHandler(self)
+        #update rich presence
         await self.updatepresence("with eggplants")
         self.log.info('Startup complete!')
         await self.pluginhandler.on_ready()
