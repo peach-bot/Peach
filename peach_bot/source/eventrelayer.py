@@ -1,5 +1,5 @@
 class EventRelayer:
-"""A very boring and repetetive class that calls the event functions from the respectable plugins."""    
+    """A very boring and repetetive class that calls the event functions from the respectable plugins."""    
 
     async def on_ready(self):
         try:
