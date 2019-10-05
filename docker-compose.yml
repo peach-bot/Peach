@@ -4,6 +4,6 @@ services:
     image: peachbot/peach:latest
     build: .
     ports: 
-     - "5000:5000"
+      - "5000:5000"
     volumes:
       - ./:/app
