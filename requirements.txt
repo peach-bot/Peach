@@ -1,3 +1,4 @@
 Flask
 discord.py
 mysql-connector
+psycopg2
