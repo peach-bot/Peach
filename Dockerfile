@@ -8,7 +8,7 @@ RUN npm i -g yarn
 
 WORKDIR /app
 
-COPY . .
+COPY . /app
 
 RUN pip3 install -r requirements.txt
 
