@@ -4,10 +4,5 @@
         "DBHOST": "",
         "DBUSER": "",
         "DBPASSWORD": ""
-    },
-    "statistics": {
-        "runtime": 632.534835,
-        "servers": [32600838240238942, 2938190238019921],
-        "executed_commands": 3561
     }
 }

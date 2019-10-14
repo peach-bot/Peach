@@ -8,7 +8,7 @@ RUN npm i -g yarn
 
 WORKDIR /app
 
-COPY . /app
+COPY . .
 
 RUN pip3 install -r requirements.txt
 
@@ -16,4 +16,4 @@ RUN yarn
 
 EXPOSE 5000
 
-ENTRYPOINT [ "yarn", "dev" ]
+CMD [ "yarn", "dev" ]

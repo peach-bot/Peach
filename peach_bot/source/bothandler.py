@@ -152,5 +152,6 @@ class Peach(discord.Client):
 
     async def shutdown(self):
         self.logout()
+        exit()
 
         quit()
