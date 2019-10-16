@@ -1,6 +1,10 @@
-async def add(discordid, username):
-    #add entry to database 
-    pass
+async def add(discordid, username, db):
+    #add entry to database
+    data = {
+        'username': username
+    } 
+    await db.plugin_updateuser(discordid, "github", data)
+    return "Your GitHub account was successfully linked :white_check_mark:"
 
 async def pull(author):
     #load github username from database
@@ -10,4 +14,4 @@ async def pull(author):
     #create embed
 
     #send embed
-    pass
+    return None

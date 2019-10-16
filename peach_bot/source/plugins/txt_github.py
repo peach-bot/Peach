@@ -7,8 +7,9 @@ def define():
     plugindef = {
         "type": "txt",
         "chatinvoke": "github",
+        "aliases": "gh",
         "eventhooks": [],
-        "deleteinvoke": True,
+        "deleteinvoke": False,
         "permreq": [],
         "interval": 60,
         }
@@ -17,7 +18,7 @@ def define():
 async def run(message, bot):
     #if !github add then add entry
     if message.content.split(" ")[1] == "add":
-        subcommands.add(message.author.id, message.content.split()[2], bot.db)
+        response = await subcommands.add(message.author.id, message.content.split()[2], bot.db)
 
     else:
         messagelen = len(message.content.split(" "))    
@@ -25,11 +26,13 @@ async def run(message, bot):
         if messagelen == 2:
             #userid = author's id
             userid = message.author.id
-            subcommands.pull(message.author, userid)
+            response = subcommands.pull(message.author, userid)
         else:
             #get mentioned user's id
             userid = message.content.split(" ")[1]
-            subcommands.pull(message.author, userid)
+            response = subcommands.pull(message.author, userid)
+
+    return response
     
 
 async def man():
