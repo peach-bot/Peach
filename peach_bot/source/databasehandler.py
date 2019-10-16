@@ -4,3 +4,6 @@ class DatabaseHandler:
 
     async def __init__(self, bot):
         self.bot = bot
+
+    async def updateplugin(plugin, json):
+        pass
