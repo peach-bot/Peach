@@ -34,8 +34,6 @@ class PluginHandler(eventrelayer.EventRelayer):
         self.log.info("Linking plugins complete")
 
     async def runcommand(self, message):
-        #delete invoke from channel
-        await message.delete()
         #filter the command they invoked
         command = message.content.split()[0][1:]
 
@@ -50,9 +48,12 @@ class PluginHandler(eventrelayer.EventRelayer):
             for required in plugindef["permreq"]:
                 if not getattr(permissions, required):
                     has_perms = False
-            
+
             #run command
             if has_perms:
+                #delete invoke from channel
+                if plugindef["deleteinvoke"]:
+                    await message.delete()
                 response = await plugin.run(message, self.bot)
                 if response != None:
                     responsemessage = await message.channel.send(response)
