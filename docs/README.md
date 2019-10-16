@@ -3,6 +3,9 @@
 [![GitHub version](https://badge.fury.io/gh/juliscrazy%2FCuddler.svg)](https://github.com/juliscrazy/Cuddler/issues)
 [![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/juliscrazy/Cuddler)
  
+
+[**Try all features today and for free**](http://bit.ly/peachbot)
+
 ## Features
  - Webinterface
    - Bot Statistics
@@ -11,6 +14,8 @@
  - Easy Command Expansion
  - Easy Feature Integration
 
-## Hosting
-To host this bot download the [latest docker image](https://github.com/peach-bot/Peach/releases)
-Then just run the docker image *ha ha ha ha ha*
+## Requirements for Hosting
+
+ - Docker host
+ - Discord bot token
+ - Postgres server
