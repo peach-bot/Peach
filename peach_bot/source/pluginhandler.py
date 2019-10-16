@@ -22,7 +22,7 @@ class PluginHandler(eventrelayer.EventRelayer):
         self.commandlink = {}
         self.eventlink = {}
         for plugin in plugins:
-            pluginname = plugin.__name__[15:]
+            pluginname = plugin.__name__.split(".")[3]
             plugindef = getattr(plugin, "define")()
             self.commandlink[plugindef["chatinvoke"]] = (plugin, plugindef)
             #link events

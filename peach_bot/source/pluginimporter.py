@@ -18,7 +18,6 @@ def load_plugins(logger):
     importlib.import_module('source.plugins')
     modules = []
     for plugin in plugins:
-        print("Considering", plugin)
         if not plugin.startswith('__'): # This is crappy
             modules.append(importlib.import_module(plugin, package="source.plugins"))
 
