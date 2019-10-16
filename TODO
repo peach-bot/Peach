@@ -3,8 +3,9 @@ Database: @nextrelease
     analytics(date timestamp [ (p) ] with time zone PRIMARY KEY, <serverid> json)
     users(id bigint PRIMARY KEY, <pluginname> json)
     <pluginname> will we user/<plugin> from github
-    ☐ add to docker compose
-    ☐ integrate to bot
+    ✘ add to docker compose @cancelled(19-10-16 15:38)
+    ✔ integrate to bot @done(19-10-16 15:38)
+    ☐ Database wrapper @nextrelease
 
 ✘ Setup script: @cancelled(19-09-28 15:21)
     ✘ check for python3.7 @cancelled(19-09-28 15:21)
@@ -15,7 +16,7 @@ Database: @nextrelease
 
 Docker: @nextrelease 
     ✔ pi setup @2h @done(19-09-28 15:57)
-    ☐ secrets @1h
+    ✔ secrets @1h @done(19-10-16 15:38)
     ✔ check build stuff @3h @done(19-10-01 21:51)
     ✔ logging @2h @done(19-10-01 21:51)
 

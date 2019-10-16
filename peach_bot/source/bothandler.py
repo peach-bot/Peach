@@ -36,7 +36,8 @@ class Peach(discord.Client):
         self.interfacehandler = interfacehandler.InterfaceHandler(self.log, self, self.pluginhandler)
         thread.start_new_thread(self.interfacehandler.tcploop, ())
         #load database connection
-        #self.db = databasehandler.DatabaseHandler(self)
+        self.db = databasehandler.DatabaseHandler(self)
+        await self.db.update_servers()
         #update rich presence
         await self.updatepresence("with eggplants")
         #load event hooks            
