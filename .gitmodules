@@ -1,0 +1,3 @@
+[submodule "peach_bot/source/plugins/plugin_github"]
+	path = peach_bot/source/plugins/plugin_github
+	url = https://github.com/peach-bot/plugin_github
