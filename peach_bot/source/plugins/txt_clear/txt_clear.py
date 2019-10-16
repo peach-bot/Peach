@@ -5,6 +5,7 @@ def define():
     """This function defines the commands configuration"""
     plugindef = {
         "chatinvoke": "clear",
+        "deleteinvoke": True,
         "permreq": ["manage_messages"],
         "eventhooks": [],
     }
