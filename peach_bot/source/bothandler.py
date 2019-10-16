@@ -20,6 +20,12 @@ class Peach(discord.Client):
         """Binds a logger to the bot class"""
         self.log = log
 
+    async def wait_till_ready(self):
+        self.ready = False
+        while not self.ready:
+            await asyncio.sleep(0.5)
+        return True
+
     async def on_ready(self):
         global bot
         bot = self
@@ -36,6 +42,7 @@ class Peach(discord.Client):
         #load event hooks            
         self.log.info('Startup complete!')
         await self.pluginhandler.on_ready()
+        self.ready = True
 
     async def on_message(self, message):
         self.log.info("Received message: {0}#{1}@{2} --> {3}".format(message.author.name, message.author.discriminator, message.guild.name, message.content))
@@ -64,7 +71,11 @@ class Peach(discord.Client):
         await self.pluginhandler.on_message_delete(message)
 
     async def on_connect(self):
-        await self.pluginhandler.on_connect()
+        try:
+            await self.pluginhandler.on_connect()
+        except AttributeError:
+            await self.wait_till_ready()
+            await self.pluginhandler.on_connect()
 
     async def on_disconnect(self):
         await self.pluginhandler.on_disconnect()
@@ -136,7 +147,11 @@ class Peach(discord.Client):
         await self.pluginhandler.on_guild_emojis_update(guild, before, after)
     
     async def on_guild_available(self, guild):
-        await self.pluginhandler.on_guild_available(guild)
+        try:
+            await self.pluginhandler.on_guild_available(guild)
+        except AttributeError:
+            await self.wait_till_ready()
+            await self.pluginhandler.on_guild_available(guild)
     
     async def on_guild_unavailable(self, guild):
         await self.pluginhandler.on_guild_unavailable(guild)

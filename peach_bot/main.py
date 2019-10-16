@@ -22,15 +22,12 @@ if __name__ == "__main__":
             logging.getLogger(loggers).disabled = True
         else:
             pass
-    
-    with open("peach_bot/config.json") as config:
-        config = json.load(config)
 
     bot.log = log
     log.info('Starting bot')
 
     
     try:
-        bot.run(config['TOKEN'])
+        bot.run(os.environ["BOTTOKEN"])
     except client_exceptions.ClientConnectorError:
         log.error("No connection to discordapp.com available.")
