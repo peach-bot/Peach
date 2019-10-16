@@ -4,6 +4,7 @@ def define():
         "chatinvoke": "help",
         "permreq": [],
         "eventhooks": [],
+        "deleteinvoke": True,
     }
     return plugindef
 
