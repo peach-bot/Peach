@@ -19,3 +19,8 @@
  - Docker host
  - Discord bot token
  - Postgres server
+ 
+ ## Special Thanks
+ 
+ - iSEVEN / Yannick Fricke
+ - Square789
