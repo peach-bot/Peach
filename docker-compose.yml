@@ -5,16 +5,5 @@ services:
     build: .
     ports: 
       - "5000:5000"
-  db:
-    image: postgres:12.0
-    restart: always
     environment:
-      POSTGRES_USER: peach
-      POSTGRES_PASSWORD: peach
-      POSTGRES_DB: peach
-    volumes:
-      - ./peachdbvol:/var/lib/postgresql/data
-
-volumes:
-    peachdbvol:
-        external: true
+      - BOTTOKEN=
