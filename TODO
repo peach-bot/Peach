@@ -5,7 +5,7 @@ Database: @nextrelease
     <pluginname> will we user/<plugin> from github
     ✘ add to docker compose @cancelled(19-10-16 15:38)
     ✔ integrate to bot @done(19-10-16 15:38)
-    ☐ Database wrapper @nextrelease
+    ✔ Database wrapper @nextrelease @done(19-10-17 00:32)
 
 ✘ Setup script: @cancelled(19-09-28 15:21)
     ✘ check for python3.7 @cancelled(19-09-28 15:21)
@@ -147,6 +147,6 @@ Plugins:
         ☐ Plugin usage @3h
         ☐ Cool graphs @4h
     Github:
-        ☐ Store usernames in db
+        ✔ Store usernames in db @done(19-10-17 00:32)
         ☐ Pull usernames from db
         ☐ Release tracker
