@@ -1,5 +1,9 @@
 FROM python:3.7
 
+ENV BOTTOKEN=<insert_discord_token_here>
+
+EXPOSE 5000
+
 RUN apt update
 
 RUN apt install nodejs npm -y
@@ -13,7 +17,5 @@ COPY . /app
 RUN pip3 install -r requirements.txt
 
 RUN yarn
-
-EXPOSE 5000
 
 CMD [ "yarn", "dev" ]
