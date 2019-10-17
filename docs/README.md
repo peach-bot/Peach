@@ -19,8 +19,12 @@
  - Docker host
  - Discord bot token
  - Postgres server
+
+### Docker run command
+
+```docker run --rm --network host --env-file ENVVARS.env --name peach -t peach:latest```
  
- ## Special Thanks
+## Special Thanks
  
  - iSEVEN / Yannick Fricke
  - Square789

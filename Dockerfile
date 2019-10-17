@@ -1,13 +1,5 @@
 FROM python:3.7
 
-ENV BOTTOKEN=<insert_discord_token_here>
-
-ENV DBHOST=<insert_db_hostname>
-
-ENV DBUSER=<insert_db_user>
-
-ENV DBPASSWORD=<insert_db_password>
-
 EXPOSE 5000
 
 RUN apt update
