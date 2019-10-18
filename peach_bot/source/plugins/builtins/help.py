@@ -5,7 +5,7 @@ def define():
         "permreq": [],
         "eventhooks": [],
         "deleteinvoke": True,
-        "aliases": ["h"]
+        "aliases": []
     }
     return plugindef
 
