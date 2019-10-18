@@ -1,3 +1,4 @@
 Flask
 discord.py
 psycopg2
+requests
