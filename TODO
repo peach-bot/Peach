@@ -126,7 +126,7 @@ Plugin handling:
         @3h
 
 
-    ☐ alias/invoke hierarchy @2h @nextrelease 
+    ✔ alias/invoke hierarchy @2h @nextrelease @done(19-10-18 16:16)
         1. main ivoke
             if duplicate
                 alias fallback

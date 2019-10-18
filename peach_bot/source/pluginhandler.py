@@ -24,13 +24,22 @@ class PluginHandler(eventrelayer.EventRelayer):
         for plugin in plugins:
             pluginname = plugin.__name__.split(".")[3]
             plugindef = getattr(plugin, "define")()
-            self.commandlink[plugindef["chatinvoke"]] = (plugin, plugindef)
+            self.commandlink[plugindef["chatinvoke"]] = (plugin, plugindef, 0)
             #link events
             for event in plugindef["eventhooks"]:
                 try:
                     self.eventlink[event].append(plugin)
                 except KeyError:
                     self.eventlink[event] = [plugin]
+            #alias linking
+            for index, alias in enumerate(plugindef["aliases"]):
+                index += 1
+                if alias in self.commandlink:
+                    tmp_plugincontainer = self.commandlink[alias]
+                    if index < tmp_plugincontainer[2]:
+                        self.commandlink[alias] = (plugin, plugindef, index)
+                else:
+                    self.commandlink[alias] = (plugin, plugindef, index)
         self.log.info("Linking plugins complete")
 
     async def runcommand(self, message):
@@ -42,7 +51,7 @@ class PluginHandler(eventrelayer.EventRelayer):
             #get authors permissions
             permissions = message.author.permissions_in(message.channel)
             #grab module from linkdict
-            plugin, plugindef = self.commandlink[command]
+            plugin, plugindef, prioritylevel = self.commandlink[command]
             #check if author's permissions are sufficient
             has_perms = True
             for required in plugindef["permreq"]:

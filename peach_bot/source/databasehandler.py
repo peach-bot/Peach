@@ -37,7 +37,7 @@ class DatabaseHandler:
 
     async def plugin_getuser(self, userid, pluginname):
         self.dbcur.execute("SELECT {0} FROM users WHERE id = {1}".format("plugin_"+pluginname, userid))
-        return self.dbcur.fetchall()
+        return json.loads(self.dbcur.fetchall()[0][0])
     
     async def plugin_updateuser(self, userid, pluginname, newdata):
         self.dbcur.execute("SELECT * FROM users WHERE id = {0}".format(userid))

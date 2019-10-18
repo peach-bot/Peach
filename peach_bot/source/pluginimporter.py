@@ -12,7 +12,7 @@ def load_plugins(logger):
     pluginfiles = [i for i in plugin_path.glob("**/*.py")]
     source_prnt = pathlib.Path(os.path.dirname(__file__), "plugins")
     plugins = [path.relative_to(source_prnt) for path in pluginfiles]
-    plugins = [path for path in plugins if not path.name.startswith("_", "__")]
+    plugins = [path for path in plugins if not path.name.startswith("_")]
     plugins = ["." + str(i.with_suffix("")).replace(os.path.sep, ".") for i in plugins] # get a neat list like [".txt_clear", ".sub_txt_github.subcommands"]
 
     importlib.import_module('source.plugins')

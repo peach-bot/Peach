@@ -8,6 +8,7 @@ def define():
         "deleteinvoke": True,
         "permreq": ["manage_messages"],
         "eventhooks": [],
+        "aliases": []
     }
     return plugindef
 
