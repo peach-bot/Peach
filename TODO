@@ -129,12 +129,10 @@ Plugin handling:
     ☐ alias/invoke hierarchy @2h @nextrelease 
         1. main ivoke
             if duplicate
-                builtins get overwritten
                 alias fallback
         2. alias
             lower list index wins
                 if draw --> pass
-            builtins handled as above
     ☐ Chronos @3h
         chr_<name>.py
         runs on interval

@@ -46,27 +46,35 @@ class Peach(discord.Client):
         self.ready = True
 
     async def on_message(self, message):
-        self.log.info("Received message: {0}#{1}@{2} --> {3}".format(message.author.name, message.author.discriminator, message.guild.name, message.content))
+        try:
+            self.log.info("Received message: {0}#{1}@{2} --> {3}".format(message.author.name, message.author.discriminator, message.guild.name, message.content))
 
-        #ignore messages sent by the bot
-        if message.author == self.user:
-            return
-        #filter for manual page invokes
-        if message.content.startswith('!man'):
-            await self.pluginhandler.man(message)
+            #ignore messages sent by the bot
+            if message.author == self.user:
+                return
+            #filter for manual page invokes
+            if message.content.startswith('!man'):
+                await self.pluginhandler.man(message)
 
-        #try to run a command in message starts with prefix
-        elif message.content.startswith('!'):
-            await self.pluginhandler.runcommand(message)
+            #try to run a command in message starts with prefix
+            elif message.content.startswith('!'):
+                await self.pluginhandler.runcommand(message)
 
-        await self.pluginhandler.on_message(message)
+            await self.pluginhandler.on_message(message)
+        except AttributeError:
+            pass
 
     async def on_member_join(self, member):
+        try:
         # Welcome message
-        await member.guild.system_channel.send('{0.mention} felt cute.'.format(member))
-        self.log.info('{0.mention} joined {0.guild.name}'.format(member))
+            await member.guild.system_channel.send('{0.mention} felt cute.'.format(member))
+            self.log.info('{0.mention} joined {0.guild.name}'.format(member))
 
-        await self.pluginhandler.on_member_join(member)
+            await self.pluginhandler.on_member_join(member)
+
+        except AttributeError:
+            await self.wait_till_ready()
+            await self.pluginhandler.on_member_join()
 
     async def on_message_delete(self, message):
         await self.pluginhandler.on_message_delete(message)
@@ -121,8 +129,12 @@ class Peach(discord.Client):
         await self.pluginhandler.on_member_remove(member)
     
     async def on_member_update(self, before, after):
-        await self.pluginhandler.on_member_update(before, after)
-    
+        try:
+            await self.pluginhandler.on_member_update(before, after)
+        except AttributeError:
+            await self.wait_till_ready()
+            await self.pluginhandler.on_member_update()
+
     async def on_user_update(self, before, after):
         await self.pluginhandler.on_user_update(before, after)
     
