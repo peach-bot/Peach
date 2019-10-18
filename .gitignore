@@ -128,5 +128,4 @@ test.py
 /node_modules
 .saddockerignore
 
-.dockerignore
 ENVVARS_dev.env
