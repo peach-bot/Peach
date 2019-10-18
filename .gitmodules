@@ -4,3 +4,6 @@
 [submodule "peach_bot/source/plugins/plugin_8ball"]
 	path = peach_bot/source/plugins/plugin_8ball
 	url = https://github.com/peach-bot/plugin_8ball
+[submodule "peach_bot/source/plugins/plugin_clear"]
+	path = peach_bot/source/plugins/plugin_clear
+	url = https://github.com/peach-bot/plugin_clear

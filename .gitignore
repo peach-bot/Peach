@@ -122,8 +122,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-peach_bot/auth.json
-peach_bot/config.json
 test.py
 .vscode
 .dockerimages
