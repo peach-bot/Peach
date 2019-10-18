@@ -22,7 +22,7 @@
 
 ### Docker run command
 
-```docker run --rm --network host --env-file ENVVARS.env --name peach -t peach:latest```
+```docker run --rm --env-file ENVVARS.env --network host --env-file ENVVARS.env --name peach -t peach:latest```
  
 ## Special Thanks
  
