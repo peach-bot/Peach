@@ -1,5 +1,4 @@
-import socket
-
+import psycopg2
 
 class DatabaseHandler:
 

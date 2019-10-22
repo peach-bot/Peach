@@ -5,7 +5,7 @@ import json
 import discord
 
 import _thread as thread
-from source import databasehandler, interfacehandler, pluginhandler
+from source import databasehandler, pluginhandler
 
 
 class Peach(discord.Client):
@@ -32,9 +32,6 @@ class Peach(discord.Client):
         self.log.info('{0.user} is logged in and online'.format(self))
         #load plugins
         self.pluginhandler = pluginhandler.PluginHandler(self, self.log)
-        #establish connection to interface
-        self.interfacehandler = interfacehandler.InterfaceHandler(self.log, self, self.pluginhandler)
-        thread.start_new_thread(self.interfacehandler.tcploop, ())
         #load database connection
         self.db = databasehandler.DatabaseHandler(self)
         await self.db.update_servers()
