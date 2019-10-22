@@ -3,7 +3,7 @@ import random
 
 import flask
 
-from source import botrequests
+from source import databasehandler
 
 app = flask.Flask(__name__)
 app.debug = False
@@ -47,14 +47,14 @@ def start():
 if __name__ == "__main__":
     logging.basicConfig(format='%(name)s @ %(asctime)s - %(levelname)s: %(message)s', level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
     log = logging.getLogger('peach/interface')
-    allowedloggers = ['peach/bot', 'peach/tcpserver', 'peach/interface']
+    allowedloggers = ['peach/bot', 'peach/interface']
     for loggers in logging.Logger.manager.loggerDict:
         if loggers not in allowedloggers:
             logging.getLogger(loggers).disabled = True
         else:
             pass
 
-    request = botrequests.Request(log)
+    db = databasehandler.DatabaseHandler(log)
     
     botrunning = random.choice([True, False])
     log.info('Starting flask')

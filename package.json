@@ -4,10 +4,9 @@
   "repository": "https://github.com/peach-bot/Peach.git",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently \"npm run dev-bot\" \"PORT=5000 npm run dev-interface\" \"npm run dev-tcp\"",
+    "dev": "concurrently \"npm run dev-bot\" \"PORT=5000 npm run dev-interface\"",
     "dev-bot": "nodemon --watch peach_bot peach_bot/main.py",
     "dev-interface": "nodemon --watch peach_interface peach_interface/main.py",
-    "dev-tcp": "nodemon --watch peach_tcp_server peach_tcp_server/main.py"
   },
   "devDependencies": {
     "concurrently": "^4.1.2",
