@@ -14,15 +14,9 @@
 <img src=https://user-images.githubusercontent.com/45462701/67280986-b47c5c00-f4ce-11e9-8c9c-5ab70ec5e392.png width=12px></img>
 To see what's planned for the future or if you want to leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/issues)
 
-## Requirements for Hosting
+## Where, What, Why?
 
- - Docker host
- - Discord bot token
- - Postgres server
-
-### Docker run command
-
-```docker run --rm --env-file ENVVARS.env --network host --env-file ENVVARS.env --name peach -t peach:latest```
+You can find more information on the project in the [wiki](https://github.com/peach-bot/Peach/wiki).
  
 ## Special Thanks
  
