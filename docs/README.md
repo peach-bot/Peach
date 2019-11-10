@@ -16,7 +16,7 @@ To see what's planned for the future or if you want to leave suggestions visit t
 
 ## Where, What, Why?
 
-You can find more information on the project in the [wiki](https://github.com/peach-bot/Peach/wiki).
+<img src=https://user-images.githubusercontent.com/45462701/67281554-fbb71c80-f4cf-11e9-86ff-8ce8344518d8.png width=12px></img> You can find more information on the project in the [wiki](https://github.com/peach-bot/Peach/wiki).
  
 ## Special Thanks
  
