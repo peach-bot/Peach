@@ -50,11 +50,20 @@ class DatabaseHandler:
         self.dbcur.execute("INSERT INTO userglobalconfig VALUES ({0}, '{1}', '{2}', '{3}') ON CONFLICT (userid, pluginid, cfgkey) DO UPDATE SET cfgvalue = '{3}' WHERE userglobalconfig.userid = {0} AND userglobalconfig.pluginid = '{1}' AND userglobalconfig.cfgkey = '{2}'".format(userid, pluginid, cfgkey, json.dumps(cfgvalue)))
         self.dbconn.commit()
 
-    async def getglobalconfig(self, pluginid, cfgkey):
+    async def plugin_getserverconfig(self, serverid, pluginid, cfgkey):
+        self.dbcur.execute("SELECT cfgvalue FROM serverconfig WHERE serverid = {0} AND pluginid = {1} AND cfgkey = {2}".format(serverid, pluginid, cfgkey))
+        return json.loads(self.dbcur.fetchall()[0][0])
+    
+    async def plugin_updateserverconfig(self, serverid, pluginid, cfgkey, cfgvalue):
+        await self.create_user(userid)
+        self.dbcur.execute("INSERT INTO serverconfig VALUES ({0}, {1}, {2}, '{3}') ON CONFLICT DO UPDATE SET cfgvalue = '{3}' WHERE serverid = {0} AND pluginid = {1} AND cfgkey = {2}".format(serverid, pluginid, cfgkey, json.dumps(cfgvalue)))
+        self.dbconn.commit()
+
+    async def plugin_getglobalconfig(self, pluginid, cfgkey):
         self.dbcur.execute("SELECT cfgvalue FROM globalconfig WHERE AND pluginid = '{0}' AND cfgkey = '{1}'".format(pluginid, cfgkey))
         data = self.dbcur.fetchall()[0][0]
         return data
 
-    async def updateglobalconfig(self, pluginid, cfgkey, cfgvalue):
+    async def plugin_updateglobalconfig(self, pluginid, cfgkey, cfgvalue):
         self.dbcur.execute("INSERT INTO globalconfig VALUES ('{0}', '{1}', '{2}') ON CONFLICT (pluginid, cfgkey) DO UPDATE SET cfgvalue = '{2}' WHERE globalconfig.pluginid = '{0}' AND globalconfig.cfgkey = '{1}'".format(pluginid, cfgkey, json.dumps(cfgvalue)))
         self.dbconn.commit()
