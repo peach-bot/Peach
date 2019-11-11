@@ -1,7 +1,8 @@
 # Peach
  ##### A Discord server management and chat bot written in Python.
 [![GitHub version](https://badge.fury.io/gh/peach-bot%2FPeach.svg)](https://github.com/peach-bot/Peach/issues)
-[![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/peach-bot/Peach/blob/master/LICENSE)
+[![MIT License](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/peach-bot/Peach/blob/master/LICENSE)
+[![Docker status](https://img.shields.io/docker/build/julislazy/peach)](https://hub.docker.com/r/julislazy/peach)
  
 
 [**Try all features today and for free**](http://bit.ly/peachbot)
