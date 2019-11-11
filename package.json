@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently \"npm run dev-bot\" \"PORT=5000 npm run dev-interface\"",
     "dev-bot": "nodemon --watch peach_bot peach_bot/main.py",
-    "dev-interface": "nodemon --watch peach_interface peach_interface/main.py",
+    "dev-interface": "nodemon --watch peach_interface peach_interface/main.py"
   },
   "devDependencies": {
     "concurrently": "^4.1.2",
