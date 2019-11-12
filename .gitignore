@@ -124,8 +124,6 @@ dmypy.json
 
 test.py
 .vscode
-.dockerimages
 /node_modules
-.saddockerignore
 
 ENVVARS_dev.env
