@@ -1,10 +1,10 @@
 """Assigns the command name to the right function call."""
 import asyncio
 
-from source import pluginimporter, eventrelayer
+from source import pluginimporter
 
 
-class PluginHandler(eventrelayer.EventRelayer):
+class PluginHandler:
     """Handles plugin importing and execution."""
     def __init__(self, bot, log):
         # bind bot and logger
@@ -41,6 +41,19 @@ class PluginHandler(eventrelayer.EventRelayer):
                 else:
                     self.commandlink[alias] = (plugin, plugindef, index)
         self.log.info("Linking plugins complete")
+
+    async def runevent(self, event: str, *args):
+        """Run an event trigger in all plugins.
+        
+        event -- event name
+
+        args  -- event related discord.py objects"""
+        try:
+            for plugin in self.eventlink["on_ready"]:
+                getattr(plugin, event)(self.bot, *args)
+        except KeyError:
+            #no plugins for on_ready
+            pass
 
     async def runcommand(self, message):
         #filter the command they invoked
