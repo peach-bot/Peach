@@ -56,6 +56,7 @@ class PluginHandler:
             pass
 
     async def runcommand(self, message):
+        """Run a plugin command. Takes in raw discord message and processes it."""
         #filter the command they invoked
         command = message.content.split()[0][1:]
 
