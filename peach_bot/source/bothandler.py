@@ -21,6 +21,9 @@ class Peach(discord.Client):
         self.log = log
 
     async def wait_till_ready(self):
+        """Gate that resolves itself when the bot is ready.
+        
+        Returns `True`"""
         self.ready = False
         while not self.ready:
             await asyncio.sleep(0.5)
@@ -40,6 +43,7 @@ class Peach(discord.Client):
         #load event hooks            
         self.log.info('Startup complete!')
         await self.pluginhandler.runevent("on_ready")
+        #release wait_till_ready gate
         self.ready = True
 
     async def on_message(self, message):

@@ -16,6 +16,7 @@ To see what's planned for the future or if you want to leave suggestions visit t
 
 Peach images are available on the Docker Hub. You can pull the following tags:
  + julislazy/peach:latest <br>→ the most recent build with the latest commits to the master branch
+ + julislazy/peach:dev <br>→ the most recent development build with the latest commits to the develop branch
  + julislazy/peach:[release] (for example `2`, `2.1` or `2.1.1`) <br>→ a specific tag
 
 # How does it work? How can I contribute?
