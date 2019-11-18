@@ -21,7 +21,6 @@ class PluginHandler:
         self.commandmap = {}
         self.eventmap = {}
         for plugin in plugins:
-            pluginname = plugin.__name__.split(".")[3]
             pluginmanifest = getattr(plugin, "manifest")
             
             #map plugin event hooks
