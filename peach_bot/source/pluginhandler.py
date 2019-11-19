@@ -21,7 +21,7 @@ class PluginHandler:
         self.commandmap = {}
         self.eventmap = {}
         for plugin in plugins:
-            pluginmanifest = getattr(plugin, "manifest")()
+            pluginmanifest = getattr(plugin, "manifest")
             
             #map plugin event hooks
             for event in pluginmanifest["eventhooks"]:
@@ -33,7 +33,7 @@ class PluginHandler:
                     self.eventmap[event] = [plugin]
             
             #map commands
-            for commandname, command in pluginmanifest["commands"].items():
+            for command in pluginmanifest["commands"]:
 
                 #map main invoke
                 if command["invoke"] in self.commandmap: #check if invoke already in map
@@ -108,4 +108,4 @@ class PluginHandler:
         await message.delete()
         #filter the command they invoked
         command = message.content.split()[1]
-        await message.channel.send(embed = await getattr(self.commandmap[command][2], command+"_man")())
+        await message.channel.send(embed = await getattr(self.commandmap[command][2], command+"_man"))
