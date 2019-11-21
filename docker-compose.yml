@@ -1,0 +1,31 @@
+version: "2"
+
+services:
+  database:
+    image: postgres:11.6-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: peach
+      POSTGRES_PASSWORD: peach
+      POSTGRES_DB: peach
+
+  bot:
+    image: julislazy/peach-bot
+    build:
+      context: .
+      dockerfile: ./Bot.Dockerfile
+    environment:
+      BOTTOKEN: MY_AWESOME_BOT_TOKEN
+    links:
+      - database:database
+
+  interface:
+    image: julislazy/peach-interface
+    build:
+      context: .
+      dockerfile: ./Interface.Dockerfile
+    ports:
+      - 5000:5000
+    links:
+      - database:database
