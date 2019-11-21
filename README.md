@@ -1,9 +1,9 @@
 # Peach
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
  ##### A Discord server management and chat bot written in Python.
 [![GitHub version](https://img.shields.io/github/v/release/peach-bot/peach?color=brightgreen)](https://github.com/peach-bot/Peach/releases)
 [![Docker status](https://img.shields.io/docker/cloud/build/julislazy/peach)](https://hub.docker.com/r/julislazy/peach)
 [![License](https://img.shields.io/github/license/peach-bot/Peach?color=brightgreen)](https://github.com/peach-bot/Peach/blob/master/LICENSE)
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg)](#contributors)
 [![Open Issues](https://img.shields.io/github/issues-raw/peach-bot/peach)](https://github.com/peach-bot/Peach/issues)
 [![Closed Issues](https://img.shields.io/github/issues-closed-raw/peach-bot/peach?color=brightgreen)](https://github.com/peach-bot/Peach/issues)
  
@@ -25,10 +25,6 @@ Peach images are available on the Docker Hub. You can pull the following tags:
 Peach uses a plugin api allowing fairly easy developement of features.
 
 <img src=https://user-images.githubusercontent.com/45462701/67281554-fbb71c80-f4cf-11e9-86ff-8ce8344518d8.png width=12px></img> You can find more information on the project in the [wiki](https://github.com/peach-bot/Peach/wiki).
- 
-# Special Thanks
- - [iSEVEN / Yannick Fricke](https://github.com/YannickFricke)
- - [Square789](https://github.com/Square789)
 
 ## Contributors ✨
 
