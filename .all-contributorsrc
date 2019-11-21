@@ -20,4 +20,5 @@
   "projectOwner": "peach-bot",
   "repoType": "github",
   "repoHost": "https://github.com"
+  "badgeTemplate": "![Contributors](https://img.shields.io/badge/contributors-<%= contributors.length %>-orange.svg)",
 }
