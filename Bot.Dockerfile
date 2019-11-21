@@ -1,9 +1,6 @@
 # Use python 3.7 as base image
 FROM python:3.7
 
-# Expose port 5000 to the world
-EXPOSE 5000
-
 # Update all package sources
 RUN apt update
 
