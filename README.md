@@ -3,7 +3,7 @@
 [![GitHub version](https://img.shields.io/github/v/release/peach-bot/peach?color=brightgreen)](https://github.com/peach-bot/Peach/releases)
 [![Docker status](https://img.shields.io/docker/cloud/build/julislazy/peach)](https://hub.docker.com/r/julislazy/peach)
 [![License](https://img.shields.io/github/license/peach-bot/Peach?color=brightgreen)](https://github.com/peach-bot/Peach/blob/master/LICENSE)
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
 [![Open Issues](https://img.shields.io/github/issues-raw/peach-bot/peach)](https://github.com/peach-bot/Peach/issues)
 [![Closed Issues](https://img.shields.io/github/issues-closed-raw/peach-bot/peach?color=brightgreen)](https://github.com/peach-bot/Peach/issues)
  
@@ -35,6 +35,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="https://yannickfricke.de"><img src="https://avatars2.githubusercontent.com/u/591450?v=4" width="100px;" alt="Yannick Fricke"/><br /><sub><b>Yannick Fricke</b></sub></a><br /><a href="#platform-YannickFricke" title="Packaging/porting to new platform">📦</a></td>
+    <td align="center"><a href="https://github.com/Square789"><img src="https://avatars0.githubusercontent.com/u/46634729?v=4" width="100px;" alt="Square789"/><br /><sub><b>Square789</b></sub></a><br /><a href="https://github.com/peach-bot/Peach/commits?author=Square789" title="Code">💻</a></td>
   </tr>
 </table>
 
