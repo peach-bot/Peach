@@ -3,7 +3,7 @@
 [![GitHub version](https://img.shields.io/github/v/release/peach-bot/peach?color=brightgreen)](https://github.com/peach-bot/Peach/releases)
 [![Docker status](https://img.shields.io/docker/cloud/build/julislazy/peach)](https://hub.docker.com/r/julislazy/peach)
 [![License](https://img.shields.io/github/license/peach-bot/Peach?color=brightgreen)](https://github.com/peach-bot/Peach/blob/master/LICENSE)
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg)](#contributors)
 [![Open Issues](https://img.shields.io/github/issues-raw/peach-bot/peach)](https://github.com/peach-bot/Peach/issues)
 [![Closed Issues](https://img.shields.io/github/issues-closed-raw/peach-bot/peach?color=brightgreen)](https://github.com/peach-bot/Peach/issues)
  
