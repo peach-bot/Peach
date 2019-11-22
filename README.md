@@ -14,7 +14,7 @@ To see what's planned for the future or if you want to leave suggestions visit t
 
 # How does it work? How can I contribute?
 
-Peach uses a plugin api allowing fairly easy developement of features.
+Peach uses a plugin api allowing for fairly easy developement of features.
 
 <img src=https://user-images.githubusercontent.com/45462701/67281554-fbb71c80-f4cf-11e9-86ff-8ce8344518d8.png width=12px></img> You can find more information on the project in the [wiki](https://github.com/peach-bot/Peach/wiki).
 
