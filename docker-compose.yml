@@ -11,7 +11,7 @@ services:
       POSTGRES_DB: peach
 
   bot:
-    image: julislazy/peach-bot
+    image: floofyjul/peach-bot
     build:
       context: .
       dockerfile: ./Bot.Dockerfile
@@ -21,7 +21,7 @@ services:
       - database:database
 
   interface:
-    image: julislazy/peach-interface
+    image: floofyjul/peach-interface
     build:
       context: .
       dockerfile: ./Interface.Dockerfile
