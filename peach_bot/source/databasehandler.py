@@ -7,7 +7,7 @@ class DatabaseHandler:
 
     def __init__(self, bot):
         self.bot = bot
-        self.dbconn = psycopg2.connect('host={0} user={1} password={2} dbname=peach'.format(os.environ["DBHOST"], os.environ["DBUSER"], os.environ["DBPASSWORD"]))
+        self.dbconn = psycopg2.connect('host={0} port={1} user=peach password=peach dbname=peach'.format(os.environ["DBHOST"], os.environ["DBPORT"]))
 
         self.dbcur = self.dbconn.cursor()
 

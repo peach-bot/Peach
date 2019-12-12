@@ -9,6 +9,11 @@ services:
       POSTGRES_USER: peach
       POSTGRES_PASSWORD: peach
       POSTGRES_DB: peach
+    logging:
+      driver: "json-file"
+      options:
+          max-size: "50m"
+    network_mode: "host"
 
   bot:
     image: floofyjul/peach-bot
@@ -16,9 +21,14 @@ services:
       context: .
       dockerfile: ./Bot.Dockerfile
     environment:
-      BOTTOKEN: MY_AWESOME_BOT_TOKEN
-    links:
-      - database:database
+      BOTTOKEN: MY_EPIC_BOT_TOKEN
+      DBHOST: 0.0.0.0
+      DBPORT: 5432
+    logging:
+      driver: "json-file"
+      options:
+          max-size: "50m"
+    network_mode: "host"
 
   interface:
     image: floofyjul/peach-interface
@@ -27,5 +37,8 @@ services:
       dockerfile: ./Interface.Dockerfile
     ports:
       - 5000:5000
-    links:
-      - database:database
+    logging:
+      driver: "json-file"
+      options:
+          max-size: "50m"
+    network_mode: "host"
