@@ -17,7 +17,8 @@ services:
       dockerfile: ./Bot.Dockerfile
     environment:
       BOTTOKEN: MY_AWESOME_BOT_TOKEN
-      DBHOST: 127.0.0.1
+      DBHOST: 0.0.0.0
+      DBPORT: 5432
     links:
       - database:database
 
