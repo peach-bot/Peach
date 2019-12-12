@@ -1,7 +1,8 @@
 # Peach
  ##### A Discord server management and chat bot written in Python.
 [![GitHub version](https://img.shields.io/github/v/release/peach-bot/peach?color=brightgreen)](https://github.com/peach-bot/Peach/releases)
-[![Docker status](https://img.shields.io/docker/cloud/build/floofyjul/peach-bot)](https://hub.docker.com/r/floofyjul/peach-bot)
+[![Docker status](https://img.shields.io/docker/cloud/build/floofyjul/peach-bot?label=bot%20build)](https://hub.docker.com/r/floofyjul/peach-bot)
+[![Docker status](https://img.shields.io/docker/cloud/build/floofyjul/peach-interface?label=interface%20build)](https://hub.docker.com/r/floofyjul/peach-interface)
 [![License](https://img.shields.io/github/license/peach-bot/Peach?color=brightgreen)](https://github.com/peach-bot/Peach/blob/master/LICENSE)
 [![Open Issues](https://img.shields.io/github/issues-raw/peach-bot/peach)](https://github.com/peach-bot/Peach/issues)
 [![Closed Issues](https://img.shields.io/github/issues-closed-raw/peach-bot/peach?color=brightgreen)](https://github.com/peach-bot/Peach/issues)
