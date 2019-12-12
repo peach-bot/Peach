@@ -126,4 +126,4 @@ test.py
 .vscode
 /node_modules
 
-docker-compose_dev.yml
+docker-compose-dev.yml
