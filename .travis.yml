@@ -26,6 +26,6 @@ after_success:
     - docker push floofyjul/peach-bot:$TRAVIS_BRANCH; 
     - docker push floofyjul/peach-interface:$TRAVIS_BRANCH;
     - on:
-        branch: master
+        branch = master
     docker push floofyjul/peach-bot:latest; 
     docker push floofyjul/peach-interface:latest;
