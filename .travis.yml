@@ -20,11 +20,12 @@ script:
     - docker-compose -f docker-compose.yml build
 
 after_success:
-    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD ;
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD;
+    - docker tag floofyjul/peach-bot:latest floofyjul/peach-bot:$TRAVIS_BRANCH;
+    - docker tag floofyjul/peach-interface:latest floofyjul/peach-interface:$TRAVIS_BRANCH;
     - docker push floofyjul/peach-bot:$TRAVIS_BRANCH; 
     - docker push floofyjul/peach-interface:$TRAVIS_BRANCH;
     - on:
         branch: master
-    
-    - docker push floofyjul/peach-bot:latest; 
-    - docker push floofyjul/peach-interface:latest;
+    docker push floofyjul/peach-bot:latest; 
+    docker push floofyjul/peach-interface:latest;
