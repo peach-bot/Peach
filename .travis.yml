@@ -24,7 +24,6 @@ after_success:
         docker rmi floofyjul/peach-interface:latest;
         docker push floofyjul/peach-interface:arm-latest;
         fi
-    - echo $TRAVIS_CPU_ARCH
     - if [ $TRAVIS_CPU_ARCH == "amd64" ]; then
         docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD;
         docker tag floofyjul/peach-bot:latest floofyjul/peach-bot:amd64-latest;
@@ -32,5 +31,5 @@ after_success:
         docker push floofyjul/peach-bot:amd64-latest;
         docker tag floofyjul/peach-interface:latest floofyjul/peach-interface:amd64-latest;
         docker rmi floofyjul/peach-interface:latest;
-        docker push floofyjul/peach-interface:amd64-latest
+        docker push floofyjul/peach-interface:amd64-latest;
         fi
