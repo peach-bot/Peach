@@ -1,6 +1,6 @@
 arch:
     - amd64
-    - arm
+    - arm32
 
 services:
     - docker
