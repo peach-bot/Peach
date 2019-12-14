@@ -22,5 +22,6 @@ script:
 after_success:
     - if [[ "$TRAVIS_BRANCH" == "master" ]]; then
     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD ;
-    make push-image ;
+    docker push floofyjul/peach-bot:latest; 
+    docker push floofyjul/peach-interface:latest;
     fi
