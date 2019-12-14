@@ -25,7 +25,7 @@ after_success:
     - docker tag floofyjul/peach-interface:latest floofyjul/peach-interface:$TRAVIS_BRANCH;
     - docker push floofyjul/peach-bot:$TRAVIS_BRANCH; 
     - docker push floofyjul/peach-interface:$TRAVIS_BRANCH;
-    - on:
-        branch = master
+    - if [ branch = master ]; then
     docker push floofyjul/peach-bot:latest; 
     docker push floofyjul/peach-interface:latest;
+    fi
