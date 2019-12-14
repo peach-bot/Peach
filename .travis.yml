@@ -1,6 +1,9 @@
 arch:
     - amd64
-    - arm32
+    - arm64
+
+language: python
+install: echo "Not installing any requirements!"
 
 services:
     - docker
@@ -20,4 +23,4 @@ after_success:
     - docker rmi floofyjul/peach-interface:latest
     - docker push floofyjul/peach-interface:arm-latest
     - on:
-        arch: arm
+        arch: arm64
