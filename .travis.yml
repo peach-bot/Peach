@@ -15,8 +15,7 @@ script:
     - docker-compose -f docker-compose.yml build
 
 after_success:
-    - on:
-        arch: arm64
+    - if: arch = arm64
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD;
     - docker tag floofyjul/peach-bot:latest floofyjul/peach-bot:arm-latest
     - docker rmi floofyjul/peach-bot:latest
@@ -26,8 +25,7 @@ after_success:
     - docker push floofyjul/peach-interface:arm-latest
 
 before_install:
-    - on:
-        arch: amd64
+    - if: arch = amd64
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD;
     - docker tag floofyjul/peach-bot:latest floofyjul/peach-bot:amd64-latest
     - docker rmi floofyjul/peach-bot:latest
