@@ -1,8 +1,7 @@
 # Peach
  ##### A Discord server management and chat bot written in Python.
 [![GitHub version](https://img.shields.io/github/v/release/peach-bot/peach?color=brightgreen)](https://github.com/peach-bot/Peach/releases)
-[![Docker status](https://img.shields.io/docker/cloud/build/floofyjul/peach-bot?label=bot%20build)](https://hub.docker.com/r/floofyjul/peach-bot)
-[![Docker status](https://img.shields.io/docker/cloud/build/floofyjul/peach-interface?label=interface%20build)](https://hub.docker.com/r/floofyjul/peach-interface)
+[![Build Status](https://api.travis-ci.com/peach-bot/Peach.svg?branch=master)](https://travis-ci.com/peach-bot/Peach/branches)
 [![License](https://img.shields.io/github/license/peach-bot/Peach?color=brightgreen)](https://github.com/peach-bot/Peach/blob/master/LICENSE)
 [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg)](#contributors)
 [![Open Issues](https://img.shields.io/github/issues-raw/peach-bot/peach)](https://github.com/peach-bot/Peach/issues)
@@ -14,7 +13,7 @@
 <img src=https://user-images.githubusercontent.com/45462701/67280986-b47c5c00-f4ce-11e9-8c9c-5ab70ec5e392.png width=12px></img>
 To see what's planned for the future or if you want to leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/issues). If you have ideas for features that should be integrated this is also the place to propose them.
 
-# How does it work? How can I contribute?
+## How does it work? How can I contribute?
 
 Peach uses a plugin api allowing for fairly easy developement of features.
 
