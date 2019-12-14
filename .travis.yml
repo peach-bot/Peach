@@ -10,6 +10,9 @@ python:
 services:
     - docker
 
+before_install:
+    - sudo apt-get install docker-compose
+
 install:
     - echo "Not installing requirements"
 
