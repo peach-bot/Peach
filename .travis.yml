@@ -21,5 +21,10 @@ script:
 
 after_success:
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD ;
+    - docker push floofyjul/peach-bot:$TRAVIS_BRANCH; 
+    - docker push floofyjul/peach-interface:$TRAVIS_BRANCH;
+    - on:
+        branch: master
+    
     - docker push floofyjul/peach-bot:latest; 
     - docker push floofyjul/peach-interface:latest;
