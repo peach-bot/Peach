@@ -17,12 +17,12 @@ script:
 after_success:
     - if [ $TRAVIS_CPU_ARCH == "arm64" ] && [ $TRAVIS_BRANCH == "master" ]; then
         docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD;
-        docker tag floofyjul/peach-bot:latest floofyjul/peach-bot:arm-latest;
+        docker tag floofyjul/peach-bot:latest floofyjul/peach-bot:arm64-latest;
         docker rmi floofyjul/peach-bot:latest;
-        docker push floofyjul/peach-bot:arm-latest;
-        docker tag floofyjul/peach-interface:latest floofyjul/peach-interface:arm-latest;
+        docker push floofyjul/peach-bot:arm64-latest;
+        docker tag floofyjul/peach-interface:latest floofyjul/peach-interface:arm64-latest;
         docker rmi floofyjul/peach-interface:latest;
-        docker push floofyjul/peach-interface:arm-latest;
+        docker push floofyjul/peach-interface:arm64-latest;
         fi
     - if [ $TRAVIS_CPU_ARCH == "amd64" ] && [ $TRAVIS_BRANCH == "master" ]; then
         docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD;
