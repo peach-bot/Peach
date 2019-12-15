@@ -3,9 +3,7 @@ arch:
     - arm64
 
 language: python
-
-python:
-    - "3.7"
+install: echo "Not installing any requirements!"
 
 services:
     - docker
@@ -13,21 +11,25 @@ services:
 before_install:
     - sudo apt-get install docker-compose
 
-install:
-    - echo "Not installing requirements"
-
 script:
     - docker-compose -f docker-compose.yml build
 
 after_success:
-    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD;
-    - docker tag floofyjul/peach-bot:latest floofyjul/peach-bot:$TRAVIS_BRANCH;
-    - docker tag floofyjul/peach-interface:latest floofyjul/peach-interface:$TRAVIS_BRANCH;
-    - docker push floofyjul/peach-bot:$TRAVIS_BRANCH; 
-    - docker push floofyjul/peach-interface:$TRAVIS_BRANCH;
-
-before_deploy:
-    - docker push floofyjul/peach-bot:latest; 
-    - docker push floofyjul/peach-interface:latest;
-    - on:
-        branch: master
+    - if [ $TRAVIS_CPU_ARCH == "arm64" ] && [ $TRAVIS_BRANCH == "master" ]; then
+        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD;
+        docker tag floofyjul/peach-bot:latest floofyjul/peach-bot:arm-latest;
+        docker rmi floofyjul/peach-bot:latest;
+        docker push floofyjul/peach-bot:arm-latest;
+        docker tag floofyjul/peach-interface:latest floofyjul/peach-interface:arm-latest;
+        docker rmi floofyjul/peach-interface:latest;
+        docker push floofyjul/peach-interface:arm-latest;
+        fi
+    - if [ $TRAVIS_CPU_ARCH == "amd64" ] && [ $TRAVIS_BRANCH == "master" ]; then
+        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD;
+        docker tag floofyjul/peach-bot:latest floofyjul/peach-bot:amd64-latest;
+        docker rmi floofyjul/peach-bot:latest;
+        docker push floofyjul/peach-bot:amd64-latest;
+        docker tag floofyjul/peach-interface:latest floofyjul/peach-interface:amd64-latest;
+        docker rmi floofyjul/peach-interface:latest;
+        docker push floofyjul/peach-interface:amd64-latest;
+        fi
