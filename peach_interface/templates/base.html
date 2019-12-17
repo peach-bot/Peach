@@ -17,12 +17,16 @@
 
         <!--  Peach custom CSS  -->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/customcss.css') }}"></script>
-        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
         <title>Peach Controlpanel</title>
     </head>
-    <body>
+    <body background="{{ url_for('static', filename='Q6XNaD4.jpg') }}">
         <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
                 <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Peach</a>
+                <div class="user-info col-lg-10 navbar-brand ml-sm-auto">
+                  {{username}}
+                  <img src="{{avatar_url}}" style="border-radius: 50%;"></img>
+                </div>
         </nav>
         <div class="container-fluid">
                 <div class="row">
@@ -30,7 +34,7 @@
                     <div class="sidebar-sticky">
                       <ul class="nav flex-column">
                         <li class="nav-item">
-                          <a class="nav-link active" href="{{ url_for('index') }}">
+                          <a class="nav-link active" href="{{ url_for('dashboard') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                             Dashboard <span class="sr-only">(current)</span>
                           </a>
@@ -49,9 +53,9 @@
                           </a>
                         </li>
                         <li class="nav-item">
-                          <a class="nav-link" href="{{ url_for('integrations') }}">
+                          <a class="nav-link" href="{{ url_for('settings') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                            Integrations
+                            Settings
                           </a>
                         </li>
                       </ul>
@@ -67,7 +71,6 @@
                       </ul>
                     </div>
                   </nav>
-                  
                   {% block main %}{% endblock %}
     </body>
 </html>

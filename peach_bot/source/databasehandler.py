@@ -16,11 +16,11 @@ class DatabaseHandler:
         botservers = []
         for server in self.bot.guilds:
             botservers.append(server)
+        print(self.bot.guilds)
         for server in botservers:
-            ownerid = server.owner.id
-            self.dbcur.execute('INSERT INTO users VALUES ({0}) ON CONFLICT DO NOTHING'.format(ownerid))
+            self.dbcur.execute('INSERT INTO users VALUES ({0}) ON CONFLICT DO NOTHING'.format(server.owner.id))
             self.dbconn.commit()
-            self.dbcur.execute('INSERT INTO servers VALUES ({0.id}, {0.owner_id}) ON CONFLICT DO NOTHING'.format(server))
+            self.dbcur.execute("INSERT INTO servers VALUES ({0.id}, {0.owner.id}, '{1}') ON CONFLICT (id) DO UPDATE SET name = '{1}' WHERE servers.id = {0.id}".format(server, server.name.replace("'", " ", -1)))
             self.bot.log.info("Added {0} to server database".format(server.name))
         self.dbconn.commit()
         self.bot.log.info("Updating server database complete")
@@ -67,3 +67,15 @@ class DatabaseHandler:
     async def plugin_updateglobalconfig(self, pluginid, cfgkey, cfgvalue):
         self.dbcur.execute("INSERT INTO globalconfig VALUES ('{0}', '{1}', '{2}') ON CONFLICT (pluginid, cfgkey) DO UPDATE SET cfgvalue = '{2}' WHERE globalconfig.pluginid = '{0}' AND globalconfig.cfgkey = '{1}'".format(pluginid, cfgkey, json.dumps(cfgvalue)))
         self.dbconn.commit()
+
+    async def query(self, query):
+        """Runs a custom database query. POST ONLY! Does not return anything. To fetch data use query_return(query)."""
+        self.bot.log.info("Running cutom post query: {0}".format(query))
+        self.dbcur.execute(query)
+        self.dbconn.commit()
+    
+    async def query_return(self, query):
+        """Runs a custom database query. FETCH ONLY! Returns data. To post data use query(query)."""
+        self.bot.log.info("Running cutom fetch query: {0}".format(query))
+        self.dbcur.execute(query)
+        return self.dbcur.fetchall()

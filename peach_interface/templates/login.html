@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device.width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <!-- Styles -->
+        <!--      Bootstrap     -->
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <!-- Popper JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+        <!--  Peach custom CSS  -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/customcss.css') }}"></script>
+        <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <title>Peach Controlpanel</title>
+    </head>
+    <body background="{{ url_for('static', filename='Q6XNaD4.jpg') }}">
+        <div class="center_container" style="top: 50%; left: 50%; transform: translate(-50%, -50%); position: absolute; text-align: center;">
+            <img src="{{ url_for('static', filename='peach.png') }}" style="width: 10vh">
+            <p id="login_prompt_text">
+                To continue please<br>
+                login with discord
+            </p>
+            <a href="{{ url_for('discord_auth') }}">
+                <button type="button" id="login_prompt_button" class="btn btn-secondary">
+                    Login
+                </button>
+            </a>
+        </div>
+    </body>
+</html>

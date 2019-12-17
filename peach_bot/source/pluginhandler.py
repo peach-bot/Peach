@@ -11,16 +11,25 @@ class PluginHandler:
         self.bot = bot
         self.log = log
 
+    async def mapplugins(self):
         # load all modules in plugins folder
         self.log.info("Loading plugins...")
         plugins = pluginimporter.load_plugins(self.log)
         self.log.info("Loading plugins complete")
+
+        #load plugins from Database
+        data = await self.bot.db.query_return("SELECT * FROM plugins")
+        dbids = []
+        for dib in data:
+            dbids.append(dib[0])
 
         #map plugin info
         self.log.info("Mapping plugins...")
         self.commandmap = {}
         self.eventmap = {}
         for plugin in plugins:
+            if plugin.__name__.split(".")[3] not in dbids:
+                await self.bot.db.query("INSERT INTO plugins VALUES ('{0}')".format(plugin.__name__.split(".")[3]))
             pluginmanifest = getattr(plugin, "manifest")()
             
             #map plugin event hooks
