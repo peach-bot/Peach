@@ -20,9 +20,9 @@ def servers():
 def stats():
     return flask.render_template("stats.html")
 
-@app.route("/integrations/")
-def integrations():
-    return flask.render_template("integrations.html")
+@app.route("/settings/")
+def settings():
+    return flask.render_template("settings.html")
 
 @app.route("/logs/")
 def logs():
