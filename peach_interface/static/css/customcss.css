@@ -38,4 +38,6 @@ a, a:hover {
 
 .user-info {
     text-align: right;
+    border-radius: 50%;
+    font-size: 1rem;
 }
