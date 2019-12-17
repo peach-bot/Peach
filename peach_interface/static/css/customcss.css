@@ -1,9 +1,11 @@
 body {
-    background-image: url("https://imgur.com/Q6XNaD4.jpg");
     background-color: #333333;
     background-blend-mode: normal;
     color: #ffffff;
     padding: 1%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
 }
 button {
     padding: 10px;
@@ -16,4 +18,24 @@ a, a:hover {
 }
 .loading {
     text-align: center;
+}
+
+#login_prompt_text {
+    font-size: 20pt;
+    font-family: 'Roboto';
+    font-weight: 200;
+}
+
+#login_prompt_button {
+    width: 20vw;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+
+#login_prompt_button:hover {
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.25),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.user-info {
+    text-align: right;
 }
