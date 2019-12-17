@@ -27,6 +27,7 @@ services:
       DBUSER: peach
       DBNAME: peach
       DBPASSWORD: peach
+      BOT_STATUS: jamming\ out
     logging:
       driver: "json-file"
       options:

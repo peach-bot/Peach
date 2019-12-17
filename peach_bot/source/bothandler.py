@@ -1,6 +1,7 @@
 import asyncio
 import inspect
 import json
+import os
 
 import discord
 
@@ -32,14 +33,15 @@ class Peach(discord.Client):
     async def on_ready(self):
         global bot
         bot = self
-        self.log.info('{0.user} is logged in and online'.format(self))
-        #load plugins
-        self.pluginhandler = pluginhandler.PluginHandler(self, self.log)
+        self.log.info('{0.user} is logged in and online. Still firing up tools in the background...'.format(self))
         #load database connection
         self.db = databasehandler.DatabaseHandler(self)
         await self.db.update_servers()
+        #load plugins
+        self.pluginhandler = pluginhandler.PluginHandler(self, self.log)
+        await self.pluginhandler.mapplugins()
         #update rich presence
-        await self.updatepresence("with eggplants")
+        await self.updatepresence(os.environ["BOT_STATUS"])
         #load event hooks            
         self.log.info('Startup complete!')
         await self.pluginhandler.runevent("on_ready")
