@@ -38,6 +38,36 @@ a, a:hover {
 
 .user-info {
     text-align: right;
-    border-radius: 50%;
     font-size: 1rem;
+}
+
+.avatar {
+    width: 46px;
+    border-radius: 50%;
+}
+
+.server_icon {
+    width: 32px;
+    border-radius: 50%;
+}
+
+.dropdown {
+    padding-right: 5vh;
+}
+
+.server_dropdown, .username, .discord_profile_picture {
+    display: inline-block;
+}
+
+.server_dropdown.btn-secondary:hover, .server_dropdown.btn-secondary, .server_dropdown.show>.btn-secondary.dropdown-toggle, .server_dropdown.show>.btn-secondary.dropdown-toggle:focus{
+    background-color: unset;
+    border-color: unset;
+    transition: unset;
+    border: unset;
+    box-shadow: unset;
+}
+
+.select_server_name {
+    display: inline;
+    padding-left: 8px;
 }
