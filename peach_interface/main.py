@@ -25,42 +25,43 @@ def discord_auth():
 def login():
     flask.session["access_token"] = Oauth.get_access_token(flask.request.args.get("code"))
     user_json = Oauth.get_user_json(flask.session["access_token"])
-    flask.session["avatar_url"] = "https://cdn.discordapp.com/avatars/{}/{}.png?size=32".format(user_json.get("id"), user_json.get("avatar"))
+    flask.session["user_guilds"] = Oauth.get_user_servers(flask.session["access_token"])
+    flask.session["avatar_url"] = "https://cdn.discordapp.com/avatars/{}/{}.png?size=128".format(user_json.get("id"), user_json.get("avatar"))
     flask.session["username"] = user_json.get("username")
     return flask.redirect(flask.url_for("dashboard"), code=302)
 
 @app.route("/dashboard/")
 def dashboard():
     try:
-        return flask.render_template("dashboard.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"])
+        return flask.render_template("dashboard.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"], servers=flask.session["user_guilds"])
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
 @app.route("/servers/")
 def servers():
     try:
-        return flask.render_template("servers.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"])
+        return flask.render_template("servers.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"], servers=flask.session["user_guilds"])
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
 @app.route("/stats/")
 def stats():
     try:
-        return flask.render_template("stats.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"])
+        return flask.render_template("stats.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"], servers=flask.session["user_guilds"])
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
 @app.route("/settings/")
 def settings():
     try:
-        return flask.render_template("settings.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"])
+        return flask.render_template("settings.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"], servers=flask.session["user_guilds"])
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
 @app.route("/logs/")
 def logs():
     try:
-        return flask.render_template("logs.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"])
+        return flask.render_template("logs.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"], servers=flask.session["user_guilds"])
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 

@@ -11,7 +11,7 @@ WORKDIR /app
 COPY . .
 
 # Install all python requirements
-RUN pip3 install -r requirements.txt
+RUN pip3 install -r requirements_bot.txt
 
 # Set the entry point
 CMD [ "python", "./peach_bot/main.py" ]

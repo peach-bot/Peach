@@ -22,10 +22,34 @@
     </head>
     <body background="{{ url_for('static', filename='Q6XNaD4.jpg') }}">
         <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-                <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Peach</a>
+                <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">
+                  <img src="{{ url_for('static', filename='peach.png') }}" style="width: 32px">
+                  Peach
+                </a>
                 <div class="user-info col-lg-10 navbar-brand ml-sm-auto">
-                  {{username}}
-                  <img src="{{avatar_url}}" style="border-radius: 50%;"></img>
+                  <div class="server_dropdown" style="padding-left: 10px;">
+                    <div class="dropdown show">
+                      <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Select Server
+                      </a>
+                    
+                      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                        {% for server in servers %}
+                        {% if server[1] != None %}
+                          <a class="dropdown-item" href="#"><img class="server_icon" src="{{server[1]}}"><p class="select_server_name">{{server[0]}}</p></a>
+                        {% else %}
+                          <a class="dropdown-item" href="#"><img class="server_icon" src="{{ url_for('static', filename='missing_icon.png') }}"><p class="select_server_name">{{server[0]}}</p></a>
+                        {% endif %}
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="username">
+                    {{username}}
+                  </div>
+                  <div class="discord_profile_picture">
+                    <img class="avatar" src="{{avatar_url}}">
+                  </div>
                 </div>
         </nav>
         <div class="container-fluid">
