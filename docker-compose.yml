@@ -21,7 +21,7 @@ services:
       context: .
       dockerfile: ./Bot.Dockerfile
     environment:
-      BOTTOKEN: MY_EPIC_BOT_TOKEN
+      BOTTOKEN: DISCORD_BOT_TOKEN
       DBHOST: 0.0.0.0
       DBPORT: 5432
       DBUSER: peach
@@ -41,6 +41,9 @@ services:
       dockerfile: ./Interface.Dockerfile
     ports:
       - 5000:5000
+    environment:
+      CLIENT_ID: DISCORD_CLIENT_ID
+      CLIENT_SECRET: DISCORD_CLIENT_SECRET
     logging:
       driver: "json-file"
       options:
