@@ -44,6 +44,7 @@ services:
     environment:
       CLIENT_ID: DISCORD_CLIENT_ID
       CLIENT_SECRET: DISCORD_CLIENT_SECRET
+      REDIRECT_ADDRESS: http://127.0.0.1
     logging:
       driver: "json-file"
       options:
