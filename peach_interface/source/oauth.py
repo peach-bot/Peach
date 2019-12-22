@@ -49,8 +49,8 @@ class Oauth(object):
         for guild in guilds.json():
             if guild.get("owner"):
                 if guild.get("icon") != None:
-                    return_list.append([guild.get("name"), "https://cdn.discordapp.com/icons/{}/{}.png?size=128".format(guild.get("id"), guild.get("icon"))])
+                    return_list.append([guild.get("name"), "https://cdn.discordapp.com/icons/{}/{}.png?size=128".format(guild.get("id"), guild.get("icon")), guild.get("id")])
                 else:
-                    return_list.append([guild.get("name"), None])
+                    return_list.append([guild.get("name"), None, guild.get("id")])
         return return_list
 
