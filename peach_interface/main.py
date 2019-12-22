@@ -61,6 +61,11 @@ def servers():
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
+@app.route("/logout/")
+def logout():
+    flask.session.clear()
+    return flask.redirect(flask.url_for("index"), code=302)
+
 @app.route("/stats/")
 def stats():
     try:
