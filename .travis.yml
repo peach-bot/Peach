@@ -10,6 +10,8 @@ services:
 
 before_install:
     - sudo apt-get install docker-compose
+    - mkdir ~/.docker
+    - echo '{"experimental":"enabled"}' > ~/.docker/config.json
 
 script:
     - docker-compose -f docker-compose.yml build
