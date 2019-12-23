@@ -99,7 +99,11 @@ class PluginHandler:
             if has_perms:
                 #delete invoke from channel
                 if command["deleteinvoke"]:
-                    await message.delete()
+                    #try to delete invoke message, if not it isn't important
+                    try:
+                        await message.delete()
+                    except Exception:
+                        pass
                 response = await getattr(plugin, command["function"])(message, self.bot)
                 if response != None:
                     responsemessage = await message.channel.send(response)
