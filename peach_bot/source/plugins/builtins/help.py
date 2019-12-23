@@ -10,6 +10,9 @@ def manifest():
                     "aliases": ["h"]
                     }
                 },
+            "settings": {
+                "Enabled": "bool true",
+            },
             "eventhooks": [],
             "chronos": {
                 }

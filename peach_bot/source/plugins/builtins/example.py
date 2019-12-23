@@ -13,6 +13,9 @@ def manifest():
                     "aliases": ["xmpl"]
                     }
                 },
+            "settings": {
+                "Enabled": "bool true",
+            },
             "eventhooks": [],
             "chronos": {
                 }
