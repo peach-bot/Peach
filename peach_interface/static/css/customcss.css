@@ -74,6 +74,7 @@ a, a:hover {
 .select_server_name {
     display: inline;
     padding-left: 8px;
+    padding-right: 4px;
 }
 
 .show>.btn-primary.dropdown-toggle:focus, .show>.btn-primary.dropdown-toggle:active, .btn-primary:focus, .btn-primary:active, .btn-primary:hover, .btn-primary, .show>.btn-primary.dropdown-toggle, .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled):active:focus {
@@ -87,6 +88,15 @@ a, a:hover {
 .box {
     display: flex;
     align-items: center;
+}
+
+.dropdown_triangle {
+    width: 0; 
+    height: 0; 
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    
+    border-top: 6px solid #fff;
 }
 
 .dropdown-toggle::after {
