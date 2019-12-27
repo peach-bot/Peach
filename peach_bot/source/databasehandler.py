@@ -1,5 +1,5 @@
-import os
 import json
+import os
 
 import psycopg2
 
@@ -58,9 +58,9 @@ class DatabaseHandler:
         self.dbcur.execute("SELECT cfgvalue FROM serverconfig WHERE serverid = {0} AND pluginid = {1} AND cfgkey = {2}".format(serverid, pluginid, cfgkey))
         return json.loads(self.dbcur.fetchall()[0][0])
     
-    async def plugin_serverconfig_addkey(self, serverid, pluginid, cfgkey, cfgvalue):
+    async def plugin_defaults_update(self, pluginid, cfgkey, cfgvalue):
         """Adds new config keys without overwriting already existing ones."""
-        self.dbcur.execute("INSERT INTO serverconfig VALUES ({0}, {1}, {2}, '{3}') ON CONFLICT DO NOTHING".format(serverid, pluginid, cfgkey, json.dumps(cfgvalue)))
+        self.dbcur.execute("INSERT INTO defaults VALUES ({0}, {1}, '{2}') ON CONFLICT (pluginid, cfgkey) DO UPDATE SET cfgvalue = '{2}' WHERE defaults.pluginid = {0} AND defaults.cfgkey = {1}".format(pluginid, cfgkey, json.dumps(cfgvalue)))
         self.dbconn.commit()
 
     async def plugin_serverconfig_update(self, serverid, pluginid, cfgkey, cfgvalue):
