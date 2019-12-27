@@ -41,6 +41,7 @@ def select_server():
             if server[2] == flask.request.args.get("id"):
                 flask.session["selected_server"] = server
         if flask.request.referrer != None:
+            print(db.fetch_settings(flask.session["selected_server"][2]))
             return flask.redirect(flask.request.referrer)
         else:
             return flask.redirect(flask.url_for("index"), code=302)
