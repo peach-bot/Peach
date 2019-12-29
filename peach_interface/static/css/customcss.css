@@ -107,3 +107,18 @@ a, a:hover {
     display: inline-block;
     vertical-align: middle;
 }
+
+.sidebar {
+    height: fit-content;
+}
+
+.columns {
+    width: 50vw;
+    column-count: 2;
+    column-fill: balance;
+    column-width: 10px;
+}
+
+.setting_element {
+    padding-left: 16px;
+}

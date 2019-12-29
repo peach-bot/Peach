@@ -3,7 +3,7 @@ import random
 import flask
 import os
 
-from source import databasehandler
+from source import databasehandler, forms
 from source.oauth import Oauth
 
 app = flask.Flask(__name__)
@@ -41,7 +41,6 @@ def select_server():
             if server[2] == flask.request.args.get("id"):
                 flask.session["selected_server"] = server
         if flask.request.referrer != None:
-            print(db.fetch_settings(flask.session["selected_server"][2]))
             return flask.redirect(flask.request.referrer)
         else:
             return flask.redirect(flask.url_for("index"), code=302)
@@ -51,14 +50,18 @@ def select_server():
 @app.route("/dashboard/")
 def dashboard():
     try:
-        return flask.render_template("dashboard.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"], servers=flask.session["user_guilds"], current_server=flask.session["selected_server"])
+        return flask.render_template(
+            "dashboard.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
+            servers=flask.session["user_guilds"], current_server=flask.session["selected_server"])
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
 @app.route("/servers/")
 def servers():
     try:
-        return flask.render_template("servers.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"], servers=flask.session["user_guilds"], current_server=flask.session["selected_server"])
+        return flask.render_template(
+            "servers.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
+            servers=flask.session["user_guilds"], current_server=flask.session["selected_server"])
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
@@ -70,21 +73,29 @@ def logout():
 @app.route("/stats/")
 def stats():
     try:
-        return flask.render_template("stats.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"], servers=flask.session["user_guilds"], current_server=flask.session["selected_server"])
+        return flask.render_template(
+            "stats.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
+            servers=flask.session["user_guilds"], current_server=flask.session["selected_server"])
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
-@app.route("/settings/")
+@app.route("/settings/", methods = ["get", "post"])
 def settings():
     try:
-        return flask.render_template("settings.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"], servers=flask.session["user_guilds"], current_server=flask.session["selected_server"])
+        serversettings = db.fetch_settings(flask.session["selected_server"][2])
+        settingsform = forms.createsettings(serversettings)
+        return flask.render_template(
+            "settings.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
+            servers=flask.session["user_guilds"], current_server=flask.session["selected_server"], form = settingsform, settings = serversettings)
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
 @app.route("/logs/")
 def logs():
     try:
-        return flask.render_template("logs.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"], servers=flask.session["user_guilds"], current_server=flask.session["selected_server"])
+        return flask.render_template(
+            "logs.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
+            servers=flask.session["user_guilds"], current_server=flask.session["selected_server"])
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
