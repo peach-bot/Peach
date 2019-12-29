@@ -6,19 +6,23 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
       <h1 class="h2">Settings</h1>
     </div>
-    <form action="" method="POST" novalidate>
-      {% for plugin in settings["plugins"] %}
-        <h3 class="h3">{{ plugin.capitalize() }}</h3>
-        <div class="columns">
-          {% for setting in settings["plugins"][plugin] %}
-            <div class="setting_element">
-              {{ form[plugin+"."+setting.lower().replace(" ", "_", -1)].label }}
-              {{ form[plugin+"."+setting.lower().replace(" ", "_", -1)]() }}
-            </div>
-          {% endfor %}
-        </div>
-      {% endfor %}
-    </form>
+    <div class="content">
+      <form action="" method="POST" novalidate>
+        {% for plugin in settings["plugins"] %}
+          <h3 class="h3">{{ plugin.capitalize() }}</h3>
+          <div class="columns">
+            {% for setting in settings["plugins"][plugin] %}
+              <div class="setting_element">
+                {{ form[plugin+"."+setting.lower().replace(" ", "_", -1)](data_toggle="toggle", data_onstyle="success", data_height="8px", data_size="small")}}
+                <div class="setting_label">
+                  {{ form[plugin+"."+setting.lower().replace(" ", "_", -1)].label }}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </form>
+    </div>
   </main>
 </div>
 </div>

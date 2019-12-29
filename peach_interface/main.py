@@ -2,11 +2,13 @@ import logging
 import random
 import flask
 import os
+from flask_bootstrap import Bootstrap
 
 from source import databasehandler, forms
 from source.oauth import Oauth
 
 app = flask.Flask(__name__)
+Bootstrap(app)
 app.debug = False
 
 @app.route("/")
