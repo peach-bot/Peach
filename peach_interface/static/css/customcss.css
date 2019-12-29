@@ -110,6 +110,11 @@ a, a:hover {
 
 .sidebar {
     height: fit-content;
+    left: 10px;
+}
+
+.col-md-2 {
+    max-width: 14.666667%;
 }
 
 .columns {
@@ -159,4 +164,8 @@ h1 {
 
 .bg-light {
     background-color: #fff;
+}
+
+.navbar {
+    box-shadow: 4px 4px 3px rgba(0,0,0,0.35)
 }

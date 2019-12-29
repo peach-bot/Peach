@@ -6,7 +6,7 @@ class DatabaseHandler:
 
     def __init__(self, log):
         self.log = log
-        self.dbconn = psycopg2.connect("host={0} port={1} user={2} password={3} dbname={4} application_name='peach - bot'".format(os.environ['DBHOST'], os.environ['DBPORT'], os.environ['DBUSER'], os.environ['DBPASSWORD'], os.environ['DBNAME'],))
+        self.dbconn = psycopg2.connect("host={0} port={1} user={2} password={3} dbname={4} application_name='peach - interface'".format(os.environ['DBHOST'], os.environ['DBPORT'], os.environ['DBUSER'], os.environ['DBPASSWORD'], os.environ['DBNAME'],))
 
         self.dbcur = self.dbconn.cursor()
 
