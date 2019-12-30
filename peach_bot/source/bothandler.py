@@ -12,10 +12,10 @@ from source import databasehandler, pluginhandler
 class Peach(discord.Client):
     """Bot class"""
 
-    async def updatepresence(self, message: str):
+    async def updatepresence(self, status: str):
         """Updates discord rich presence to display something super funny"""
         self.log.info("Updated Rich Presence")
-        await self.change_presence(status=discord.Status.online, activity=discord.Game(name=message, details="all day long"))
+        await self.change_presence(status=discord.Status.online, activity=discord.Game(name=status, details="all day long"))
 
     def bind(self, log):
         """Binds a logger to the bot class"""

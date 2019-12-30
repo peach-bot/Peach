@@ -55,8 +55,9 @@ class DatabaseHandler:
 
     async def plugin_serverconfig_get(self, serverid, pluginid, cfgkey):
         """Retrieves a config value for a given key."""
-        self.dbcur.execute("SELECT cfgvalue FROM serverconfig WHERE serverid = {0} AND pluginid = {1} AND cfgkey = {2}".format(serverid, pluginid, cfgkey))
-        return json.loads(self.dbcur.fetchall()[0][0])
+        self.dbcur.execute("SELECT cfgvalue FROM serverconfig WHERE serverid = {0} AND pluginid = '{1}' AND cfgkey = '{2}'".format(serverid, pluginid, cfgkey))
+        value = await self.solvevalue(self.dbcur.fetchall()[0][0])
+        return value
     
     async def plugin_defaults_update(self, pluginid, cfgkey, cfgvalue):
         """Adds new config keys without overwriting already existing ones."""
@@ -90,3 +91,12 @@ class DatabaseHandler:
         self.bot.log.info("Running cutom fetch query: {0}".format(query))
         self.dbcur.execute(query)
         return self.dbcur.fetchall()
+
+    async def solvevalue(self, data):
+        if data["type"] == "bool":
+            if data["value"] == "true":
+                return True
+            elif data["value"] == "false":
+                return False
+            else:
+                self.bot.log.error("Could not solve database value, boolean but not boolean")

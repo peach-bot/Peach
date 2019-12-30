@@ -20,7 +20,8 @@ def manifest():
     return manifest
 
 async def help(message, bot):
-    await message.channel.send("Hello, I am stupid")
+    if await bot.db.plugin_serverconfig_get(message.guild.id, "help", "Enabled"):
+        await message.channel.send("Hello, I am stupid")
 
 async def help_man():
     embed = discord.Embed(title="Manual - !help", description="How to use this command:", color=0xff886b)

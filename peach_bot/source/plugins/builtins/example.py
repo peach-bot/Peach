@@ -24,7 +24,8 @@ def manifest():
 
 async def example(message, bot):
     """The actual command that runs upon invoke"""
-    return "This is an example for a command plugin. It doesn't really do anything (duh)." #Returns a response message that displays for 5 seconds or None
+    if await bot.db.plugin_serverconfig_get(message.guild.id, "example", "Enabled"):
+        return "This is an example for a command plugin. It doesn't really do anything (duh)." #Returns a response message that displays for 5 seconds or None
 
 async def on_message(message, bot):
     """Example of the on_message event hook"""
