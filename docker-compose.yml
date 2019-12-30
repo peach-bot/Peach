@@ -27,7 +27,7 @@ services:
       DBUSER: peach
       DBNAME: peach
       DBPASSWORD: peach
-      BOT_STATUS: jamming\ out
+      BOT_STATUS: a game
     logging:
       driver: "json-file"
       options:
@@ -42,9 +42,13 @@ services:
     ports:
       - 5000:5000
     environment:
+      DBHOST: 0.0.0.0
+      DBPORT: 5432
+      DBUSER: peach
+      DBNAME: peach
       CLIENT_ID: DISCORD_CLIENT_ID
       CLIENT_SECRET: DISCORD_CLIENT_SECRET
-      REDIRECT_ADDRESS: http://127.0.0.1
+      REDIRECT_ADDRESS: http://127.0.0.1:5000
     logging:
       driver: "json-file"
       options:

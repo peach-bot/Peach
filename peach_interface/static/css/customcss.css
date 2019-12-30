@@ -74,6 +74,7 @@ a, a:hover {
 .select_server_name {
     display: inline;
     padding-left: 8px;
+    padding-right: 4px;
 }
 
 .show>.btn-primary.dropdown-toggle:focus, .show>.btn-primary.dropdown-toggle:active, .btn-primary:focus, .btn-primary:active, .btn-primary:hover, .btn-primary, .show>.btn-primary.dropdown-toggle, .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled):active:focus {
@@ -89,6 +90,15 @@ a, a:hover {
     align-items: center;
 }
 
+.dropdown_triangle {
+    width: 0; 
+    height: 0; 
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    
+    border-top: 6px solid #fff;
+}
+
 .dropdown-toggle::after {
     display: none;
 }
@@ -96,4 +106,71 @@ a, a:hover {
 .user-info {
     display: inline-block;
     vertical-align: middle;
+}
+
+.sidebar {
+    height: fit-content;
+    left: 10px;
+}
+
+.col-md-2 {
+    max-width: 14.666667%;
+}
+
+.columns {
+    column-count: 2;
+    column-fill: balance;
+    column-width: 10px;
+    padding-bottom: 16px;
+}
+
+.setting_element {
+    padding-left: 16px;
+}
+
+.toggle-handle {
+    background-color: white;
+}
+
+.toggle.btn, .btn-default:active{
+    background-color: #343a40;
+}
+
+label {
+    color: #fff !important;
+    font-weight: 450;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.25); 
+}
+
+.setting_label {
+    display: inline;
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+h3{
+    padding-bottom: 4px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.4); 
+}
+
+h1 {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.4); 
+}
+
+.content {
+    max-width: 75%;
+    padding-left: 50px;
+}
+
+.bg-light {
+    background-color: #fff;
+}
+
+.navbar {
+    box-shadow: 4px 4px 3px rgba(0,0,0,0.35)
+}
+
+.submitbutton {
+    padding-top: 30px;
+    padding-left: 16px;
 }

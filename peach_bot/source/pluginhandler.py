@@ -32,6 +32,11 @@ class PluginHandler:
                 await self.bot.db.query("INSERT INTO plugins VALUES ('{0}')".format(plugin.__name__.split(".")[3]))
             pluginmanifest = getattr(plugin, "manifest")()
             
+            #update plugin settings
+            
+            for setting, setting_type in pluginmanifest["settings"].items():
+                await self.bot.db.plugin_defaults_update("'{}'".format(plugin.__name__.split(".")[3]), "'{}'".format(setting), {"type": setting_type.split()[0], "value": setting_type.split()[1]})
+
             #map plugin event hooks
             for event in pluginmanifest["eventhooks"]:
                 try:
