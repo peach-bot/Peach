@@ -169,3 +169,8 @@ h1 {
 .navbar {
     box-shadow: 4px 4px 3px rgba(0,0,0,0.35)
 }
+
+.submitbutton {
+    padding-top: 30px;
+    padding-left: 16px;
+}

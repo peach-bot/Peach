@@ -1,5 +1,6 @@
 import logging
 import random
+import time
 import flask
 import os
 from flask_bootstrap import Bootstrap
@@ -25,12 +26,14 @@ def discord_auth():
 
 @app.route("/login/", methods = ["get"])
 def login():
+    starttime = time.time()
     flask.session["access_token"] = Oauth.get_access_token(flask.request.args.get("code"))
     user_json = Oauth.get_user_json(flask.session["access_token"])
     flask.session["user_guilds"] = Oauth.get_user_servers(flask.session["access_token"])
     flask.session["selected_server"] = flask.session["user_guilds"][0]
     flask.session["avatar_url"] = "https://cdn.discordapp.com/avatars/{}/{}.png?size=128".format(user_json.get("id"), user_json.get("avatar"))
     flask.session["username"] = user_json.get("username")
+    log.info("Login loading time: {} seconds".format(round(time.time()-starttime, 4)))
     return flask.redirect(flask.url_for("dashboard"), code=302)
 
 @app.route("/select_server/")
@@ -51,7 +54,9 @@ def select_server():
 
 @app.route("/dashboard/")
 def dashboard():
+    starttime = time.time()
     try:
+        log.info("Page loading time: {} seconds".format(round(time.time()-starttime, 4)))
         return flask.render_template(
             "dashboard.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
             servers=flask.session["user_guilds"], current_server=flask.session["selected_server"])
@@ -60,7 +65,9 @@ def dashboard():
 
 @app.route("/servers/")
 def servers():
+    starttime = time.time()
     try:
+        log.info("Page loading time: {} seconds".format(round(time.time()-starttime, 4)))
         return flask.render_template(
             "servers.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
             servers=flask.session["user_guilds"], current_server=flask.session["selected_server"])
@@ -74,18 +81,25 @@ def logout():
 
 @app.route("/stats/")
 def stats():
+    starttime = time.time()
     try:
+        log.info("Page loading time: {} seconds".format(round(time.time()-starttime, 4)))
         return flask.render_template(
             "stats.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
             servers=flask.session["user_guilds"], current_server=flask.session["selected_server"])
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
-@app.route("/settings/", methods = ["get", "post"])
+@app.route("/settings/", methods = ["GET", "POST"])
 def settings():
+    starttime = time.time()
     try:
         serversettings = db.fetch_settings(flask.session["selected_server"][2])
-        settingsform = forms.createsettings(serversettings)
+        settingsform = forms.createsettings(serversettings, flask.request.form)
+        if settingsform.validate_on_submit():
+            db.updatesettings(settingsform, flask.session["selected_server"][2])
+            serversettings = db.fetch_settings(flask.session["selected_server"][2])
+        log.info("Page loading time: {} seconds".format(round(time.time()-starttime, 4)))
         return flask.render_template(
             "settings.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
             servers=flask.session["user_guilds"], current_server=flask.session["selected_server"], form = settingsform, settings = serversettings)

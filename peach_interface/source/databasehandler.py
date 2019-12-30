@@ -30,3 +30,17 @@ class DatabaseHandler:
         self.dbcur.execute("SELECT defaults.pluginid, defaults.cfgkey, serverconfig.serverid, CASE WHEN serverconfig.cfgvalue IS NULL THEN defaults.cfgvalue ELSE serverconfig.cfgvalue END AS result FROM defaults LEFT JOIN (SELECT * FROM serverconfig WHERE serverid = {}) serverconfig ON defaults.pluginid = serverconfig.pluginid AND defaults.cfgkey = serverconfig.cfgkey".format(serverid))
         data = self.dbcur.fetchall()
         return data
+
+    def updatesettings(self, form, serverid):
+        for setting in form:
+            if setting.type != "CSRFTokenField":
+                if setting.name != "submit":
+                    plugin = setting.name.split("_", 1)[0]
+                    try:
+                        dbsetting = setting.name.split("_", 1)[1].replace("_", " ", -1).title()
+                    except IndexError:
+                        dbsetting = setting.name.split("_", 1)[1]
+                    if setting.type == "BooleanField":
+                        settingtype = "bool"
+                    self.dbcur.execute("INSERT INTO serverconfig VALUES ({0}, '{1}', '{2}', '{3}') ON CONFLICT (serverid, pluginid, cfgkey) DO UPDATE SET cfgvalue = '{3}' WHERE serverconfig.serverid = {0} AND serverconfig.pluginid = '{1}' AND serverconfig.cfgkey = '{2}'".format(serverid, plugin, dbsetting, json.dumps({"type": settingtype, "value": str(setting.data).lower()})))
+                    self.dbconn.commit()

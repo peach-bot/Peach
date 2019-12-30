@@ -8,19 +8,27 @@
     </div>
     <div class="content">
       <form action="" method="POST" novalidate>
+        {{ form.hidden_tag() }}
         {% for plugin in settings["plugins"] %}
           <h3 class="h3">{{ plugin.capitalize() }}</h3>
           <div class="columns">
             {% for setting in settings["plugins"][plugin] %}
               <div class="setting_element">
-                {{ form[plugin+"."+setting.lower().replace(" ", "_", -1)](data_toggle="toggle", data_onstyle="success", data_height="8px", data_size="small")}}
+                {% if settings["plugins"][plugin][setting]["value"] == "true" %}
+                {{ form[plugin+"_"+setting.lower().replace(" ", "_", -1)](checked=True, data_toggle="toggle", data_onstyle="success", data_height="8px", data_size="small")}}
+                {% else %}
+                {{ form[plugin+"_"+setting.lower().replace(" ", "_", -1)](checked=False, data_toggle="toggle", data_onstyle="success", data_height="8px", data_size="small")}}
+                {% endif %}
                 <div class="setting_label">
-                  {{ form[plugin+"."+setting.lower().replace(" ", "_", -1)].label }}
+                  {{ form[plugin+"_"+setting.lower().replace(" ", "_", -1)].label }}
                 </div>
               </div>
             {% endfor %}
           </div>
         {% endfor %}
+        <div class="submitbutton">
+          {{ form.submit(class_="btn btn-success") }}
+        </div>
       </form>
     </div>
   </main>
