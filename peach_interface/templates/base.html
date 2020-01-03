@@ -4,7 +4,7 @@
 <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">
         <div class="box">
-            <img src="{{ url_for('static', filename='peach.png') }}" style="width: 32px">
+            <img src="{{ url_for('static', filename='peach.png') }}" style="width: 32px" alt="Peach icon">
             <span>Peach</span>
         </div>
     </a>
@@ -14,10 +14,10 @@
                 <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <div class="box">
                         {% if current_server[1] != None %}
-                            <img class="server_icon" src="{{current_server[1]}}">
+                            <img class="server_icon" src="{{current_server[1]}}" alt="Server icon">
                             <span class="select_server_name">{{current_server[0]}}</span>
                         {% else %}
-                            <img class="server_icon" src="{{ url_for('static', filename='missing_icon.png') }}">
+                            <img class="server_icon" src="{{ url_for('static', filename='missing_icon.png') }}" alt="Missing icon">
                             <span class="select_server_name">{{current_server[0]}}</span>
                         {% endif %}
                             <span class="dropdown_triangle"></span>
@@ -29,14 +29,14 @@
                         {% if server[1] != None %}
                             <a class="dropdown-item" href="/select_server/?id={{server[2]}}">
                                 <div class="box">
-                                    <img class="server_icon" src="{{server[1]}}">
+                                    <img class="server_icon" src="{{server[1]}}" alt="Server icon">
                                     <span class="select_server_name">{{server[0]}}</span>
                                 </div>
                             </a>
                         {% else %}
                             <a class="dropdown-item" href="/select_server/?id={{server[2]}}">
                                 <div class="box">
-                                    <img class="server_icon" src="{{ url_for('static', filename='missing_icon.png') }}">
+                                    <img class="server_icon" src="{{ url_for('static', filename='missing_icon.png') }}" alt="Missing icon">
                                     <span class="select_server_name">{{server[0]}}</span>
                                 </div>
                             </a>
@@ -51,7 +51,7 @@
                     <span>{{username}}</span>
                 </div>
                 <div class="discord_profile_picture">
-                    <img class="avatar" src="{{avatar_url}}">
+                    <img class="avatar" src="{{avatar_url}}" alt="Avatar">
                 </div>
             </div>
         </div>
