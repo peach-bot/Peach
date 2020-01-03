@@ -1,1 +1,1 @@
-# [Start of changelog](https://github.com/peach-bot/Peach/tree/48fdcf62550f9b0c23a66dcbadea27350dcf5707) (2020-01-01)
+# [Start of changelog](https://github.com/peach-bot/Peach/tree/48fdcf62550f9b0c23a66dcbadea27350dcf5707) (v3.3.1)
