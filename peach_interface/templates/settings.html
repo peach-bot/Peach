@@ -7,29 +7,33 @@
       <h1 class="h2">Settings</h1>
     </div>
     <div class="content">
-      <form action="" method="POST" novalidate>
-        {{ form.hidden_tag() }}
-        {% for plugin in settings["plugins"] %}
-          <h3 class="h3">{{ plugin.capitalize() }}</h3>
-          <div class="columns">
-            {% for setting in settings["plugins"][plugin] %}
-              <div class="setting_element">
-                {% if settings["plugins"][plugin][setting]["value"] == "true" %}
-                {{ form[plugin+"_"+setting.lower().replace(" ", "_", -1)](checked=True, data_toggle="toggle", data_onstyle="success", data_height="8px", data_size="small")}}
-                {% else %}
-                {{ form[plugin+"_"+setting.lower().replace(" ", "_", -1)](checked=False, data_toggle="toggle", data_onstyle="success", data_height="8px", data_size="small")}}
-                {% endif %}
-                <div class="setting_label">
-                  {{ form[plugin+"_"+setting.lower().replace(" ", "_", -1)].label }}
-                </div>
-              </div>
+      <div class="content_box">
+        <form action="" method="POST" novalidate>
+          <div class="content_inner">
+            {{ form.hidden_tag() }}
+            {% for plugin in settings["plugins"] %}
+              <h3 class="h3">{{ plugin.capitalize() }}</h3>
+                {% for setting in settings["plugins"][plugin] %}
+                  <div class="setting_element">
+                    <div class="setting_label">
+                      {{ form[plugin+"_"+setting.lower().replace(" ", "_", -1)].label }}
+                    </div>
+                    {% if settings["plugins"][plugin][setting]["value"] == "true" %}
+                    {{ form[plugin+"_"+setting.lower().replace(" ", "_", -1)](checked=True, data_toggle="toggle", data_onstyle="success", data_height="8px", data_size="small", data_width="64px")}}
+                    {% else %}
+                    {{ form[plugin+"_"+setting.lower().replace(" ", "_", -1)](checked=False, data_toggle="toggle", data_onstyle="success", data_height="8px", data_size="small", data_width="64px")}}
+                    {% endif %}
+                    <div class="setting_divider"></div>
+                  </div>
+                {% endfor %}
+              <div class="plugin_divider"></div>
             {% endfor %}
+            <div class="submitbutton">
+              {{ form.submit(class_="btn btn-success") }}
+            </div>
           </div>
-        {% endfor %}
-        <div class="submitbutton">
-          {{ form.submit(class_="btn btn-success") }}
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </main>
 </div>
