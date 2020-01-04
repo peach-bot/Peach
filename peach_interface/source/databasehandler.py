@@ -27,7 +27,7 @@ class DatabaseHandler:
 
     def plugin_serverconfig_get(self, serverid):
         """Grabs a server's settings from the database."""
-        self.dbcur.execute("SELECT defaults.pluginid, defaults.cfgkey, serverconfig.serverid, CASE WHEN serverconfig.cfgvalue IS NULL THEN defaults.cfgvalue ELSE serverconfig.cfgvalue END AS result FROM defaults LEFT JOIN (SELECT * FROM serverconfig WHERE serverid = {}) serverconfig ON defaults.pluginid = serverconfig.pluginid AND defaults.cfgkey = serverconfig.cfgkey".format(serverid))
+        self.dbcur.execute("SELECT defaults.pluginid, defaults.cfgkey, serverconfig.serverid, CASE WHEN serverconfig.cfgvalue IS NULL THEN defaults.cfgvalue ELSE serverconfig.cfgvalue END AS result FROM defaults LEFT JOIN (SELECT * FROM serverconfig WHERE serverid = {}) serverconfig ON defaults.pluginid = serverconfig.pluginid AND defaults.cfgkey = serverconfig.cfgkey ORDER BY pluginid".format(serverid))
         data = self.dbcur.fetchall()
         return data
 
