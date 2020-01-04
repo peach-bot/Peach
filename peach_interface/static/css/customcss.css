@@ -172,7 +172,7 @@ h1 {
 }
 
 .bg-light {
-    background-color: #fff;
+    background-color: #fff !important;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
 }
@@ -226,4 +226,8 @@ h1 {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #555; 
+}
+
+.dropdown-item:active {
+    background-color: #e4a075;
 }
