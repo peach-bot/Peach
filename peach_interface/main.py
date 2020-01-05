@@ -29,7 +29,10 @@ def login():
     user_json = Oauth.get_user_json(flask.session["access_token"])
     flask.session["user_guilds"] = Oauth.get_user_servers(flask.session["access_token"])
     flask.session["selected_server"] = flask.session["user_guilds"][0]
-    flask.session["avatar_url"] = "https://cdn.discordapp.com/avatars/{}/{}.png?size=128".format(user_json.get("id"), user_json.get("avatar"))
+    if user_json.get("avatar").startswith("a_"):
+        flask.session["avatar_url"] = "https://cdn.discordapp.com/avatars/{}/{}.gif?size=128".format(user_json.get("id"), user_json.get("avatar"))
+    else:
+        flask.session["avatar_url"] = "https://cdn.discordapp.com/avatars/{}/{}.png?size=128".format(user_json.get("id"), user_json.get("avatar"))
     flask.session["username"] = user_json.get("username")
     log.info("Login loading time: {} seconds".format(round(time.time()-starttime, 4)))
     return flask.redirect(flask.url_for("dashboard"), code=302)
