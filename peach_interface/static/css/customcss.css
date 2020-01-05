@@ -6,6 +6,7 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
+    scrollbar-width: none;
 }
 button {
     padding: 10px;
@@ -212,21 +213,9 @@ h1 {
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
+    display: none;
 }
 
-::-webkit-scrollbar-track {
-    background: transparent; 
-}
-
-::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #555; 
-}
 
 .dropdown-item:active {
     background-color: #e4a075;
