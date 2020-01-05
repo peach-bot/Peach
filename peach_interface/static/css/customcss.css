@@ -109,7 +109,7 @@ a, a:hover {
 }
 
 .sidebar {
-    height: fit-content;
+    height: min-content;
     left: 10px;
 }
 
