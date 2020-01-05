@@ -20,14 +20,14 @@ class DatabaseHandler:
             if setting[0] not in settings["plugins"]:
                 settings["plugins"][setting[0]] = {}
             settings["plugins"][setting[0]][setting[1]] = {
-                "type": setting[3]["type"],
-                "value": setting[3]["value"],
+                "type": setting[4]["type"],
+                "value": setting[4]["value"],
             }
         return settings
 
     def plugin_serverconfig_get(self, serverid):
         """Grabs a server's settings from the database."""
-        self.dbcur.execute("SELECT defaults.pluginid, defaults.cfgkey, serverconfig.serverid, CASE WHEN serverconfig.cfgvalue IS NULL THEN defaults.cfgvalue ELSE serverconfig.cfgvalue END AS result FROM defaults LEFT JOIN (SELECT * FROM serverconfig WHERE serverid = {}) serverconfig ON defaults.pluginid = serverconfig.pluginid AND defaults.cfgkey = serverconfig.cfgkey ORDER BY pluginid".format(serverid))
+        self.dbcur.execute("SELECT defaults.pluginid, defaults.cfgkey, serverconfig.serverid, defaults.position, CASE WHEN serverconfig.cfgvalue IS NULL THEN defaults.cfgvalue ELSE serverconfig.cfgvalue END AS result FROM defaults LEFT JOIN (SELECT * FROM serverconfig WHERE serverid = {}) serverconfig ON defaults.pluginid = serverconfig.pluginid AND defaults.cfgkey = serverconfig.cfgkey ORDER BY pluginid, position".format(serverid))
         data = self.dbcur.fetchall()
         return data
 

@@ -12,21 +12,23 @@
           <div class="content_inner">
             {{ form.hidden_tag() }}
             {% for plugin in settings["plugins"] %}
-              <h3 class="h3">{{ plugin.capitalize() }}</h3>
-                {% for setting in settings["plugins"][plugin] %}
-                  <div class="setting_element">
-                    <div class="setting_label">
-                      {{ form[plugin+"_"+setting.lower().replace(" ", "_", -1)].label }}
+              <div class="plugin_element">
+                <h3 class="h3">{{ plugin.capitalize() }}</h3>
+                  {% for setting in settings["plugins"][plugin] %}
+                    <div class="setting_element">
+                      <div class="setting_label">
+                        {{ form[plugin+"_"+setting.lower().replace(" ", "_", -1)].label }}
+                      </div>
+                      {% if settings["plugins"][plugin][setting]["value"] == "true" %}
+                      {{ form[plugin+"_"+setting.lower().replace(" ", "_", -1)](checked=True, data_toggle="toggle", data_onstyle="success", data_height="8px", data_size="small", data_width="64px")}}
+                      {% else %}
+                      {{ form[plugin+"_"+setting.lower().replace(" ", "_", -1)](checked=False, data_toggle="toggle", data_onstyle="success", data_height="8px", data_size="small", data_width="64px")}}
+                      {% endif %}
+                      <div class="setting_divider"></div>
                     </div>
-                    {% if settings["plugins"][plugin][setting]["value"] == "true" %}
-                    {{ form[plugin+"_"+setting.lower().replace(" ", "_", -1)](checked=True, data_toggle="toggle", data_onstyle="success", data_height="8px", data_size="small", data_width="64px")}}
-                    {% else %}
-                    {{ form[plugin+"_"+setting.lower().replace(" ", "_", -1)](checked=False, data_toggle="toggle", data_onstyle="success", data_height="8px", data_size="small", data_width="64px")}}
-                    {% endif %}
-                    <div class="setting_divider"></div>
-                  </div>
-                {% endfor %}
-              <div class="plugin_divider"></div>
+                  {% endfor %}
+                <div class="plugin_divider"></div>
+              </div>
             {% endfor %}
             <div class="submitbutton">
               {{ form.submit(class_="btn btn-success") }}

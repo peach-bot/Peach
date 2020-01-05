@@ -5,7 +5,7 @@
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">
         <div class="box">
             <img src="{{ url_for('static', filename='peach.png') }}" style="width: 32px" alt="Peach icon">
-            <span>Peach</span>
+            <span style="font-weight: 600;">Peach</span>{% if admin %}<span style="font-weight: 200;">Admin</span>{% endif %}
         </div>
     </a>
     <div class="server-info col-lg-10 navbar-brand ml-sm-auto">

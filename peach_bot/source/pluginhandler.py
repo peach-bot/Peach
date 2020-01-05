@@ -33,9 +33,10 @@ class PluginHandler:
             pluginmanifest = getattr(plugin, "manifest")()
             
             #update plugin settings
-            
+            position = 0
             for setting, setting_type in pluginmanifest["settings"].items():
-                await self.bot.db.plugin_defaults_update("'{}'".format(plugin.__name__.split(".")[3]), "'{}'".format(setting), {"type": setting_type.split()[0], "value": setting_type.split()[1]})
+                await self.bot.db.plugin_defaults_update("'{}'".format(plugin.__name__.split(".")[3]), "'{}'".format(setting), {"type": setting_type.split()[0], "value": setting_type.split()[1]}, position)
+                position += 1
 
             #map plugin event hooks
             for event in pluginmanifest["eventhooks"]:
