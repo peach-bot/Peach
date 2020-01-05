@@ -1,4 +1,4 @@
-# [Fancy interface](https://github.com/peach-bot/Peach/compare/v3.3.2...v3.4.0) (v3.4.0)
+# [Settings page got some fanc'](https://github.com/peach-bot/Peach/compare/v3.3.2...v3.4.0) (v3.4.0)
 
 ### 🐛 Bug Fixes 
 
