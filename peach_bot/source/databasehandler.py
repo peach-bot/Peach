@@ -59,9 +59,9 @@ class DatabaseHandler:
         value = await self.solvevalue(self.dbcur.fetchall()[0][0])
         return value
     
-    async def plugin_defaults_update(self, pluginid, cfgkey, cfgvalue):
+    async def plugin_defaults_update(self, pluginid, cfgkey, cfgvalue, position):
         """Adds new config keys without overwriting already existing ones."""
-        self.dbcur.execute("INSERT INTO defaults VALUES ({0}, {1}, '{2}') ON CONFLICT (pluginid, cfgkey) DO UPDATE SET cfgvalue = '{2}' WHERE defaults.pluginid = {0} AND defaults.cfgkey = {1}".format(pluginid, cfgkey, json.dumps(cfgvalue)))
+        self.dbcur.execute("INSERT INTO defaults VALUES ({0}, {1}, '{2}', {3}) ON CONFLICT (pluginid, cfgkey) DO UPDATE SET cfgvalue = '{2}', position = {3} WHERE defaults.pluginid = {0} AND defaults.cfgkey = {1}".format(pluginid, cfgkey, json.dumps(cfgvalue), position))
         self.dbconn.commit()
 
     async def plugin_serverconfig_update(self, serverid, pluginid, cfgkey, cfgvalue):
