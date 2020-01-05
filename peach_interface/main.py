@@ -123,7 +123,7 @@ def admin_dashboard():
     try:
         log.info("Page loading time: {} seconds".format(round(time.time()-starttime, 4)))
         return flask.render_template(
-            "dashboard.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
+            "dashboard_admin.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
             servers=flask.session["user_guilds"], current_server=flask.session["selected_server"], admin=True)
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
