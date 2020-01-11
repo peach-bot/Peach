@@ -183,7 +183,7 @@ h1 {
 }
 
 .submitbutton {
-    padding-left: 16px;
+    text-align: center;
 }
 
 .content_box {
@@ -193,7 +193,7 @@ h1 {
 }
 
 .content_inner {
-    padding: 20px 100px 20px 100px;
+    padding: 20px 100px 30px 100px;
 }
 
 .sidebar-sticky {

@@ -2,7 +2,7 @@
 
 {% block site %}
 <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ url_for('index') }}">
         <div class="box">
             <img src="{{ url_for('static', filename='peach.png') }}" style="width: 32px" alt="Peach icon">
             <span style="font-weight: 600;">Peach</span>{% if admin %}<span style="font-weight: 200;">Admin</span>{% endif %}
