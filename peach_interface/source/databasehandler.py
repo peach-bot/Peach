@@ -1,6 +1,8 @@
 import psycopg2
 import os
 import json
+import time
+import datetime
 
 class DatabaseHandler:
 
@@ -44,3 +46,103 @@ class DatabaseHandler:
                         settingtype = "bool"
                     self.dbcur.execute("INSERT INTO serverconfig VALUES ({0}, '{1}', '{2}', '{3}') ON CONFLICT (serverid, pluginid, cfgkey) DO UPDATE SET cfgvalue = '{3}' WHERE serverconfig.serverid = {0} AND serverconfig.pluginid = '{1}' AND serverconfig.cfgkey = '{2}'".format(serverid, plugin, dbsetting, json.dumps({"type": settingtype, "value": str(setting.data).lower()})))
                     self.dbconn.commit()
+
+    def getactivitydatamonth(self, serverid):
+        today = int(datetime.datetime.fromtimestamp(time.time()).replace(hour=0, minute=0, second=0, microsecond=0).timestamp())
+
+        #get the timestamp for 30 days ago
+        timestamp = today - 86400*30
+
+        #create empty lists n stuff
+        activitybuffer = []
+        activitydata = []
+
+        #fetch data from database
+        self.dbcur.execute("SELECT unixtimestamp, SUM(messages) FROM channelstats WHERE serverid = {} GROUP BY unixtimestamp".format(serverid))
+        dbdata = self.dbcur.fetchall()
+
+        #calulate all the points for the buffer
+        while True:
+            for activity in dbdata:
+                if timestamp == activity[0]:
+                    activitybuffer.append({"x": timestamp, "y": activity[1]})
+                    break
+            else:
+                activitybuffer.append({"x": timestamp, "y": 0})
+            timestamp = timestamp+1800
+            if timestamp > today:
+                break
+
+        #revert timestamp back to 30 days ago
+        timestamp = today - 86400*30
+
+        #merge timeframes together
+        day = 0
+        nextday = timestamp + 86400
+        for activity in activitybuffer:
+            day += activity["y"]
+            timestamp = timestamp+1800
+            if timestamp == nextday:
+                activitydata.append({"x": nextday-86400, "y": day})
+                nextday = timestamp + 86400
+                day = 0
+
+        return activitydata
+
+    def getactivitydatayear(self, serverid):
+        today = int(datetime.datetime.fromtimestamp(time.time()).replace(hour=0, minute=0, second=0, microsecond=0).timestamp())
+
+        #get the timestamp for a year ago
+        timestamp = today - 86400*365
+
+        #create empty lists n stuff
+        activitybuffer = []
+        activitydata = []
+
+        #fetch data from database
+        self.dbcur.execute("SELECT unixtimestamp, SUM(messages) FROM channelstats WHERE serverid = {} GROUP BY unixtimestamp".format(serverid))
+        dbdata = self.dbcur.fetchall()
+
+        #calulate all the points for the buffer
+        while True:
+            for activity in dbdata:
+                if timestamp == activity[0]:
+                    activitybuffer.append({"x": timestamp, "y": activity[1]})
+                    break
+            else:
+                activitybuffer.append({"x": timestamp, "y": 0})
+            timestamp = timestamp+1800
+            if timestamp == today:
+                break
+
+        #revert timestamp back to a year ago
+        timestamp = today - 86400*365
+
+        #merge timeframes together
+        day = 0
+        nextday = timestamp + 86400
+        for activity in activitybuffer:
+            day += activity["y"]
+            timestamp = timestamp+1800
+            if timestamp == nextday:
+                activitydata.append({"x": nextday-86400, "y": day})
+                nextday = timestamp + 86400
+                day = 0
+
+        #revert timestamp back to a year ago
+        timestamp = today - 86400*365
+        activitybuffer = activitydata
+        activitydata = []
+        month = 0
+        first = activitybuffer[0]["x"]
+        #merge days into months
+        for activity in activitybuffer:
+            if datetime.datetime.fromtimestamp(activity["x"]).day == 1:
+                activitydata.append({"x": first, "y": month})
+                month = 0
+                first = activity["x"]
+            month += activity["y"]
+        activitydata.append({"x": first, "y": month})
+
+        print(activitydata)
+        return activitydata

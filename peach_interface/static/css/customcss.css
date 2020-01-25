@@ -121,7 +121,7 @@ a, a:hover {
 .columns {
     column-count: 2;
     column-fill: balance;
-    column-width: 10px;
+    column-width: 100px;
     padding-bottom: 16px;
 }
 
@@ -219,4 +219,18 @@ h1 {
 
 .dropdown-item:active {
     background-color: #e4a075;
+}
+
+canvas {
+    display: inline-block !important;
+}
+
+.chartTitle {
+    padding-left: 10px;
+    font-weight: 500;
+    font-size: 16pt;
+}
+
+.chartContainer {
+    display: inline-block;
 }
