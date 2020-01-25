@@ -6,7 +6,7 @@ import os
 import discord
 
 import _thread as thread
-from source import databasehandler, pluginhandler
+from source import databasehandler, pluginhandler, analytics
 
 
 class Peach(discord.Client):
@@ -40,13 +40,15 @@ class Peach(discord.Client):
         #load plugins
         self.pluginhandler = pluginhandler.PluginHandler(self, self.log)
         await self.pluginhandler.mapplugins()
+        #load analytic module
+        self.analytics = analytics.Analytics(self)
         #update rich presence
         await self.updatepresence(os.environ["BOT_STATUS"])
-        #load event hooks            
         self.log.info('Startup complete!')
-        await self.pluginhandler.runevent("on_ready")
         #release wait_till_ready gate
         self.ready = True
+        #run backlogged events
+        await self.pluginhandler.runevent("on_ready")
 
     async def on_message(self, message):
         try:
@@ -64,6 +66,10 @@ class Peach(discord.Client):
                 await self.pluginhandler.runcommand(message)
 
             await self.pluginhandler.runevent("on_message", message)
+
+            await self.analytics.increment_messages(message.channel.id ,message.guild.id)
+
+
         except AttributeError:
             pass
 

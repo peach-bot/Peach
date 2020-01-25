@@ -34,6 +34,10 @@ def login():
     else:
         flask.session["avatar_url"] = "https://cdn.discordapp.com/avatars/{}/{}.png?size=128".format(user_json.get("id"), user_json.get("avatar"))
     flask.session["username"] = user_json.get("username")
+    if user_json.get("id") == "216994889156657153":
+        flask.session["admin"] = True
+    else:
+        flask.session["admin"] = False
     log.info("Login loading time: {} seconds".format(round(time.time()-starttime, 4)))
     return flask.redirect(flask.url_for("dashboard"), code=302)
 
@@ -60,7 +64,7 @@ def dashboard():
         log.info("Page loading time: {} seconds".format(round(time.time()-starttime, 4)))
         return flask.render_template(
             "dashboard.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
-            servers=flask.session["user_guilds"], current_server=flask.session["selected_server"], admin=False)
+            servers=flask.session["user_guilds"], current_server=flask.session["selected_server"], admin=flask.session["admin"])
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
@@ -71,7 +75,7 @@ def servers():
         log.info("Page loading time: {} seconds".format(round(time.time()-starttime, 4)))
         return flask.render_template(
             "servers.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
-            servers=flask.session["user_guilds"], current_server=flask.session["selected_server"], admin=False)
+            servers=flask.session["user_guilds"], current_server=flask.session["selected_server"], admin=flask.session["admin"])
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
@@ -84,10 +88,13 @@ def logout():
 def stats():
     starttime = time.time()
     try:
+        monthdata = db.getactivitydatamonth(flask.session["selected_server"][2])
+        yeardata = db.getactivitydatayear(flask.session["selected_server"][2])
+        print(flask.session["selected_server"][2])
         log.info("Page loading time: {} seconds".format(round(time.time()-starttime, 4)))
         return flask.render_template(
             "stats.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
-            servers=flask.session["user_guilds"], current_server=flask.session["selected_server"], admin=False)
+            servers=flask.session["user_guilds"], current_server=flask.session["selected_server"], admin=flask.session["admin"], monthdata=monthdata, yeardata=yeardata)
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
@@ -104,7 +111,7 @@ def settings():
         return flask.render_template(
             "settings.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
             servers=flask.session["user_guilds"], current_server=flask.session["selected_server"], form = settingsform,
-            settings = serversettings, admin=False)
+            settings = serversettings, admin=flask.session["admin"])
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
@@ -113,7 +120,7 @@ def logs():
     try:
         return flask.render_template(
             "logs.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
-            servers=flask.session["user_guilds"], current_server=flask.session["selected_server"], admin=False)
+            servers=flask.session["user_guilds"], current_server=flask.session["selected_server"], admin=flask.session["admin"])
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
@@ -124,7 +131,7 @@ def admin_dashboard():
         log.info("Page loading time: {} seconds".format(round(time.time()-starttime, 4)))
         return flask.render_template(
             "dashboard_admin.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
-            servers=flask.session["user_guilds"], current_server=flask.session["selected_server"], admin=True)
+            servers=flask.session["user_guilds"], current_server=flask.session["selected_server"], admin=flask.session["admin"])
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 

@@ -93,6 +93,7 @@ class DatabaseHandler:
         return self.dbcur.fetchall()
 
     async def solvevalue(self, data):
+        """Returns the value stored inside a database set."""
         if data["type"] == "bool":
             if data["value"] == "true":
                 return True
@@ -100,3 +101,8 @@ class DatabaseHandler:
                 return False
             else:
                 self.bot.log.error("Could not solve database value, boolean but not boolean")
+
+    async def increment_messages(self, channelid: int, timestamp: int, serverid: int):
+        """Increments the message counter in the database."""
+        self.dbcur.execute("INSERT INTO channelstats VALUES ({0}, {1}, {2}, 1) ON CONFLICT (channelid, unixtimestamp) DO UPDATE SET messages = channelstats.messages + 1 WHERE channelstats.unixtimestamp = {1} and channelstats.serverid = {2}".format(channelid, timestamp, serverid))
+        self.dbconn.commit()
