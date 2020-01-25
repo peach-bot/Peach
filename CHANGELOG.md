@@ -1,4 +1,11 @@
-# [Sorting, Fixing, GIFs](https://github.com/peach-bot/Peach/compare/v3.4.0...v) (v3.5.0)
+# [Activity Graphs](https://github.com/peach-bot/Peach/compare/v3.6.0...v3.5.0) (v3.6.0)
+
+### ✨ Features
+
+* **interface:** Added message activity graphs ([153b24f](https://github.com/peach-bot/Peach/commit/153b24f91dcdc861cccc5e32de084d4ae0619110))
+* **bot:** Added message activity logging ([216c47e](https://github.com/peach-bot/Peach/commit/216c47eeed1e0071656c34a4bcc30fa1b69a7d6e))
+
+# [Sorting, Fixing, GIFs](https://github.com/peach-bot/Peach/compare/v3.4.0...v3.5.0) (v3.5.0)
 
 ### ✨ Features
 
