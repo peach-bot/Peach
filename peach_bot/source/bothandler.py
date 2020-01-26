@@ -2,6 +2,7 @@ import asyncio
 import inspect
 import json
 import os
+import datetime
 
 import discord
 
@@ -45,6 +46,8 @@ class Peach(discord.Client):
         #update rich presence
         await self.updatepresence(os.environ["BOT_STATUS"])
         self.log.info('Startup complete!')
+        #set startup timestamp
+        self.startuptime = datetime.datetime.now()
         #release wait_till_ready gate
         self.ready = True
         #run backlogged events
