@@ -144,5 +144,4 @@ class DatabaseHandler:
             month += activity["y"]
         activitydata.append({"x": first, "y": month})
 
-        print(activitydata)
         return activitydata

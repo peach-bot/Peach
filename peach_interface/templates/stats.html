@@ -18,63 +18,68 @@
               </span>
               <canvas id="serverMessageActivityChartMonth" width="200px" height="100px"></canvas>
                 <script>
-                  var ctx = document.getElementById("serverMessageActivityChartMonth").getContext("2d");
-                  data = {{ monthdata|tojson }}
-                  convertedData = []
-                  data.forEach(eatShit)
-                  function eatShit(value, index, array) {
-                    convertedData.push({x: new Date(value.x * 1000), y: value.y})
-                  }
-                  var serverMessageActivityChartMonth = new Chart(ctx, {
-                      type: 'line',
-                      data: {"datasets":[{
-                        fill: true,
-                        label:"Messages",
-                        borderColor : "#e4a075",
-                        backgroundColor: "rgba(255, 255, 255, 0.2)",
-                        data: convertedData,
-                        cubicInterpolationMode: "monotone",
-                        fill:false,
-                        lineTension:1}]},
-                      options: {
-                        responsive: true,
-                        defaultFontColor: "#fff",
-                        legend: {
-                          display: false
-                        },
-                        layout: {
-                          padding: {
-                            top: 10
-                          }
-                        },
-                        scales: {
-                          xAxes: [{
-                            gridLines: {
-                              display:false
-                            },
-                            ticks: {
-                              fontColor: "#999"
-                            },
-                            type: 'time',
-                              time: {
-                                unit: "week",
-                                tooltipFormat: "DD.MM.YYYY",
-                                isoWeekday: true,
-                                displayFormats: {
-                                }
-                              }
-                          }],
-                          yAxes: [{
-                            display: false,
-                            gridLines: {
-                              display:false
+                  var monthctx = document.getElementById("serverMessageActivityChartMonth").getContext("2d");
+                  var monthxhttp = new XMLHttpRequest();
+                  monthxhttp.open("GET", "../api/?request=monthactivity", true)
+                  monthxhttp.onreadystatechange = function() {
+                          if (this.readyState == 4 && this.status == 200) {
+                            mdata = JSON.parse(this.responseText).data;
+                            monthdata = [];
+                            mdata.forEach(eatShit);
+                            function eatShit(value, index, array) {
+                              monthdata.push({x: new Date(value.x * 1000), y: value.y})
                             }
-                          }]
-                        }
-                      }
-                  });
-                  serverMessageActivityChartMonth.canvas.parentNode.style.width = '49%';
-                  serverMessageActivityChartMonth.canvas.parentNode.style.padding = '0% 2% 0% 0%';
+                            var serverMessageActivityChartMonth = new Chart(monthctx, {
+                                type: 'line',
+                                data: {"datasets":[{
+                                  fill: true,
+                                  label:"Messages",
+                                  borderColor : "#e4a075",
+                                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                                  data: monthdata,
+                                  cubicInterpolationMode: "monotone",
+                                  fill:false,
+                                  lineTension:1}]},
+                                options: {
+                                  responsive: true,
+                                  defaultFontColor: "#fff",
+                                  legend: {
+                                    display: false
+                                  },
+                                  layout: {
+                                    padding: {
+                                      top: 10
+                                    }
+                                  },
+                                  scales: {
+                                    xAxes: [{
+                                      gridLines: {
+                                        display:false
+                                      },
+                                      ticks: {
+                                        fontColor: "#999"
+                                      },
+                                      type: 'time',
+                                        time: {
+                                          unit: "week",
+                                          tooltipFormat: "DD.MM.YYYY",
+                                          isoWeekday: true,
+                                        }
+                                    }],
+                                    yAxes: [{
+                                      display: false,
+                                      gridLines: {
+                                        display:false
+                                      }
+                                    }]
+                                  }
+                                }
+                            });
+                          serverMessageActivityChartMonth.canvas.parentNode.style.width = '49%';
+                          serverMessageActivityChartMonth.canvas.parentNode.style.padding = '0% 0% 0% 2%';
+                          }
+                      };
+                      monthxhttp.send();
                 </script>
             </div>
             <div class="chartContainer">
@@ -82,63 +87,70 @@
                 Message activity over the last year
               </span>
               <canvas id="serverMessageActivityChartYear" width="200px" height="100px"></canvas>
-                <script>
-                  var ctx = document.getElementById("serverMessageActivityChartYear").getContext("2d");
-                  data = {{ yeardata|tojson }}
-                  convertedData = []
-                  data.forEach(eatShit)
-                  function eatShit(value, index, array) {
-                    convertedData.push({x: new Date(value.x * 1000), y: value.y})
-                  }
-                  console.log(convertedData)
-                  var serverMessageActivityChartYear = new Chart(ctx, {
-                      type: 'line',
-                      data: {"datasets":[{
-                        fill: true,
-                        label:"Messages",
-                        borderColor : "#e4a075",
-                        backgroundColor: "rgba(255, 255, 255, 0.2)",
-                        data: convertedData,
-                        cubicInterpolationMode: "monotone",
-                        fill:false,
-                        lineTension:1}]},
-                      options: {
-                        responsive: true,
-                        defaultFontColor: "#fff",
-                        legend: {
-                          display: false
-                        },
-                        layout: {
-                          padding: {
-                            top: 10
-                          }
-                        },
-                        scales: {
-                          xAxes: [{
-                            gridLines: {
-                              display:false
-                            },
-                            ticks: {
-                              fontColor: "#999"
-                            },
-                            type: 'time',
-                              time: {
-                                unit: "month",
-                                tooltipFormat: "DD.MM.YYYY",
-                                isoWeekday: true,
-                              }
-                          }],
-                          yAxes: [{
-                            display: false,
-                            gridLines: {
-                              display:false
+                  <script>
+                      var yearctx = document.getElementById("serverMessageActivityChartYear").getContext("2d");
+                      var yearxhttp = new XMLHttpRequest();
+                      yearxhttp.open("GET", "../api/?request=yearactivity", true);
+                      yearxhttp.onreadystatechange = function() {
+                          if (this.readyState == 4 && this.status == 200) {
+                            console.log(this.responseText)
+                            ydata = JSON.parse(this.responseText).data;
+                            yeardata = [];
+                            ydata.forEach(yearEatShit);
+                            function yearEatShit(value, index, array) {
+                              yeardata.push({x: new Date(value.x * 1000), y: value.y})
                             }
-                          }]
-                        }
-                      }
-                  });
-                  serverMessageActivityChartYear.canvas.parentNode.style.width = '49%';
-                  serverMessageActivityChartYear.canvas.parentNode.style.padding = '0% 0% 0% 2%';
+                            var serverMessageActivityChartYear = new Chart(yearctx, {
+                                type: 'line',
+                                data: {"datasets":[{
+                                  fill: true,
+                                  label:"Messages",
+                                  borderColor : "#e4a075",
+                                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                                  data: yeardata,
+                                  cubicInterpolationMode: "monotone",
+                                  fill:false,
+                                  lineTension:1}]},
+                                options: {
+                                  responsive: true,
+                                  defaultFontColor: "#fff",
+                                  legend: {
+                                    display: false
+                                  },
+                                  layout: {
+                                    padding: {
+                                      top: 10
+                                    }
+                                  },
+                                  scales: {
+                                    xAxes: [{
+                                      gridLines: {
+                                        display:false
+                                      },
+                                      ticks: {
+                                        fontColor: "#999"
+                                      },
+                                      type: 'time',
+                                        time: {
+                                          unit: "month",
+                                          tooltipFormat: "DD.MM.YYYY",
+                                          isoWeekday: true,
+                                        }
+                                    }],
+                                    yAxes: [{
+                                      display: false,
+                                      gridLines: {
+                                        display:false
+                                      }
+                                    }]
+                                  }
+                                }
+                            });
+                          serverMessageActivityChartYear.canvas.parentNode.style.width = '49%';
+                          serverMessageActivityChartYear.canvas.parentNode.style.padding = '0% 0% 0% 2%';
+                          }
+                      };
+                      yearxhttp.send();
                 </script>
             </div>
           </div>

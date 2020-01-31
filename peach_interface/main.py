@@ -4,11 +4,11 @@ import time
 import flask
 import os
 
-from source import databasehandler, forms
+from source import databasehandler, forms, api
 from source.oauth import Oauth
 
 app = flask.Flask(__name__)
-app.debug = False
+API = api.Api()
 
 @app.route("/")
 def index():
@@ -88,13 +88,10 @@ def logout():
 def stats():
     starttime = time.time()
     try:
-        monthdata = db.getactivitydatamonth(flask.session["selected_server"][2])
-        yeardata = db.getactivitydatayear(flask.session["selected_server"][2])
-        print(flask.session["selected_server"][2])
         log.info("Page loading time: {} seconds".format(round(time.time()-starttime, 4)))
         return flask.render_template(
             "stats.html", username=flask.session["username"], avatar_url=flask.session["avatar_url"],
-            servers=flask.session["user_guilds"], current_server=flask.session["selected_server"], admin=flask.session["admin"], monthdata=monthdata, yeardata=yeardata)
+            servers=flask.session["user_guilds"], current_server=flask.session["selected_server"], admin=flask.session["admin"])
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
@@ -135,7 +132,19 @@ def admin_dashboard():
     except KeyError:
         return flask.redirect(flask.url_for("index"), code=302)
 
+@app.route("/api/", methods = ["GET", "POST"])
+def api():
+    request = flask.request.args.get("request")
+    if request == "monthactivity":
+        return {"data": db.getactivitydatamonth(flask.session["selected_server"][2])}
+    elif request == "yearactivity":
+        return {"data": db.getactivitydatayear(flask.session["selected_server"][2])}
+
+
 if __name__ == "__main__":
+
+    app.debug = False
+
     logging.basicConfig(format='%(name)s @ %(asctime)s - %(levelname)s: %(message)s', level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
     log = logging.getLogger('peach/interface')
     allowedloggers = ['peach/bot', 'peach/interface']
