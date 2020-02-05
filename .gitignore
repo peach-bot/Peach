@@ -126,3 +126,6 @@ test.py
 .vscode
 
 docker-compose-dev.yml
+
+# Bot token file
+key.scrt
