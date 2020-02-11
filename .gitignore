@@ -124,6 +124,8 @@ dmypy.json
 
 test.py
 .vscode
-/node_modules
 
 docker-compose-dev.yml
+
+# Bot token file
+key.scrt

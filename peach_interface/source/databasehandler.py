@@ -58,7 +58,7 @@ class DatabaseHandler:
         activitydata = []
 
         #fetch data from database
-        self.dbcur.execute("SELECT unixtimestamp, SUM(messages) FROM channelstats WHERE serverid = {} GROUP BY unixtimestamp".format(serverid))
+        self.dbcur.execute("SELECT unixtimestamp, SUM(messages) FROM channelstats WHERE serverid = {} GROUP BY unixtimestamp ORDER BY unixtimestamp".format(serverid))
         dbdata = self.dbcur.fetchall()
 
         #calulate all the points for the buffer
@@ -100,7 +100,7 @@ class DatabaseHandler:
         activitydata = []
 
         #fetch data from database
-        self.dbcur.execute("SELECT unixtimestamp, SUM(messages) FROM channelstats WHERE serverid = {} GROUP BY unixtimestamp".format(serverid))
+        self.dbcur.execute("SELECT unixtimestamp, SUM(messages) FROM channelstats WHERE serverid = {} GROUP BY unixtimestamp ORDER BY unixtimestamp".format(serverid))
         dbdata = self.dbcur.fetchall()
 
         #calulate all the points for the buffer
@@ -144,5 +144,4 @@ class DatabaseHandler:
             month += activity["y"]
         activitydata.append({"x": first, "y": month})
 
-        print(activitydata)
         return activitydata
