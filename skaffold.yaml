@@ -26,4 +26,4 @@ profiles:
   - name: travis-ci
     build:
       local:
-        push: false
+        push: true
