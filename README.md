@@ -1,5 +1,5 @@
 # Peach
- ##### A Discord server management and chat bot written in Python.
+ ##### A Discord server management and chat bot with loads of handy features
 [![GitHub version](https://img.shields.io/github/v/release/peach-bot/peach?color=brightgreen)](https://github.com/peach-bot/Peach/releases)
 [![Build Status](https://api.travis-ci.com/peach-bot/Peach.svg?branch=master)](https://travis-ci.com/peach-bot/Peach/branches)
 [![License](https://img.shields.io/github/license/peach-bot/Peach?color=brightgreen)](https://github.com/peach-bot/Peach/blob/master/LICENSE)
@@ -19,7 +19,22 @@ Peach uses a plugin api allowing for fairly easy developement of features.
 
 <img src=https://user-images.githubusercontent.com/45462701/67281554-fbb71c80-f4cf-11e9-86ff-8ce8344518d8.png width=12px></img> You can find more information on the project in the [wiki](https://github.com/peach-bot/Peach/wiki).
 
-## Contributors ✨
+## ✨ Features
+ - [ ] Advanced role pinging
+ - [ ] Dynamic voice channels
+ - [ ] More rich embeds (info cards)
+ - [ ] Twitter forwarding
+ - [ ] Twitch, YouTube, Mixer announcements
+ - [ ] Fast channel configuring
+ - [ ] Reaction role
+ - [ ] Raffles
+ - [ ] Economy system
+ - [ ] Funky text filters
+ - [ ] Customizable prefixes
+ - [ ] Moderation tools (Freeze, Kick, Ban, Mute, Jail)
+ - [ ] Raid protection
+
+## 💜 Contributors 
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
@@ -35,3 +50,5 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## 

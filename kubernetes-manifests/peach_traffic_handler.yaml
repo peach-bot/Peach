@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: peach-traffic-handler
+spec:
+  selector:
+    matchLabels:
+      app: peach-traffic-handler
+  template:
+    metadata:
+      labels:
+        app: peach-traffic-handler
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: peach-traffic-handler
+        image: sleepyjul/peach-traffic-handler
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: peach-traffic-handler
+spec:
+  type: ClusterIP
+  selector:
+    app: peach-traffic-handler
+  ports:
+  - name: peach-traffic-handler
+    port: 5000
+    targetPort: 8080

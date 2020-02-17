@@ -1,19 +1,19 @@
 version: "2"
 services:
   eventHandler:
-    image: peach/event-handler:latest
+    image: sleepyjul/peach-event-handler:latest
     build:
       context: ./peach_event_handler
       dockerfile: ./Dockerfile
 
   trafficHandler:
-    image: peach/traffic-handler:latest
+    image: sleepyjul/peach-traffic-handler:latest
     build:
       context: ./peach_traffic_handler
       dockerfile: ./Dockerfile
 
   wsgi:
-    image: peach/wsgi:latest
+    image: sleepyjul/peach-wsgi-app:latest
     build:
       context: ./peach_wsgi_app
       dockerfile: ./Dockerfile

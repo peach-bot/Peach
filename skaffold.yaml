@@ -1,0 +1,29 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+metadata:
+  name: peach
+build:
+  artifacts:
+  - image: sleepyjul/peach-event-handler
+    context: peach_event_handler
+  - image: sleepyjul/peach-traffic-handler
+    context: peach_traffic_handler
+  - image: sleepyjul/peach-wsgi-app
+    context: peach_wsgi_app
+deploy:
+  kubectl:
+    manifests:
+    - kubernetes-manifests/peach_event_handler.yaml
+    - kubernetes-manifests/peach_traffic_handler.yaml
+    - kubernetes-manifests/peach_wsgi_app.yaml
+profiles:
+  # "travis-ci" profile is used to build the images without
+  # pushing them.
+  - name: p
+    build:
+      local:
+        push: false
+  - name: travis-ci
+    build:
+      local:
+        push: false

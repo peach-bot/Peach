@@ -1,0 +1,13 @@
+sudo: required
+
+services:
+- docker
+
+install:
+- curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/v1.3.1/skaffold-linux-amd64
+- chmod +x skaffold
+- sudo mv skaffold /usr/local/bin
+
+script:
+- docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD;
+- skaffold build --profile travis-ci
