@@ -27,3 +27,6 @@ profiles:
     build:
       local:
         push: true
+      tagPolicy:
+        envTemplate:
+          template: "latest"
