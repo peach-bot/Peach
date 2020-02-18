@@ -17,8 +17,6 @@ deploy:
     - kubernetes-manifests/peach_traffic_handler.yaml
     - kubernetes-manifests/peach_wsgi_app.yaml
 profiles:
-  # "travis-ci" profile is used to build the images without
-  # pushing them.
   - name: p
     build:
       local:
