@@ -26,7 +26,7 @@ Peach uses a plugin api allowing for fairly easy developement of features.
  - [ ] Twitter forwarding
  - [ ] Twitch, YouTube, Mixer announcements
  - [ ] Fast channel configuring
- - [ ] Reaction role
+ - [ ] Reaction role, automatic role assignment
  - [ ] Raffles
  - [ ] Economy system
  - [ ] Funky text filters
