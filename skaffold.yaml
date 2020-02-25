@@ -1,0 +1,30 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+metadata:
+  name: peach
+build:
+  artifacts:
+  - image: sleepyjul/peach-discord-client
+    context: peach_discord_client
+  - image: sleepyjul/peach-interface
+    context: peach_interface
+  - image: sleepyjul/peach-shard-coordinator
+    context: peach_shard_coordinator
+deploy:
+  kubectl:
+    manifests:
+    - kubernetes-manifests/peach_discord_client.yaml
+    - kubernetes-manifests/peach_interface.yaml
+    - kubernetes-manifests/peach_shard_coordinator.yaml
+profiles:
+  - name: p
+    build:
+      local:
+        push: false
+  - name: travis-ci
+    build:
+      local:
+        push: true
+      tagPolicy:
+        envTemplate:
+          template: "{{.IMAGE_NAME}}:latest"

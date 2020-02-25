@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: peach-shard-coordinator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: peach-shard-coordinator
+  template:
+    metadata:
+      labels:
+        app: peach-shard-coordinator
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: peach-shard-coordinator
+        image: sleepyjul/peach-shard-coordinator
+        ports:
+        - containerPort: 8080
