@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: peach-discord-client
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: discordshard
+  template:
+    metadata:
+      name: discordshard
+      labels:
+        app: discordshard
+    spec:
+      containers:
+      - name: peach-discord-client
+        image: sleepyjul/peach-discord-client
+        ports:
+        - containerPort: 8080
