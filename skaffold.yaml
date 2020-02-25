@@ -4,18 +4,18 @@ metadata:
   name: peach
 build:
   artifacts:
-  - image: sleepyjul/peach-event-handler
-    context: peach_event_handler
-  - image: sleepyjul/peach-traffic-handler
-    context: peach_traffic_handler
-  - image: sleepyjul/peach-wsgi-app
-    context: peach_wsgi_app
+  - image: sleepyjul/peach-discord-client
+    context: peach_discord_client
+  - image: sleepyjul/peach-interface
+    context: peach_interface
+  - image: sleepyjul/peach-shard-coordinator
+    context: peach_shard_coordinator
 deploy:
   kubectl:
     manifests:
-    - kubernetes-manifests/peach_event_handler.yaml
-    - kubernetes-manifests/peach_traffic_handler.yaml
-    - kubernetes-manifests/peach_wsgi_app.yaml
+    - kubernetes-manifests/peach_discord_client.yaml
+    - kubernetes-manifests/peach_interface.yaml
+    - kubernetes-manifests/peach_shard_coordinator.yaml
 profiles:
   - name: p
     build:
