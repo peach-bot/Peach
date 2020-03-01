@@ -8,7 +8,7 @@
 [![Closed Issues](https://img.shields.io/github/issues-closed-raw/peach-bot/peach?color=brightgreen)](https://github.com/peach-bot/Peach/issues)
  
 
-[**Try all features today and for free**](http://bit.ly/peachbot)
+<!--[**Try all features today and for free**](http://bit.ly/peachbot)-->
  
 <img src=https://user-images.githubusercontent.com/45462701/67280986-b47c5c00-f4ce-11e9-8c9c-5ab70ec5e392.png width=12px></img>
 To see what's planned for the future or if you want to leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/issues). If you have ideas for features that should be integrated this is also the place to propose them.
