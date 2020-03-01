@@ -33,6 +33,8 @@ Peach uses a plugin api allowing for fairly easy developement of features.
  - [ ] Customizable prefixes
  - [ ] Moderation tools (Freeze, Kick, Ban, Mute, Jail)
  - [ ] Raid protection
+ - [ ] Currency/Point system
+ - [ ] Minigames (Duels, Roulette)
 
 ## 💜 Contributors 
 
