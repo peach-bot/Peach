@@ -9,18 +9,10 @@
  
 
 <!--[**Try all features today and for free**](http://bit.ly/peachbot)-->
- 
-
-
-## How does it work? How can I contribute?
-
-Peach uses a plugin api allowing for fairly easy developement of features.
-
-<img src=https://user-images.githubusercontent.com/45462701/67281554-fbb71c80-f4cf-11e9-86ff-8ce8344518d8.png width=12px></img> You can find more information on the project in the [wiki](https://github.com/peach-bot/Peach/wiki).
 
 ## ✨ Features
 <img src=https://user-images.githubusercontent.com/45462701/67280986-b47c5c00-f4ce-11e9-8c9c-5ab70ec5e392.png width=12px></img>
-To leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/issues). Here is a list of features that are planned ([ ])  or already implemented ([x]).
+To leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/issues). Here is a list of features that are planned or already implemented:
 
  - [ ] Advanced role pinging
  - [ ] Dynamic voice channels
@@ -37,6 +29,10 @@ To leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/
  - [ ] Raid protection
  - [ ] Currency/Point system
  - [ ] Minigames (Duels, Roulette, Lottery)
+
+## How does it work? How can I contribute?
+
+Peach features a dynamic system for loading and powering it's features (plugins). The system includes an API for plugins to be written against allowing for better maintainability.
 
 ## 💜 Contributors 
 
