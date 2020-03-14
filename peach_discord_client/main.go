@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"log"
+)
 
 func main() {
-	fmt.Printf("bot shard online lol")
+	log.Printf("shard online\n")
+	for {
+
+	}
 }

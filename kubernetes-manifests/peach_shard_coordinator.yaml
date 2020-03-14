@@ -18,3 +18,24 @@ spec:
         image: sleepyjul/peach-shard-coordinator
         ports:
         - containerPort: 8080
+        env:
+          - name: BOTTOKEN
+            valueFrom:
+              secretKeyRef:
+                name: bottoken
+                key: bottoken
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: peach-shard-coordinator
+spec:
+  type: NodePort 
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30000
+    name: http
+    protocol: TCP
+  selector:
+    app: peach-shard-coordinator

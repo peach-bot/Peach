@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: peach-discord-client
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: discordshard
