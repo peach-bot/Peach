@@ -1,1 +1,1 @@
-kubectl create secret generic bottoken --from-file=./secrets/bottoken.txt
+kubectl create secret generic bottoken --from-file=./secrets/BOTTOKEN
