@@ -126,3 +126,4 @@ test.py
 .vscode
 notes
 vidscripts
+secrets/bottoken.txt
