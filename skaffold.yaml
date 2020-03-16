@@ -17,11 +17,11 @@ deploy:
     - kubernetes-manifests/peach_interface.yaml
     - kubernetes-manifests/peach_shard_coordinator.yaml
 profiles:
-  - name: p
+  - name: nopush
     build:
       local:
         push: false
-  - name: travis-ci
+  - name: push
     build:
       local:
         push: true
