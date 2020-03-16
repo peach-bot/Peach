@@ -23,7 +23,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: bottoken
-                key: bottoken
+                key: BOTTOKEN
 ---
 apiVersion: v1
 kind: Service
