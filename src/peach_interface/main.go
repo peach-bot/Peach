@@ -1,11 +1,28 @@
 package main
 
 import (
-	"log"
+	"os"
+
+	log "github.com/sirupsen/logrus"
 )
 
+func init() {
+	// Set log format, output and level
+	log.SetFormatter(&log.TextFormatter{
+		ForceColors:      true,
+		PadLevelText:     true,
+		QuoteEmptyFields: true,
+		DisableTimestamp: false,
+		FullTimestamp:    true,
+		TimestampFormat:  "2006-01-02 15:04:05",
+	})
+	log.SetOutput(os.Stdout)
+	log.SetLevel(log.InfoLevel)
+}
+
 func main() {
-	log.Printf("Interface online\n")
+	log.Info("interface node starting...")
 	for {
+
 	}
 }
