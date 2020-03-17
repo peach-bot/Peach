@@ -10,7 +10,6 @@ func init() {
 	// Set log format, output and level
 	log.SetFormatter(&log.TextFormatter{
 		ForceColors:      true,
-		PadLevelText:     true,
 		QuoteEmptyFields: true,
 		DisableTimestamp: false,
 		FullTimestamp:    true,

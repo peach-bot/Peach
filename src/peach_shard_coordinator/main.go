@@ -16,7 +16,6 @@ func init() {
 	// Set log format, output and level
 	log.SetFormatter(&log.TextFormatter{
 		ForceColors:      true,
-		PadLevelText:     true,
 		QuoteEmptyFields: true,
 		DisableTimestamp: false,
 		FullTimestamp:    true,
@@ -33,12 +32,12 @@ func main() {
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api/v1").Subrouter()
 	api.HandleFunc("/getshard", getShard).Methods(http.MethodGet)
-	api.HandleFunc("/reserveshard/{shardID}", reserveShard).Methods(http.MethodPost)
+	api.HandleFunc("/reserveshard", reserveShard).Methods(http.MethodPost)
 	api.HandleFunc("/updateshard", updateShard).Methods(http.MethodPost)
 	api.HandleFunc("/scale", scale).Methods(http.MethodGet)
 
 	// initial creation of shards list
-	go resetShardCount()
+	go resetShardCount(0)
 
 	// run
 	done := make(chan bool)
