@@ -1,5 +1,7 @@
 sudo: required
 
+language: go
+
 services:
 - docker
 
@@ -12,6 +14,8 @@ jobs:
   include:
   - stage: shard_coordinator_test
     script:
+      - go get -t github.com/stretchr/testify
+      - go get -d -t ./src/peach_shard_coordinator/...
       - ./scripts/test_shard_coordinator.sh
   - stage: deploy
     script:
