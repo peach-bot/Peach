@@ -5,11 +5,11 @@ metadata:
 build:
   artifacts:
   - image: sleepyjul/peach-discord-client
-    context: peach_discord_client
+    context: src/peach_discord_client
   - image: sleepyjul/peach-interface
-    context: peach_interface
+    context: src/peach_interface
   - image: sleepyjul/peach-shard-coordinator
-    context: peach_shard_coordinator
+    context: src/peach_shard_coordinator
 deploy:
   kubectl:
     manifests:
@@ -17,11 +17,11 @@ deploy:
     - kubernetes-manifests/peach_interface.yaml
     - kubernetes-manifests/peach_shard_coordinator.yaml
 profiles:
-  - name: p
+  - name: nopush
     build:
       local:
         push: false
-  - name: travis-ci
+  - name: push
     build:
       local:
         push: true

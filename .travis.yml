@@ -1,4 +1,7 @@
-sudo: required
+os: linux
+dist: xenial
+
+language: go
 
 services:
 - docker
@@ -8,6 +11,18 @@ install:
 - chmod +x skaffold
 - sudo mv skaffold /usr/local/bin
 
-script:
-- docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD;
-- skaffold build --profile travis-ci
+jobs:
+  include:
+  - stage: shard_coordinator_test
+    script:
+      - go get -t github.com/stretchr/testify
+      - go get -d -t ./src/peach_shard_coordinator/...
+      - ./scripts/test_shard_coordinator.sh
+  - stage: deploy
+    script:
+    - if [ $TRAVIS_BRANCH == "master" ] && [ $TRAVIS_PULL_REQUEST == false ]; then
+      docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD;
+      skaffold build --profile push;
+      else
+      skaffold build --profile nopush;
+      fi

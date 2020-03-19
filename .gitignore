@@ -125,5 +125,5 @@ dmypy.json
 test.py
 .vscode
 notes
-retrospective
-scripts
+vidscripts
+secrets
