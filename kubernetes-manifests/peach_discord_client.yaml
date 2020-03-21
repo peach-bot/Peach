@@ -18,3 +18,9 @@ spec:
         image: sleepyjul/peach-discord-client
         ports:
         - containerPort: 8080
+        env:
+          - name: BOTTOKEN
+            valueFrom:
+              secretKeyRef:
+                name: discord
+                key: BOTTOKEN
