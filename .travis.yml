@@ -13,11 +13,10 @@ install:
 
 jobs:
   include:
-  - stage: shard_coordinator_test
+  - stage: test
     script:
-      - go get -t github.com/stretchr/testify
-      - go get -d -t ./src/peach_shard_coordinator/...
-      - ./scripts/test_shard_coordinator.sh
+      - go get -d -t ./src/./...
+      - ./scripts/test.sh
   - stage: deploy
     script:
     - if [ $TRAVIS_BRANCH == "master" ] && [ $TRAVIS_PULL_REQUEST == false ]; then
