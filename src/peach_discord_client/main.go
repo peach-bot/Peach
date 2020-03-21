@@ -3,25 +3,41 @@ package main
 import (
 	"os"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
-func init() {
+// VERSION of Peach
+const VERSION = "v0.1.0"
+
+var bottoken string = os.Getenv("BOTTOKEN")
+
+func createLog() *logrus.Logger {
 	// Set log format, output and level
-	log.SetFormatter(&log.TextFormatter{
+	l := logrus.New()
+	l.SetFormatter(&logrus.TextFormatter{
 		ForceColors:      true,
 		QuoteEmptyFields: true,
 		DisableTimestamp: false,
 		FullTimestamp:    true,
 		TimestampFormat:  "2006-01-02 15:04:05",
 	})
-	log.SetOutput(os.Stdout)
-	log.SetLevel(log.InfoLevel)
+	l.SetOutput(os.Stdout)
+	l.SetLevel(logrus.InfoLevel)
+	return l
 }
 
 func main() {
-	log.Info("shard node starting...")
-	for {
+	l := createLog()
 
+	l.Info("shard node starting...")
+
+	c, err := CreateClient()
+	if err != nil {
+		l.Fatal("Unable to create new client, exiting...")
 	}
+	c.log = l
+	done := make(chan bool)
+	err = c.Run()
+
+	<-done
 }
