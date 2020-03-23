@@ -3,6 +3,7 @@ module github.com/peach-bot/Peach
 go 1.13
 
 require (
+	github.com/bwmarrin/snowflake v0.3.0
 	github.com/gorilla/mux v1.7.4
 	github.com/gorilla/websocket v1.4.1
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
