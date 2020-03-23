@@ -1,8 +1,10 @@
 package main
 
 import (
+	"sync"
 	"time"
 
+	"github.com/bwmarrin/snowflake"
 	"github.com/gorilla/websocket"
 	"github.com/sirupsen/logrus"
 )
@@ -11,10 +13,16 @@ import (
 type Client struct {
 
 	// Logger
-	log *logrus.Logger
+	Log *logrus.Logger
 
 	// Authentification
 	TOKEN string
+
+	// Settings
+	Compress           bool
+	LargeThreshold     int // total number of members where the gateway will stop sending offline members in the guild member list
+	GuildSubscriptions bool
+	Intents            int
 
 	// Sharding
 	ShardID    int
@@ -24,18 +32,23 @@ type Client struct {
 	GatewayURL string
 
 	// Connected represents the clients connection status
-	Connected bool
+	Connected chan interface{}
 
 	// Session
 	SessionID string
 	Sequence  *int64
 
 	// Heartbeat
-	heartbeatInterval time.Duration
-	lastHeartbeat     time.Time
+	HeartbeatInterval    time.Duration // Interval in which client should sent heartbeats
+	LastHeartbeatAck     time.Time     // Last time the client received a heartbeat acknowledgement
+	MissingHeartbeatAcks time.Duration // Number of Acks that can be missed before reconnecting
 
 	// Websocket Connection
-	wsConn *websocket.Conn
+	wsConn  *websocket.Conn
+	wsMutex sync.Mutex
+
+	// Snowflake node to generate snowflakes
+	Snowflake snowflake.Node
 }
 
 // Gateway opcodes, denote payload type, see https://discordapp.com/developers/docs/topics/opcodes-and-status-codes#gateway-opcodes
