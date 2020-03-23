@@ -11,9 +11,9 @@ func (c *Client) Run() error {
 }
 
 // CreateClient creates a new discord client
-func CreateClient(args ...interface{}) (c *Client, err error) {
+func CreateClient() (c *Client, err error) {
 
-	c = &Client{}
+	c = &Client{Sequence: new(int64)}
 
 	// Parse shard coordinator for gateway url and shardID
 	c.GatewayURL = "wss://gateway.discord.gg/"
