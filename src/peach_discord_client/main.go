@@ -3,13 +3,12 @@ package main
 import (
 	"os"
 
+	"github.com/bwmarrin/snowflake"
 	"github.com/sirupsen/logrus"
 )
 
 // VERSION of Peach
 const VERSION = "v0.1.0"
-
-var bottoken string = os.Getenv("BOTTOKEN")
 
 func createLog() *logrus.Logger {
 	// Set log format, output and level
@@ -27,15 +26,26 @@ func createLog() *logrus.Logger {
 }
 
 func main() {
-	l := createLog()
+	log := createLog()
 
-	l.Info("shard node starting...")
+	log.Info("shard node starting...")
 
 	c, err := CreateClient()
 	if err != nil {
-		l.Fatal("Unable to create new client, exiting...")
+		log.Fatal("Unable to create new client, exiting...")
 	}
-	c.log = l
+	c.Log = log
+
+	// Set discord epoch and sequence
+	snowflake.Epoch = 1420070400000
+
+	// Settings
+	c.Compress = true
+	c.LargeThreshold = 250
+	c.GuildSubscriptions = true
+	c.TOKEN = os.Getenv("BOTTOKEN")
+	c.MissingHeartbeatAcks = 5
+
 	done := make(chan bool)
 	err = c.Run()
 
