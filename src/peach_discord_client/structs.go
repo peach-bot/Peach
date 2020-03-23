@@ -51,6 +51,146 @@ type Client struct {
 	Snowflake snowflake.Node
 }
 
+// IdentifyPayload is used to create an identify message
+type IdentifyPayload struct {
+	OpCode int      `json:"op"`
+	Data   Identify `json:"d"`
+}
+
+// Identify is used to trigger the initial handshake with the gateway.
+type Identify struct {
+	Token              string       `json:"token"`
+	Compress           bool         `json:"compress,omitempty"`
+	LargeThreshold     int          `json:"large_threshold,omitemtpy"`
+	Shard              *[2]int      `json:"shard,omitempty"`
+	Presence           UpdateStatus `json:"presence,omitempty"`
+	GuildSubscriptions bool         `json:"guild_subscriptions,omitempty"`
+	Intents            int          `json:"intents,omitempty"`
+	Properties         struct {
+		OS      string `json:"$os"`
+		Browser string `json:"$browser"`
+		Device  string `json:"$device"`
+	} `json:"properties"`
+}
+
+// ResumePayload is used to create a resume message
+type ResumePayload struct {
+	OpCode int    `json:"op"`
+	Data   Resume `json:"d"`
+}
+
+// Resume is used to resume a connection
+type Resume struct {
+}
+
+// HeartbeatPayload is used to create a heartbeat message
+type HeartbeatPayload struct {
+	OpCode int   `json:"op"`
+	Data   int64 `json:"d"`
+}
+
+// User represents a discord user
+type User struct {
+	ID            string `json:"id"`
+	Username      string `json:"username"`
+	Discriminator string `json:"discriminator"`
+	Avatar        string `json:"avatar"`
+	Bot           bool   `json:"bot,omitempty"`
+	System        bool   `json:"system,omitempty"`
+	MFAEnabled    bool   `json:"mfa_enabled,omitempty"`
+	Language      string `json:"locale,omitempty"`
+	Verified      bool   `json:"verified,omitempty"`
+	Email         string `json:"email,omitempty"`
+	Flags         int    `json:"flags,omitempty"`
+	NitroType     int    `json:"premium_type,omitempty"`
+}
+
+// Guild represents a discord guild
+type Guild struct {
+	ID                          string            `json:"id"`
+	Name                        string            `json:"name"`
+	Icon                        string            `json:"icon"`
+	Splash                      string            `json:"splash"`
+	DiscoverySplash             string            `json:"discovery_splash"`
+	IsOwner                     bool              `json:"owner,omitempty"`
+	OwnerID                     string            `json:"owner_id"`
+	Permissions                 int               `json:"permissions,omitempty"`
+	Region                      string            `json:"region"`
+	AFKChannelID                string            `json:"afk_channel_id"`
+	AFKTimeout                  int               `json:"afk_timeout"`
+	EmbedEnabled                bool              `json:"embed_enabled,omitempty"`
+	EmbedChannelID              string            `json:"embed_channel_id,omitempty"`
+	VerificationLevel           int               `json:"verification_level"`
+	DefaultMessageNotifications int               `json:"default_message_notifications"`
+	ExplicitContentFilter       int               `json:"explicit_content_filter"`
+	Roles                       []*Role           `json:"roles"`
+	Emojis                      []*Emoji          `json:"emojis"`
+	Features                    []string          `json:"features"`
+	MFALevel                    int               `json:"mfa_level"`
+	ApplicationID               string            `json:"application_id"`
+	WidgetEnabled               bool              `json:"widget_enabled,omitempty"`
+	WidgetChannelID             string            `json:"widget_channel_id,omitempty"`
+	SystemChannelID             string            `json:"system_channel_id"`
+	SystemChannelFlags          int               `json:"system_channel_flags"`
+	RulesChannelID              string            `json:"rules_channel_id"`
+	JoinedAt                    string            `json:"joined_at,omitempty"`
+	Large                       bool              `json:"large,omitempty"`
+	Unavailable                 bool              `json:"unavailable,omitempty"`
+	MemberCount                 int               `json:"member_count,omitempty"`
+	VoiceStates                 []*VoiceState     `json:"voice_states,omitempty"`
+	Members                     []*GuildMember    `json:"members,omitempty"`
+	Channels                    []*Channel        `json:"channels,omitempty"`
+	Presences                   []*PresenceUpdate `json:"presences,omitempty"`
+	MaxPresences                int               `json:"max_presences,omitempty"`
+	MaxMembers                  int               `json:"max_members,omitempty"`
+	VanityURLCode               string            `json:"vanity_url_code"`
+	Description                 string            `json:"description,omitempty"`
+	Banner                      string            `json:"banner,omitempty"`
+	BoostLevel                  int               `json:"premium_tier"`
+	Boosts                      int               `json:"premium_subscription_count,omitempty"`
+	PreferredLanguage           string            `json:"preferred_locale"`
+	PublicUpdatesChannelID      string            `json:"public_updates_channel_id"`
+}
+
+// Channel represents a discord channel
+type Channel struct {
+}
+
+// Emoji represents a discord emoji
+type Emoji struct {
+}
+
+// PresenceUpdate represents a discord presence update
+type PresenceUpdate struct {
+}
+
+// GuildMember represents a member of a discord guild
+type GuildMember struct {
+}
+
+// VoiceState represents a discord voice state
+type VoiceState struct {
+}
+
+// Role represents a discord guild role
+type Role struct {
+}
+
+// UpdateStatus is sent by the client to indicate a presence or status update.
+type UpdateStatus struct {
+	Since    int      `json:"since"`  // unix time in ms or null
+	Activity Activity `json:"game"`   // the clients new activity or null
+	Status   string   `json:"status"` // the clients new status
+	AFK      bool     `json:"afk"`    // whether the client is afk or not
+}
+
+// Activity represence a discord status activity
+type Activity struct {
+	Name      string `json:"name"`
+	Type      int    `json:"type"`
+	CreatedAt int    `json:"created_at"`
+}
+
 // Gateway opcodes, denote payload type, see https://discordapp.com/developers/docs/topics/opcodes-and-status-codes#gateway-opcodes
 const (
 	opCodeDispatch            = 0  // Receive      | An event was dispatched.
@@ -82,4 +222,21 @@ const (
 	closeCodeInvalidAPIVersion    = 4012 // Sent an invalid gateway version.
 	closeCodeInvalidIntents       = 4013 // Sent invalid gateway intent.
 	closeCodeDisallowedIntents    = 4014 // Sent intent the account isn't eligible for.
+)
+
+// Guild features
+const (
+	GuildFeatureInviteSplash   = "INVITE_SPLASH"
+	GuildFeatureVIPRegions     = "VIP_REGIONS"
+	GuildFeatureVanityURL      = "VANITY_URL"
+	GuildFeatureVerified       = "VERIFIED"
+	GuildFeaturePartnered      = "PARTNERED"
+	GuildFeaturePublic         = "PUBLIC"
+	GuildFeatureCommerce       = "COMMERCE"
+	GuildFeatureNews           = "NEWS"
+	GuildFeatureDiscoverable   = "DISCOVERABLE"
+	GuildFeatureFeaturable     = "FEATURABLE"
+	GuildFeatureAnimatedIcon   = "ANIMATED_ICON"
+	GuildFeatureBanner         = "BANNER"
+	GuildFeaturePublicDisabled = "PUBLIC_DISABLED"
 )
