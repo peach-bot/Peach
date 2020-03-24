@@ -27,8 +27,9 @@ To leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/
  - [ ] Customizable prefixes
  - [ ] Moderation tools (Freeze, Kick, Ban, Mute, Jail)
  - [ ] Raid protection
- - [ ] Currency/Point system
+ - [ ] Currency/Point system 
  - [ ] Minigames (Duels, Roulette, Lottery)
+ - [ ] Leveling and Rank system
 
 ## How does it work? How can I contribute?
 
