@@ -2,6 +2,8 @@ package main
 
 // Run starts various background routines and starts listeners
 func (c *Client) Run() error {
+	c.Log.Info("Starting Websocket")
+
 	err := c.CreateWebsocket()
 	if err != nil {
 		return err

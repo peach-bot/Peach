@@ -46,6 +46,7 @@ type Client struct {
 	// Websocket Connection
 	wsConn  *websocket.Conn
 	wsMutex sync.Mutex
+	sync.RWMutex
 
 	// Snowflake node to generate snowflakes
 	Snowflake snowflake.Node

@@ -47,28 +47,35 @@ func (c *Client) CreateWebsocket() error {
 	// Start listening and heartbeat
 	c.Connected = make(chan interface{})
 
-	go c.Listen(c.wsConn)
 	go c.Heartbeat(c.wsConn)
+	go c.Listen(c.wsConn)
 
-	c.Log.Info("Websocket created")
+	c.Log.Info("Websocket: created")
 	return nil
 }
 
 // Listen retrieves messages from the websocket
 func (c *Client) Listen(wsConn *websocket.Conn) {
-	c.Log.Info("Websocket started listening")
+	c.Log.Info("Websocket: started listening")
 
 	for {
 		// Read message from connection
 		messageType, message, err := wsConn.ReadMessage()
 		if err != nil {
+			c.Log.Error("Websocket: was unable to read message: %v", err)
+		}
 
+		// If closed close connection
+		if messageType == -1 {
+			c.wsConn.Close()
+			c.Connected <- nil
+			break
 		}
 
 		// Resolve event
 		_, err = c.ResolveEvent(messageType, message)
 		if err != nil {
-			c.Log.Error(err)
+			c.Log.Errorf("Websocket: Error resolving event: %v", err)
 		}
 
 		select {
@@ -95,6 +102,7 @@ func (c *Client) ResolveEvent(messageType int, message []byte) (*Event, error) {
 	decoder := json.NewDecoder(reader)
 	err := decoder.Decode(&e)
 	if err != nil {
+		c.Log.Error(messageType, message)
 		return e, err
 	}
 
@@ -104,13 +112,13 @@ func (c *Client) ResolveEvent(messageType int, message []byte) (*Event, error) {
 	// Do opcode specific things
 	if e.OpCode == opCodeHeartbeatACK {
 		c.LastHeartbeatAck = time.Now()
-		c.Log.Info("Websocket received opcode 11 HeartbeatACK.")
+		c.Log.Debug("Websocket: received opcode 11 HeartbeatACK.")
 	} else if e.OpCode == opCodeDispatch {
-		c.Log.Infof("Websocket received opcode 0 Dispatch with event %s from Discord.", e.Type)
+		c.Log.Debugf("Websocket: received opcode 0 Dispatch with event %s from Discord.", e.Type)
 	} else if e.OpCode == opCodeHello {
-		c.Log.Info("Received opcode 10 Hello from Discord.")
+		c.Log.Debug("Websocket: received opcode 10 Hello from Discord.")
 	} else {
-		c.Log.Infof("Websocket received opcode %v.", e.OpCode)
+		c.Log.Debugf("Websocket: received opcode %v.", e.OpCode)
 	}
 
 	return e, nil
@@ -129,10 +137,13 @@ func (c *Client) Heartbeat(wsConn *websocket.Conn) {
 		err := c.wsConn.WriteJSON(HeartbeatPayload{1, sequence})
 		c.wsMutex.Unlock()
 
-		if err != nil || time.Now().Sub(c.LastHeartbeatAck) > c.HeartbeatInterval*c.MissingHeartbeatAcks {
-
+		if err != nil {
+			c.Log.Errorf("Websocket: was unable to send heartbeat: %v", err)
+			return
+		} else if time.Now().Sub(c.LastHeartbeatAck) > c.HeartbeatInterval*c.MissingHeartbeatAcks {
+			c.Log.Error("Websocket: did not receive a hearbeat acknowledgement for the last %v heartbeats", c.MissingHeartbeatAcks.Milliseconds)
 		}
-		c.Log.Info("Sent heartbeat to Discord")
+		c.Log.Debug("Websocket: sent heartbeat to Discord")
 
 		// Wait for next tick or quit
 		select {
@@ -165,14 +176,14 @@ func (c *Client) Hello() error {
 		return err
 	}
 	if event.OpCode != opCodeHello {
-		return fmt.Errorf("Expected opcode 10 Hello, received opcode %v intead", event.OpCode)
+		return fmt.Errorf("Websocket: expected opcode 10 Hello, received opcode %v intead", event.OpCode)
 	}
 
 	// Resolve body
 	var hello EventHello
 	err = json.Unmarshal(event.RawData, &hello)
 	if err != nil {
-		return fmt.Errorf("Couldn't unmarshal Hello, %v", err)
+		return fmt.Errorf("Websocket: was unable to unmarshal Hello, %v", err)
 	}
 	c.HeartbeatInterval = hello.HeartbeatInterval * time.Millisecond
 	c.LastHeartbeatAck = time.Now()
@@ -206,7 +217,7 @@ func (c *Client) Resume() error {
 // Identify sends an identify payload, duh
 func (c *Client) Identify() error {
 
-	c.Log.Info("Sending Identify payload...")
+	c.Log.Debug("Websocket: is authenticating with gateway...")
 
 	// Build Identify data
 	data := Identify{}
@@ -224,6 +235,6 @@ func (c *Client) Identify() error {
 	c.wsMutex.Lock()
 	err := c.wsConn.WriteJSON(payload)
 	c.wsMutex.Unlock()
-	c.Log.Info("Sent payload uwu")
+	c.Log.Debug("Websocket: sent Identify payload.")
 	return err
 }

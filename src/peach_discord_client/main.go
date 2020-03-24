@@ -21,14 +21,14 @@ func createLog() *logrus.Logger {
 		TimestampFormat:  "2006-01-02 15:04:05",
 	})
 	l.SetOutput(os.Stdout)
-	l.SetLevel(logrus.InfoLevel)
+	l.SetLevel(logrus.DebugLevel)
 	return l
 }
 
 func main() {
 	log := createLog()
 
-	log.Info("shard node starting...")
+	log.Info("Shard node starting...")
 
 	c, err := CreateClient()
 	if err != nil {
