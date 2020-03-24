@@ -29,7 +29,7 @@ To leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/
  - [ ] Raid protection
  - [ ] Currency/Point system 
  - [ ] Minigames (Duels, Roulette, Lottery)
- - [ ] Leveling and Rank system
+ - [ ] Leveling and ranking system
 
 ## How does it work? How can I contribute?
 
