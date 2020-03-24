@@ -73,7 +73,9 @@ func (c *Client) Listen(wsConn *websocket.Conn) {
 
 		select {
 		case <-c.Connected:
+			c.Log.Info("Websocket: stopped listening")
 			break
+		default:
 		}
 	}
 }
