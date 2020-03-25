@@ -8,6 +8,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+var gatewayurl string
+
 // function used to create the shards object and to fetch the shard amount
 func resetShardCount(shardCount int) {
 	if shardCount == 0 {
@@ -28,24 +30,15 @@ func resetShardCount(shardCount int) {
 		if err != nil {
 			log.Error(err)
 		}
-
 		shardCount = response.Shards + 1
-	} else {
-		shardCount++
+		gatewayurl = response.URL
 	}
 
 	// create list with shard objects
 	shards = make([]shard, (shardCount))
 
 	// set shardIDs and roles
-	DMshard := true
 	for shardID := 0; shardID < shardCount; shardID++ {
-		if DMshard {
-			shards[shardID].ShardID = shardID
-			DMshard = false
-		} else {
-			shards[shardID].ShardID = shardID - 1
-			shards[shardID].Server = true
-		}
+		shards[shardID].ShardID = shardID
 	}
 }
