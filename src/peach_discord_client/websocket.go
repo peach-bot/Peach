@@ -115,6 +115,8 @@ func (c *Client) ResolveEvent(messageType int, message []byte) (*Event, error) {
 		c.Log.Debug("Websocket: received opcode 11 HeartbeatACK.")
 	} else if e.OpCode == opCodeDispatch {
 		c.Log.Debugf("Websocket: received opcode 0 Dispatch with event %s from Discord.", e.Type)
+	} else if e.OpCode == opCodeInvalidSession {
+		c.Log.Error("Websocket: received opcode 9 Invalid Session", c.ShardID)
 	} else if e.OpCode == opCodeHello {
 		c.Log.Debug("Websocket: received opcode 10 Hello from Discord.")
 	} else {
@@ -227,10 +229,15 @@ func (c *Client) Identify() error {
 	data.Properties.OS = runtime.GOOS
 	data.Properties.Browser = "Peach" + VERSION
 	data.Properties.Device = "Peach" + VERSION
+	data.Shard = [2]int{c.ShardID, c.ShardCount}
 
 	// Create Payload
 	payload := IdentifyPayload{2, data}
 
+	if c.ShardID != 0 {
+		queuetime, _ := time.ParseDuration(fmt.Sprintf("%vs", 6*c.ShardID))
+		time.Sleep(queuetime)
+	}
 	// Send message
 	c.wsMutex.Lock()
 	err := c.wsConn.WriteJSON(payload)

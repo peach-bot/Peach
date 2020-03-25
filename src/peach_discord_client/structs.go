@@ -33,7 +33,6 @@ type Client struct {
 
 	// Shard Coordinator
 	ShardCoordinatorURL string
-	ShardCoordinator    ShardCoordinatorResponse
 
 	// Connected represents the clients connection status
 	Connected chan interface{}
@@ -67,7 +66,7 @@ type Identify struct {
 	Token              string       `json:"token"`
 	Compress           bool         `json:"compress,omitempty"`
 	LargeThreshold     int          `json:"large_threshold,omitemtpy"`
-	Shard              *[2]int      `json:"shard,omitempty"`
+	Shard              [2]int       `json:"shard,omitempty"`
 	Presence           UpdateStatus `json:"presence,omitempty"`
 	GuildSubscriptions bool         `json:"guild_subscriptions,omitempty"`
 	Intents            int          `json:"intents,omitempty"`
@@ -96,10 +95,9 @@ type HeartbeatPayload struct {
 
 // ShardCoordinatorResponse is used to unmarshal the shard coordinator response
 type ShardCoordinatorResponse struct {
-	TotalShards int  `json:"total_shards"`
-	ShardID     int  `json:"assigned_shard"`
-	APIShardID  int  `json:"api_shardid"`
-	IsServer    bool `json:"is_server"`
+	TotalShards int    `json:"total_shards"`
+	ShardID     int    `json:"assigned_shard"`
+	GatewayURL  string `json:"gatewayurl"`
 }
 
 // User represents a discord user

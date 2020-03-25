@@ -32,7 +32,7 @@ func main() {
 
 	c, err := CreateClient(log)
 	if err != nil {
-		log.Fatal("Unable to create new client, exiting...")
+		log.Fatal(err, "\nUnable to create new client, exiting...")
 	}
 
 	// Set discord epoch and sequence
@@ -44,6 +44,7 @@ func main() {
 	c.GuildSubscriptions = true
 	c.TOKEN = os.Getenv("BOTTOKEN")
 	c.MissingHeartbeatAcks = 5
+	c.GatewayURL = c.GatewayURL + "?v=" + APIVersion + "&encoding=json"
 
 	done := make(chan bool)
 	err = c.Run()
