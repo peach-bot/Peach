@@ -17,8 +17,15 @@ func getShard(w http.ResponseWriter, r *http.Request) {
 	for pos, thisshard := range shards {
 		if thisshard.Reserved == false {
 			// write response
+			var ShardID int
+			if thisshard.Server == false {
+				ShardID = -1
+			} else {
+				ShardID = thisshard.ShardID
+			}
+
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(fmt.Sprintf(`{"total_shards": %d, "assigned_shard": %d, "is_server": %v}`, len(shards)-1, thisshard.ShardID, thisshard.Server)))
+			w.Write([]byte(fmt.Sprintf(`{"total_shards": %d, "assigned_shard": %d, "api_shardid": %d, "is_server": %v}`, len(shards)-1, thisshard.ShardID, ShardID, thisshard.Server)))
 			log.WithFields(log.Fields{
 				"total_shards": len(shards),
 				"shardID":      thisshard.ShardID,

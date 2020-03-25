@@ -24,7 +24,10 @@ func resetShardCount(shardCount int) {
 			log.Error(err)
 		}
 		defer resp.Body.Close()
-		json.NewDecoder(resp.Body).Decode(&response)
+		err = json.NewDecoder(resp.Body).Decode(&response)
+		if err != nil {
+			log.Error(err)
+		}
 
 		shardCount = response.Shards + 1
 	} else {
