@@ -62,7 +62,7 @@ func (c *Client) Listen(wsConn *websocket.Conn) {
 		// Read message from connection
 		messageType, message, err := wsConn.ReadMessage()
 		if err != nil {
-			c.Log.Error("Websocket: was unable to read message: %v", err)
+			c.Log.Errorf("Websocket: was unable to read message: %v", err)
 		}
 
 		// If closed close connection
@@ -141,7 +141,7 @@ func (c *Client) Heartbeat(wsConn *websocket.Conn) {
 			c.Log.Errorf("Websocket: was unable to send heartbeat: %v", err)
 			return
 		} else if time.Now().Sub(c.LastHeartbeatAck) > c.HeartbeatInterval*c.MissingHeartbeatAcks {
-			c.Log.Error("Websocket: did not receive a hearbeat acknowledgement for the last %v heartbeats", c.MissingHeartbeatAcks.Milliseconds)
+			c.Log.Errorf("Websocket: did not receive a hearbeat acknowledgement for the last %v heartbeats", c.MissingHeartbeatAcks.Milliseconds())
 		}
 		c.Log.Debug("Websocket: sent heartbeat to Discord")
 
