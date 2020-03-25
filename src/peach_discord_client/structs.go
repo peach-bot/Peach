@@ -31,6 +31,10 @@ type Client struct {
 	// Gateway URL
 	GatewayURL string
 
+	// Shard Coordinator
+	ShardCoordinatorURL string
+	ShardCoordinator    ShardCoordinatorResponse
+
 	// Connected represents the clients connection status
 	Connected chan interface{}
 
@@ -88,6 +92,14 @@ type Resume struct {
 type HeartbeatPayload struct {
 	OpCode int   `json:"op"`
 	Data   int64 `json:"d"`
+}
+
+// ShardCoordinatorResponse is used to unmarshal the shard coordinator response
+type ShardCoordinatorResponse struct {
+	TotalShards int  `json:"total_shards"`
+	ShardID     int  `json:"assigned_shard"`
+	APIShardID  int  `json:"api_shardid"`
+	IsServer    bool `json:"is_server"`
 }
 
 // User represents a discord user

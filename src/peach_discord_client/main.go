@@ -30,11 +30,10 @@ func main() {
 
 	log.Info("Shard node starting...")
 
-	c, err := CreateClient()
+	c, err := CreateClient(log)
 	if err != nil {
 		log.Fatal("Unable to create new client, exiting...")
 	}
-	c.Log = log
 
 	// Set discord epoch and sequence
 	snowflake.Epoch = 1420070400000
