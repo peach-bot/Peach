@@ -37,7 +37,7 @@ func main() {
 	api.HandleFunc("/scale", scale).Methods(http.MethodGet)
 
 	// initial creation of shards list
-	go resetShardCount(0)
+	resetShardCount(0)
 
 	// run
 	done := make(chan bool)

@@ -1,1 +1,1 @@
-kubectl create secret generic bottoken --from-file=./secrets/BOTTOKEN
+kubectl create secret generic discord --from-file=./secrets/BOTTOKEN --from-file=./secrets/CLIENTID

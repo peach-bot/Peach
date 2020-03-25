@@ -16,14 +16,13 @@ func getShard(w http.ResponseWriter, r *http.Request) {
 	// get next unreserved shard
 	for pos, thisshard := range shards {
 		if thisshard.Reserved == false {
-			// write response
+
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(fmt.Sprintf(`{"total_shards": %d, "assigned_shard": %d, "is_server": %v}`, len(shards)-1, thisshard.ShardID, thisshard.Server)))
+			w.Write([]byte(fmt.Sprintf(`{"total_shards": %d, "assigned_shard": %d, "gatewayurl": "%s"}`, len(shards), thisshard.ShardID, gatewayurl)))
 			log.WithFields(log.Fields{
 				"total_shards": len(shards),
 				"shardID":      thisshard.ShardID,
 				"active":       shards[thisshard.ShardID].Active,
-				"is_server":    thisshard.Server,
 			}).Info("GET 200 api/v1/getshard - shard assigned")
 			break
 		}
@@ -45,36 +44,32 @@ func reserveShard(w http.ResponseWriter, r *http.Request) {
 		Because of the split shard 0 shard 1 has the index 2 in the shards list.
 		When using the api -1 refers to the DM shard and 0 refers to the server shard 0. 1 then refers to the server shard 1.
 	*/
-	shardindex := shardID + 1
-	if shardID == -1 {
-		shardID = 0
-	}
-	if shardindex >= len(shards) || shardindex < 0 {
+
+	if shardID >= len(shards) || shardID < 0 {
 		// requested shard out of range
 		w.WriteHeader(http.StatusNotAcceptable)
 		w.Write([]byte("Requested shard out of range"))
 		log.WithFields(log.Fields{
 			"shardID": shardID,
 		}).Info("POST 406 api/v1/reserveshard - requested shard out of range")
-	} else if shards[shardindex].Reserved {
+	} else if shards[shardID].Reserved {
 		// shard already reserved
 		w.WriteHeader(http.StatusNotAcceptable)
 		w.Write([]byte("Requested shard already reserved"))
 		log.WithFields(log.Fields{
-			"shardID":   shardID,
-			"reserved":  shards[shardindex].Reserved,
-			"active":    shards[shardindex].Active,
-			"is_server": shards[shardindex].Server,
+			"shardID":  shardID,
+			"reserved": shards[shardID].Reserved,
+			"active":   shards[shardID].Active,
 		}).Info("POST 406 api/v1/reserveshard - requested shard already reserved")
 	} else {
 		// set shard reservation
-		shards[shardindex].Reserved = true
+		shards[shardID].Reserved = true
 		w.WriteHeader(http.StatusCreated)
 		log.WithFields(log.Fields{
 			"shardID":   shardID,
-			"reserved":  shards[shardindex].Reserved,
-			"active":    shards[shardindex].Active,
-			"is_server": shards[shardindex].Server,
+			"reserved":  shards[shardID].Reserved,
+			"active":    shards[shardID].Active,
+			"is_server": shards[shardID].Server,
 		}).Info("POST 201 api/v1/reserveshard - shard reserved")
 	}
 }

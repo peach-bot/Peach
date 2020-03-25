@@ -22,7 +22,7 @@ spec:
           - name: BOTTOKEN
             valueFrom:
               secretKeyRef:
-                name: bottoken
+                name: discord
                 key: BOTTOKEN
 ---
 apiVersion: v1

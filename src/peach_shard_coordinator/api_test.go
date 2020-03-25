@@ -25,7 +25,7 @@ func TestGetShard(t *testing.T) {
 
 	// Evaluate results
 	assert.Equal(http.StatusOK, w.Code)
-	assert.Equal(fmt.Sprintf(`{"total_shards": %v, "assigned_shard": 0, "is_server": false}`, wantedShardCount), w.Body.String())
+	assert.Equal(fmt.Sprintf(`{"total_shards": %v, "assigned_shard": 0, "gatewayurl": ""}`, wantedShardCount), w.Body.String())
 }
 
 func TestReserveShard(t *testing.T) {
@@ -39,7 +39,7 @@ func TestReserveShard(t *testing.T) {
 	api.HandleFunc("/reserveshard", reserveShard).Methods(http.MethodPost)
 
 	// Run request
-	r.ServeHTTP(w, httptest.NewRequest("POST", "/api/v1/reserveshard?shardid=-1", nil))
+	r.ServeHTTP(w, httptest.NewRequest("POST", "/api/v1/reserveshard?shardid=0", nil))
 
 	// Evaluate results
 	assert.Equal(http.StatusCreated, w.Code)
@@ -55,12 +55,12 @@ func TestMultiGetReserveShard(t *testing.T) {
 	api.HandleFunc("/reserveshard", reserveShard).Methods(http.MethodPost)
 	api.HandleFunc("/getshard", getShard).Methods(http.MethodGet)
 
-	// Get Shard 0 (DM)
+	// Get Shard 0
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, httptest.NewRequest("GET", "/api/v1/getshard", nil))
 	// Evaluate results
 	assert.Equal(http.StatusOK, w.Code)
-	assert.Equal(fmt.Sprintf(`{"total_shards": %v, "assigned_shard": 0, "is_server": false}`, wantedShardCount), w.Body.String())
+	assert.Equal(fmt.Sprintf(`{"total_shards": %v, "assigned_shard": 0, "gatewayurl": ""}`, wantedShardCount), w.Body.String())
 
 	// Reserve Shard 1
 	w = httptest.NewRecorder()
@@ -68,16 +68,16 @@ func TestMultiGetReserveShard(t *testing.T) {
 	// Evaluate results
 	assert.Equal(http.StatusCreated, w.Code)
 
-	// Get Shard 0 (DM)
+	// Get Shard 0
 	w = httptest.NewRecorder()
 	r.ServeHTTP(w, httptest.NewRequest("GET", "/api/v1/getshard", nil))
 	// Evaluate results
 	assert.Equal(http.StatusOK, w.Code)
-	assert.Equal(fmt.Sprintf(`{"total_shards": %v, "assigned_shard": 0, "is_server": false}`, wantedShardCount), w.Body.String())
+	assert.Equal(fmt.Sprintf(`{"total_shards": %v, "assigned_shard": 0, "gatewayurl": ""}`, wantedShardCount), w.Body.String())
 
-	// Reserve Shard 0 (DM)
+	// Reserve Shard 0
 	w = httptest.NewRecorder()
-	r.ServeHTTP(w, httptest.NewRequest("POST", "/api/v1/reserveshard?shardid=-1", nil))
+	r.ServeHTTP(w, httptest.NewRequest("POST", "/api/v1/reserveshard?shardid=0", nil))
 	// Evaluate results
 	assert.Equal(http.StatusCreated, w.Code)
 
@@ -87,20 +87,7 @@ func TestMultiGetReserveShard(t *testing.T) {
 	// Evaluate results
 	assert.Equal(http.StatusNotAcceptable, w.Code)
 
-	// Get Shard 0 (Server)
-	w = httptest.NewRecorder()
-	r.ServeHTTP(w, httptest.NewRequest("GET", "/api/v1/getshard", nil))
-	// Evaluate results
-	assert.Equal(http.StatusOK, w.Code)
-	assert.Equal(fmt.Sprintf(`{"total_shards": %v, "assigned_shard": 0, "is_server": true}`, wantedShardCount), w.Body.String())
-
-	// Reserve Shard 0 (Server)
-	w = httptest.NewRecorder()
-	r.ServeHTTP(w, httptest.NewRequest("POST", "/api/v1/reserveshard?shardid=0", nil))
-	// Evaluate results
-	assert.Equal(http.StatusCreated, w.Code)
-
-	// Reserve Shard 0 (Server, already assigned)
+	// Reserve Shard 0 (already assigned)
 	w = httptest.NewRecorder()
 	r.ServeHTTP(w, httptest.NewRequest("POST", "/api/v1/reserveshard?shardid=0", nil))
 	// Evaluate results
