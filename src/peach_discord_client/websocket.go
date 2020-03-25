@@ -141,7 +141,7 @@ func (c *Client) Heartbeat(wsConn *websocket.Conn) {
 			c.Log.Errorf("Websocket: was unable to send heartbeat: %v", err)
 			return
 		} else if time.Now().Sub(c.LastHeartbeatAck) > c.HeartbeatInterval*c.MissingHeartbeatAcks {
-			c.Log.Errorf("Websocket: did not receive a hearbeat acknowledgement for the last %v heartbeats", c.MissingHeartbeatAcks.Milliseconds())
+			c.Log.Errorf("Websocket: did not receive a hearbeat acknowledgement for the last %v heartbeats", c.MissingHeartbeatAcks)
 		}
 		c.Log.Debug("Websocket: sent heartbeat to Discord")
 
