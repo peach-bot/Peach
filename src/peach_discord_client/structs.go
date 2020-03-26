@@ -1,3 +1,8 @@
+// This file containst structs for the client
+// For structs representing discord objects see emoji.go, channel.go, guild.go, user.go, permissions.go, voice.go
+// For websocket events see events.go
+// For constants like close and opcodes see consts.go
+
 package main
 
 import (
@@ -100,91 +105,8 @@ type ShardCoordinatorResponse struct {
 	GatewayURL  string `json:"gatewayurl"`
 }
 
-// User represents a discord user
-type User struct {
-	ID            string `json:"id"`
-	Username      string `json:"username"`
-	Discriminator string `json:"discriminator"`
-	Avatar        string `json:"avatar"`
-	Bot           bool   `json:"bot,omitempty"`
-	System        bool   `json:"system,omitempty"`
-	MFAEnabled    bool   `json:"mfa_enabled,omitempty"`
-	Language      string `json:"locale,omitempty"`
-	Verified      bool   `json:"verified,omitempty"`
-	Email         string `json:"email,omitempty"`
-	Flags         int    `json:"flags,omitempty"`
-	NitroType     int    `json:"premium_type,omitempty"`
-}
-
-// Guild represents a discord guild
-type Guild struct {
-	ID                          string            `json:"id"`
-	Name                        string            `json:"name"`
-	Icon                        string            `json:"icon"`
-	Splash                      string            `json:"splash"`
-	DiscoverySplash             string            `json:"discovery_splash"`
-	IsOwner                     bool              `json:"owner,omitempty"`
-	OwnerID                     string            `json:"owner_id"`
-	Permissions                 int               `json:"permissions,omitempty"`
-	Region                      string            `json:"region"`
-	AFKChannelID                string            `json:"afk_channel_id"`
-	AFKTimeout                  int               `json:"afk_timeout"`
-	EmbedEnabled                bool              `json:"embed_enabled,omitempty"`
-	EmbedChannelID              string            `json:"embed_channel_id,omitempty"`
-	VerificationLevel           int               `json:"verification_level"`
-	DefaultMessageNotifications int               `json:"default_message_notifications"`
-	ExplicitContentFilter       int               `json:"explicit_content_filter"`
-	Roles                       []*Role           `json:"roles"`
-	Emojis                      []*Emoji          `json:"emojis"`
-	Features                    []string          `json:"features"`
-	MFALevel                    int               `json:"mfa_level"`
-	ApplicationID               string            `json:"application_id"`
-	WidgetEnabled               bool              `json:"widget_enabled,omitempty"`
-	WidgetChannelID             string            `json:"widget_channel_id,omitempty"`
-	SystemChannelID             string            `json:"system_channel_id"`
-	SystemChannelFlags          int               `json:"system_channel_flags"`
-	RulesChannelID              string            `json:"rules_channel_id"`
-	JoinedAt                    string            `json:"joined_at,omitempty"`
-	Large                       bool              `json:"large,omitempty"`
-	Unavailable                 bool              `json:"unavailable,omitempty"`
-	MemberCount                 int               `json:"member_count,omitempty"`
-	VoiceStates                 []*VoiceState     `json:"voice_states,omitempty"`
-	Members                     []*GuildMember    `json:"members,omitempty"`
-	Channels                    []*Channel        `json:"channels,omitempty"`
-	Presences                   []*PresenceUpdate `json:"presences,omitempty"`
-	MaxPresences                int               `json:"max_presences,omitempty"`
-	MaxMembers                  int               `json:"max_members,omitempty"`
-	VanityURLCode               string            `json:"vanity_url_code"`
-	Description                 string            `json:"description,omitempty"`
-	Banner                      string            `json:"banner,omitempty"`
-	BoostLevel                  int               `json:"premium_tier"`
-	Boosts                      int               `json:"premium_subscription_count,omitempty"`
-	PreferredLanguage           string            `json:"preferred_locale"`
-	PublicUpdatesChannelID      string            `json:"public_updates_channel_id"`
-}
-
-// Channel represents a discord channel
-type Channel struct {
-}
-
-// Emoji represents a discord emoji
-type Emoji struct {
-}
-
 // PresenceUpdate represents a discord presence update
 type PresenceUpdate struct {
-}
-
-// GuildMember represents a member of a discord guild
-type GuildMember struct {
-}
-
-// VoiceState represents a discord voice state
-type VoiceState struct {
-}
-
-// Role represents a discord guild role
-type Role struct {
 }
 
 // UpdateStatus is sent by the client to indicate a presence or status update.
@@ -201,53 +123,3 @@ type Activity struct {
 	Type      int    `json:"type"`
 	CreatedAt int    `json:"created_at"`
 }
-
-// Gateway opcodes, denote payload type, see https://discordapp.com/developers/docs/topics/opcodes-and-status-codes#gateway-opcodes
-const (
-	opCodeDispatch            = 0  // Receive      | An event was dispatched.
-	opCodeHeartbeat           = 1  // Send/Receive | Fired periodically by the client to keep the connection alive.
-	opCodeIdentify            = 2  // Send         | Starts a new session during the initial handshake.
-	opCodePresenceUpdate      = 3  // Send         | Update the client's presence.
-	opCodeVoiceStateUpdate    = 4  // Send         | Used to join/leave or move between voice channels.
-	opCodeResume              = 6  // Send         | Resume a previous session that was disconnected.
-	opCodeReconnect           = 7  // Receive      | You must reconnect with a new session immediately.
-	opCodeRequestGuildMembers = 8  // Send         | Request information about offline guild members in a large guild.
-	opCodeInvalidSession      = 9  // Receive      | The session has been invalidated. You should reconnect and identify/resume accordingly.
-	opCodeHello               = 10 // Receive      | Sent immediately after connecting, contains the heartbeat_interval to use.
-	opCodeHeartbeatACK        = 11 // Receive      | Sent in response to receiving a heartbeat to acknowledge that it has been received.
-)
-
-// Gateway Close Event Codes, denote reason for gateway closure, see https://discordapp.com/developers/docs/topics/opcodes-and-status-codes#gateway-opcodes
-const (
-	closeCodeUnknownError         = 4000 // Not sure what went wrong. Try reconnecting.
-	closeCodeUnknownOpCode        = 4001 // Sent invalid opcode or invalid payload for opcode.
-	closeCodeDecodeError          = 4002 // Sent invalid payload.
-	closeCodeNotAuthenticated     = 4003 // Sent payload prior to identifying.
-	closeCodeAuthenticationFailed = 4004 // Account token in identify payload is incorrect.
-	closeCodeAlreadyAuthenticated = 4005 // Sent more than one identify payload.
-	closeCodeInvalidSquence       = 4007 // Sent invalid sequence when resuming.
-	closeCodeRateLimited          = 4008 // Sending payloads to quickly.
-	closeCodeSessionTimedOut      = 4009 // Session timed out. Reconnect or start new session.
-	closeCodeInvalidShard         = 4010 // Sent invalid shard in identify payload.
-	closeCodeShardingRequired     = 4011 // Sharding required because bot is in too many guilds.
-	closeCodeInvalidAPIVersion    = 4012 // Sent an invalid gateway version.
-	closeCodeInvalidIntents       = 4013 // Sent invalid gateway intent.
-	closeCodeDisallowedIntents    = 4014 // Sent intent the account isn't eligible for.
-)
-
-// Guild features
-const (
-	GuildFeatureInviteSplash   = "INVITE_SPLASH"
-	GuildFeatureVIPRegions     = "VIP_REGIONS"
-	GuildFeatureVanityURL      = "VANITY_URL"
-	GuildFeatureVerified       = "VERIFIED"
-	GuildFeaturePartnered      = "PARTNERED"
-	GuildFeaturePublic         = "PUBLIC"
-	GuildFeatureCommerce       = "COMMERCE"
-	GuildFeatureNews           = "NEWS"
-	GuildFeatureDiscoverable   = "DISCOVERABLE"
-	GuildFeatureFeaturable     = "FEATURABLE"
-	GuildFeatureAnimatedIcon   = "ANIMATED_ICON"
-	GuildFeatureBanner         = "BANNER"
-	GuildFeaturePublicDisabled = "PUBLIC_DISABLED"
-)
