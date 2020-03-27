@@ -2,12 +2,12 @@
  <img alt="Peach" width="270" height="90" src="https://raw.githubusercontent.com/peach-bot/Peach/master/assets/title.png"></img><br>
  <img alt="Logo" width="300" height="300" src="https://raw.githubusercontent.com/peach-bot/Peach/master/assets/logo.png"></img><br>
  A Discord server management and chat bot with loads of handy features<br><br>
- <a href="https://github.com/peach-bot/Peach/releases"><img src="https://img.shields.io/github/v/release/peach-bot/peach?color=brightgreen" alt="GitHub version"></img></a>
- <a href="https://travis-ci.com/peach-bot/Peach/branches"><img src="https://api.travis-ci.com/peach-bot/Peach.svg?branch=master" alt="Build Status"></img></a>
- <a href="https://github.com/peach-bot/Peach/blob/master/LICENSE"><img src="https://img.shields.io/github/license/peach-bot/Peach?color=brightgreen" alt="License"></img></a>
- <a href="#contributors"><img src="https://img.shields.io/badge/all_contributors-2-orange.svg" alt="Contributors"></img></a>
- <a href="https://github.com/peach-bot/Peach/issues"><img src="https://img.shields.io/github/issues-raw/peach-bot/peach" alt="Open Issues"></img></a>
- <a href="https://github.com/peach-bot/Peach/issues"><img src="https://img.shields.io/github/issues-closed-raw/peach-bot/peach?color=brightgreen" alt="Closed Issues"></img></a><br><br>
+ <a href="https://github.com/peach-bot/Peach/releases"><img src="https://img.shields.io/github/v/release/peach-bot/peach?color=brightgreen&include_prereleases&style=flat-square" alt="GitHub version"></img></a>
+ <a href="https://travis-ci.com/peach-bot/Peach/branches"><img src="https://img.shields.io/travis/com/peach-bot/Peach/master?style=flat-square" alt="Build Status"></img></a>
+ <a href="https://github.com/peach-bot/Peach/blob/master/LICENSE"><img src="https://img.shields.io/github/license/peach-bot/Peach?color=brightgreen&style=flat-square" alt="License"></img></a>
+ <a href="#contributors"><img src="https://img.shields.io/github/contributors/peach-bot/Peach?style=flat-square" alt="Contributors"></img></a>
+ <a href="https://github.com/peach-bot/Peach/issues"><img src="https://img.shields.io/github/issues-raw/peach-bot/peach?style=flat-square" alt="Open Issues"></img></a>
+ <a href="https://github.com/peach-bot/Peach/issues"><img src="https://img.shields.io/github/issues-closed-raw/peach-bot/peach?color=brightgreen&style=flat-square" alt="Closed Issues"></img></a><br><br>
 </p>
 
 <!--[**Try all features today and for free**](http://bit.ly/peachbot)-->
