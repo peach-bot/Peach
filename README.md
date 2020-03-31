@@ -33,10 +33,6 @@ To leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/
  - [ ] Minigames (Duels, Roulette, Lottery)
  - [ ] Leveling and ranking system
 
-## How does it work? How can I contribute?
-
-Peach features a dynamic system for loading and powering its features (plugins). The system includes an API for plugins to be written against allowing for better maintainability.
-
 ## 💜 Contributors 
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
