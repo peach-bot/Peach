@@ -35,7 +35,7 @@ func resetShardCount(shardCount int) {
 		gatewayurl = response.URL
 	}
 
-	if len(shards) == 0 {
+	if len(shards) == 0 || shardCount == 0 {
 		// create list with shard objects
 		shards = make([]shard, shardCount)
 
