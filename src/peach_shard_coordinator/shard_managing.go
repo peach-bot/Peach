@@ -11,7 +11,7 @@ import (
 var gatewayurl string
 
 // function used to create the shards object and to fetch the shard amount
-func resetShardCount(shardCount int) {
+func resetShardCount(shardCount int, reset bool) {
 	if shardCount == 0 {
 		// fetch recommended shard amount from discord api
 		client := &http.Client{}
@@ -35,7 +35,7 @@ func resetShardCount(shardCount int) {
 		gatewayurl = response.URL
 	}
 
-	if len(shards) == 0 || shardCount == 0 {
+	if len(shards) == 0 || reset {
 		// create list with shard objects
 		shards = make([]shard, shardCount)
 

@@ -88,5 +88,9 @@ func scale(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	go resetShardCount(amount)
+	reset, err := strconv.ParseBool((r.URL.Query().Get("reset")))
+	if err != nil {
+		log.Fatal(err)
+	}
+	go resetShardCount(amount, reset)
 }
