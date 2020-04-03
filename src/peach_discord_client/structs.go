@@ -62,7 +62,7 @@ type Client struct {
 
 // IdentifyPayload is used to create an identify message
 type IdentifyPayload struct {
-	OpCode int      `json:"op"`
+	Opcode int      `json:"op"`
 	Data   Identify `json:"d"`
 }
 
@@ -84,7 +84,7 @@ type Identify struct {
 
 // ResumePayload is used to create a resume message
 type ResumePayload struct {
-	OpCode int    `json:"op"`
+	Opcode int    `json:"op"`
 	Data   Resume `json:"d"`
 }
 
@@ -94,7 +94,7 @@ type Resume struct {
 
 // HeartbeatPayload is used to create a heartbeat message
 type HeartbeatPayload struct {
-	OpCode int   `json:"op"`
+	Opcode int   `json:"op"`
 	Data   int64 `json:"d"`
 }
 

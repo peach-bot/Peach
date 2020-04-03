@@ -16,6 +16,7 @@ jobs:
   - stage: test
     script:
       - go get -d -t ./src/./...
+      - ./scripts/generate.sh
       - ./scripts/test.sh
   - stage: deploy
     script:
