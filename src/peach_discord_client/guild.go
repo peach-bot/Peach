@@ -56,6 +56,14 @@ type UnavailableGuild struct {
 
 // GuildMember represents a member of a discord guild
 type GuildMember struct {
+	User          User      `json:"user,omitempty"`
+	Nickname      string    `json:"nick,omitempty"`
+	Roles         []*string `json:"roles"`
+	JoinedAt      string    `json:"joined_at"`
+	BoostingSince string    `json:"premium_since,omitempty"`
+	Deaf          bool      `json:"deaf"`
+	Mute          bool      `json:"mute"`
+	GuildID       string    `json:"guild_id,omitempty"`
 }
 
 // Guild features
