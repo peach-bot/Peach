@@ -6,6 +6,7 @@
 package main
 
 import (
+	"encoding/json"
 	"sync"
 	"time"
 
@@ -105,10 +106,6 @@ type ShardCoordinatorResponse struct {
 	GatewayURL  string `json:"gatewayurl"`
 }
 
-// PresenceUpdate represents a discord presence update
-type PresenceUpdate struct {
-}
-
 // UpdateStatus is sent by the client to indicate a presence or status update.
 type UpdateStatus struct {
 	Since    int      `json:"since"`  // unix time in ms or null
@@ -122,4 +119,34 @@ type Activity struct {
 	Name      string `json:"name"`
 	Type      int    `json:"type"`
 	CreatedAt int    `json:"created_at"`
+}
+
+// ClientStatus represents a user's active sessions
+type ClientStatus struct {
+	Desktop string `json:"desktop,omitempty"`
+	Mobile  string `json:"mobile,omitempty"`
+	Web     string `json:"web,omitempty"`
+}
+
+// PresenceUpdate represents an update to a user's current state on a guild
+type PresenceUpdate struct {
+	User         User         `json:"user"`
+	Roles        []string     `json:"roles"`
+	Game         Activity     `json:"game,omitempty"`
+	GuildID      string       `json:"guild_id"`
+	Status       string       `json:"status"`
+	Activities   []*Activity  `json:"activities"`
+	ClientStatus ClientStatus `json:"client_status"`
+	NitroSince   string       `json:"premium_since,omitempty"`
+	Nickname     string       `json:"nick,omitempty"`
+}
+
+// Event provides a basic initial struct for all websocket events.
+type Event struct {
+	Opcode   opcode          `json:"op"`
+	Sequence int64           `json:"s"`
+	Type     string          `json:"t"`
+	RawData  json.RawMessage `json:"d"`
+	// Struct contains one of the other Events
+	Struct interface{} `json:"-"`
 }

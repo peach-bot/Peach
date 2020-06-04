@@ -1,19 +1,10 @@
 package main
 
+//go:generate go run cmd/eventresolvers/main.go
+
 import (
-	"encoding/json"
 	"time"
 )
-
-// Event provides a basic initial struct for all websocket events.
-type Event struct {
-	Opcode   opcode          `json:"op"`
-	Sequence int64           `json:"s"`
-	Type     string          `json:"t"`
-	RawData  json.RawMessage `json:"d"`
-	// Struct contains one of the other types in this file.
-	Struct interface{} `json:"-"`
-}
 
 // EventHello is the initial event sent by discord upon connection
 type EventHello struct {
@@ -28,4 +19,14 @@ type EventReady struct {
 	Guilds          []*Guild   `json:"guilds"`
 	SessionID       string     `json:"session_id"`
 	Shard           *[2]int    `json:"shard,omitempty"`
+}
+
+// EventMessageCreate is the data for a MessageCreate event.
+type EventMessageCreate struct {
+	*Message
+}
+
+// EventPresenceUpdate is the data for a PresenceUpdate event.
+type EventPresenceUpdate struct {
+	PresenceUpdate
 }
