@@ -32,6 +32,8 @@ func (c *Client) CreateWebsocket() error {
 		return nil
 	})
 
+	AddEventResolvers()
+
 	// Handle Hello
 	err = c.Hello()
 	if err != nil {
@@ -118,6 +120,13 @@ func (c *Client) ResolveEvent(messageType int, message []byte) (*Event, error) {
 
 	if e.Opcode == opcodeDispatch {
 		c.Log.Debugf("Websocket: received opcode 0 Dispatch with event %s from Discord.", e.Type)
+		e.Struct = eventResolvers[e.Type]
+
+		if err = json.Unmarshal(e.RawData, &e.Struct); err != nil {
+			c.Log.Errorf("error unmarshalling %s event, %s", e.Type, err)
+		}
+		c.Log.Debugf("%s", e.Struct)
+
 		return e, nil
 	}
 
