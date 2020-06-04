@@ -9,5 +9,7 @@ require (
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/sirupsen/logrus v1.4.2
 	github.com/stretchr/testify v1.5.1
-	golang.org/x/sys v0.0.0-20200302150141-5c8b2ff67527 // indirect
+	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e // indirect
+	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a // indirect
+	golang.org/x/tools v0.0.0-20200528185414-6be401e3f76e // indirect
 )

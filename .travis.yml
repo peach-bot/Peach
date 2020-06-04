@@ -16,6 +16,8 @@ jobs:
   - stage: test
     script:
       - go get -d -t ./src/./...
+      - go get golang.org/x/tools/cmd/stringer
+      - ./scripts/generate.sh
       - ./scripts/test.sh
   - stage: deploy
     script:

@@ -14,7 +14,7 @@ func TestGetShard(t *testing.T) {
 	// Test setup
 	assert := assert.New(t)
 	wantedShardCount := 2
-	resetShardCount(wantedShardCount)
+	resetShardCount(wantedShardCount, true)
 	w := httptest.NewRecorder()
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api/v1").Subrouter()
@@ -32,7 +32,7 @@ func TestReserveShard(t *testing.T) {
 	// Test setup
 	assert := assert.New(t)
 	wantedShardCount := 2
-	resetShardCount(wantedShardCount)
+	resetShardCount(wantedShardCount, true)
 	w := httptest.NewRecorder()
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api/v1").Subrouter()
@@ -49,7 +49,7 @@ func TestMultiGetReserveShard(t *testing.T) {
 	// Test setup
 	assert := assert.New(t)
 	wantedShardCount := 2
-	resetShardCount(wantedShardCount)
+	resetShardCount(wantedShardCount, true)
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api/v1").Subrouter()
 	api.HandleFunc("/reserveshard", reserveShard).Methods(http.MethodPost)

@@ -32,6 +32,8 @@ func (c *Client) CreateWebsocket() error {
 		return nil
 	})
 
+	AddEventResolvers()
+
 	// Handle Hello
 	err = c.Hello()
 	if err != nil {
@@ -110,20 +112,27 @@ func (c *Client) ResolveEvent(messageType int, message []byte) (*Event, error) {
 	atomic.StoreInt64(c.Sequence, e.Sequence)
 
 	// Do opcode specific things
-	if e.OpCode == opCodeHeartbeatACK {
+	if e.Opcode == opcodeHeartbeatACK {
 		c.LastHeartbeatAck = time.Now()
 		c.Log.Debug("Websocket: received opcode 11 HeartbeatACK.")
-	} else if e.OpCode == opCodeDispatch {
-		c.Log.Debugf("Websocket: received opcode 0 Dispatch with event %s from Discord.", e.Type)
-	} else if e.OpCode == opCodeInvalidSession {
-		c.Log.Error("Websocket: received opcode 9 Invalid Session", c.ShardID)
-	} else if e.OpCode == opCodeHello {
-		c.Log.Debug("Websocket: received opcode 10 Hello from Discord.")
-	} else {
-		c.Log.Debugf("Websocket: received opcode %v.", e.OpCode)
+		return e, nil
 	}
 
+	if e.Opcode == opcodeDispatch {
+		c.Log.Debugf("Websocket: received opcode 0 Dispatch with event %s from Discord.", e.Type)
+		e.Struct = eventResolvers[e.Type]
+
+		if err = json.Unmarshal(e.RawData, &e.Struct); err != nil {
+			c.Log.Errorf("error unmarshalling %s event, %s", e.Type, err)
+		}
+		c.Log.Debugf("%s", e.Struct)
+
+		return e, nil
+	}
+
+	c.Log.Debugf("Websocket: received opcode %v %v from Discord.", e.Opcode, e.Opcode.String())
 	return e, nil
+
 }
 
 // Heartbeat sends heartbeat payloads to discord to signal discord that the client is still alive
@@ -177,8 +186,8 @@ func (c *Client) Hello() error {
 	if err != nil {
 		return err
 	}
-	if event.OpCode != opCodeHello {
-		return fmt.Errorf("Websocket: expected opcode 10 Hello, received opcode %v intead", event.OpCode)
+	if event.Opcode != opcodeHello {
+		return fmt.Errorf("Websocket: expected opcode 10 Hello, received opcode %v %v instead", event.Opcode, event.Opcode.String())
 	}
 
 	// Resolve body

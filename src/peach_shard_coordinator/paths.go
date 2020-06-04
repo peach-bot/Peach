@@ -84,5 +84,13 @@ func updateShard(w http.ResponseWriter, r *http.Request) {
 func scale(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	go resetShardCount(0)
+	amount, err := strconv.Atoi(r.URL.Query().Get("amount"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	reset, err := strconv.ParseBool((r.URL.Query().Get("reset")))
+	if err != nil {
+		log.Fatal(err)
+	}
+	go resetShardCount(amount, reset)
 }

@@ -16,13 +16,13 @@
 <img src=https://user-images.githubusercontent.com/45462701/67280986-b47c5c00-f4ce-11e9-8c9c-5ab70ec5e392.png width=12px></img>
 To leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/issues). Here is a list of features that are planned or already implemented:
 
- - [ ] Advanced role pinging
  - [ ] Dynamic voice channels
  - [ ] More rich embeds (info cards)
- - [ ] Twitter forwarding
+ - [ ] Twitter annoucements
  - [ ] Twitch, YouTube, Mixer announcements
  - [ ] Fast channel configuring
- - [ ] Reaction role, automatic role assignment
+ - [ ] Reaction role
+ - [ ] Automatic role assignment
  - [ ] Raffles
  - [ ] Economy system
  - [ ] Funky text filters
@@ -32,14 +32,13 @@ To leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/
  - [ ] Currency/Point system 
  - [ ] Minigames (Duels, Roulette, Lottery)
  - [ ] Leveling and ranking system
+ - [ ] Urban Dictionary lookup
+ - [ ] Spotify search
+ - [ ] Genius lyric search
 
-## How does it work? How can I contribute?
+## Contributors 
 
-Peach features a dynamic system for loading and powering its features (plugins). The system includes an API for plugins to be written against allowing for better maintainability.
-
-## 💜 Contributors 
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+These wonderful people helped realize this project ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
@@ -54,4 +53,6 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
-## 
+##
+
+Discord client heavily inspired by [bwmarrin/discordgo](https://github.com/bwmarrin/discordgo).

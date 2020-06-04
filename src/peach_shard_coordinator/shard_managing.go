@@ -11,7 +11,7 @@ import (
 var gatewayurl string
 
 // function used to create the shards object and to fetch the shard amount
-func resetShardCount(shardCount int) {
+func resetShardCount(shardCount int, reset bool) {
 	if shardCount == 0 {
 		// fetch recommended shard amount from discord api
 		client := &http.Client{}
@@ -30,15 +30,31 @@ func resetShardCount(shardCount int) {
 		if err != nil {
 			log.Error(err)
 		}
+		// for testing purposes we increment this by one to enable sharding
 		shardCount = response.Shards + 1
 		gatewayurl = response.URL
 	}
 
-	// create list with shard objects
-	shards = make([]shard, (shardCount))
+	if len(shards) == 0 || reset {
+		// create list with shard objects
+		shards = make([]shard, shardCount)
 
-	// set shardIDs and roles
-	for shardID := 0; shardID < shardCount; shardID++ {
-		shards[shardID].ShardID = shardID
+		// set shardIDs and roles
+		for shardID := 0; shardID < shardCount; shardID++ {
+			shards[shardID].ShardID = shardID
+		}
+	} else {
+		// Create temporary buffers for new shards
+		newShards := make([]shard, shardCount)
+
+		for shardID := 0; shardID < shardCount; shardID++ {
+			newShards[shardID].ShardID = shardID
+			if shardID < len(shards) {
+				newShards[shardID] = shards[shardID]
+			}
+		}
+
+		// Update shards
+		shards = newShards
 	}
 }
