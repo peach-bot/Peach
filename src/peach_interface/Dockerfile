@@ -1,4 +1,4 @@
-FROM golang:1.13.8 as builder
+FROM golang:1.13 as builder
 RUN go get -t github.com/stretchr/testify
 COPY . .
 RUN go get -d ./...
