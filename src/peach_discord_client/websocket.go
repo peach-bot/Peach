@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/sirupsen/logrus"
 )
 
 // CreateWebsocket creates a new websocket connection to Discord
@@ -120,13 +121,19 @@ func (c *Client) ResolveEvent(messageType int, message []byte) (*Event, error) {
 
 	if e.Opcode == opcodeDispatch {
 		c.Log.Debugf("Websocket: received opcode 0 Dispatch with event %s from Discord.", e.Type)
-		e.Struct = eventResolvers[e.Type]
+		e.Struct = eventResolvers[e.Type].New()
 
 		if err = json.Unmarshal(e.RawData, &e.Struct); err != nil {
 			c.Log.Errorf("error unmarshalling %s event, %s", e.Type, err)
 		}
-		c.Log.Debugf("%s", e.Struct)
-
+		if e.Type == messageCreateEventType {
+			t := e.Struct.(*EventMessageCreate)
+			c.Log.WithFields(logrus.Fields{
+				"author":   t.Author.Username,
+				"message":  t.Content,
+				"serverid": t.GuildID,
+			}).Debug("Websocket: received message")
+		}
 		return e, nil
 	}
 
