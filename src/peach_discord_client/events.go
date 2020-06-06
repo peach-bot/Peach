@@ -25,8 +25,8 @@ type EventReady struct {
 	Shard           *[2]int             `json:"shard,omitempty"`
 }
 
-// EventResume is dispatched when a client has sent a resume payload to the gateway.
-type EventResume struct {
+// EventResumed is dispatched when a client has sent a resume payload to the gateway.
+type EventResumed struct {
 }
 
 //

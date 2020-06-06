@@ -150,3 +150,11 @@ type Event struct {
 	// Struct contains one of the other Events
 	Struct interface{} `json:"-"`
 }
+
+// EventInvalidSession is sent to indicate that the session could not be initialized, resumed or was invalidated.
+type EventInvalidSession struct {
+	Opcode   opcode `json:"op"`
+	Sequence int64  `json:"s"`
+	Type     string `json:"t"`
+	RawData  bool   `json:"d"`
+}

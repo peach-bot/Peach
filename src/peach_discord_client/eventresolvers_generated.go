@@ -20,10 +20,11 @@ const (
 	guildRoleUpdateEventType         = "GUILD_ROLE_UPDATE"
 	guildUpdateEventType             = "GUILD_UPDATE"
 	helloEventType                   = "HELLO"
+	invalidSessionEventType          = "INVALID_SESSION"
 	messageCreateEventType           = "MESSAGE_CREATE"
 	presenceUpdateEventType          = "PRESENCE_UPDATE"
 	readyEventType                   = "READY"
-	resumeEventType                  = "RESUME"
+	resumedEventType                 = "RESUMED"
 	webhooksUpdateEventType          = "WEBHOOKS_UPDATE"
 )
 
@@ -387,6 +388,26 @@ func (eventresolver helloEventResolver) Handle(c *Client, i interface{}) {
 	}
 }
 
+// invalidSessionEventResolver is an event resolver for InvalidSession events.
+type invalidSessionEventResolver func(*Client, *EventInvalidSession)
+
+// Type returns the event type for InvalidSession events.
+func (eventresolver invalidSessionEventResolver) Type() string {
+	return invalidSessionEventType
+}
+
+// New returns a new instance of InvalidSession.
+func (eventresolver invalidSessionEventResolver) New() interface{} {
+	return &EventInvalidSession{}
+}
+
+// Handle is the handler for InvalidSession events.
+func (eventresolver invalidSessionEventResolver) Handle(c *Client, i interface{}) {
+	if t, ok := i.(*EventInvalidSession); ok {
+		eventresolver(c, t)
+	}
+}
+
 // messageCreateEventResolver is an event resolver for MessageCreate events.
 type messageCreateEventResolver func(*Client, *EventMessageCreate)
 
@@ -447,22 +468,22 @@ func (eventresolver readyEventResolver) Handle(c *Client, i interface{}) {
 	}
 }
 
-// resumeEventResolver is an event resolver for Resume events.
-type resumeEventResolver func(*Client, *EventResume)
+// resumedEventResolver is an event resolver for Resumed events.
+type resumedEventResolver func(*Client, *EventResumed)
 
-// Type returns the event type for Resume events.
-func (eventresolver resumeEventResolver) Type() string {
-	return resumeEventType
+// Type returns the event type for Resumed events.
+func (eventresolver resumedEventResolver) Type() string {
+	return resumedEventType
 }
 
-// New returns a new instance of Resume.
-func (eventresolver resumeEventResolver) New() interface{} {
-	return &EventResume{}
+// New returns a new instance of Resumed.
+func (eventresolver resumedEventResolver) New() interface{} {
+	return &EventResumed{}
 }
 
-// Handle is the handler for Resume events.
-func (eventresolver resumeEventResolver) Handle(c *Client, i interface{}) {
-	if t, ok := i.(*EventResume); ok {
+// Handle is the handler for Resumed events.
+func (eventresolver resumedEventResolver) Handle(c *Client, i interface{}) {
+	if t, ok := i.(*EventResumed); ok {
 		eventresolver(c, t)
 	}
 }
@@ -525,14 +546,16 @@ func handlerForInterface(resolver interface{}) EventResolver {
 		return guildUpdateEventResolver(v)
 	case func(*Client, *EventHello):
 		return helloEventResolver(v)
+	case func(*Client, *EventInvalidSession):
+		return invalidSessionEventResolver(v)
 	case func(*Client, *EventMessageCreate):
 		return messageCreateEventResolver(v)
 	case func(*Client, *EventPresenceUpdate):
 		return presenceUpdateEventResolver(v)
 	case func(*Client, *EventReady):
 		return readyEventResolver(v)
-	case func(*Client, *EventResume):
-		return resumeEventResolver(v)
+	case func(*Client, *EventResumed):
+		return resumedEventResolver(v)
 	case func(*Client, *EventWebhooksUpdate):
 		return webhooksUpdateEventResolver(v)
 	}
@@ -571,9 +594,10 @@ func AddEventResolvers() {
 	addEventResolver(guildRoleUpdateEventResolver(nil))
 	addEventResolver(guildUpdateEventResolver(nil))
 	addEventResolver(helloEventResolver(nil))
+	addEventResolver(invalidSessionEventResolver(nil))
 	addEventResolver(messageCreateEventResolver(nil))
 	addEventResolver(presenceUpdateEventResolver(nil))
 	addEventResolver(readyEventResolver(nil))
-	addEventResolver(resumeEventResolver(nil))
+	addEventResolver(resumedEventResolver(nil))
 	addEventResolver(webhooksUpdateEventResolver(nil))
 }

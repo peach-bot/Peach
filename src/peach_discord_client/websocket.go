@@ -109,6 +109,23 @@ func (c *Client) ResolveEvent(messageType int, message []byte) (*Event, error) {
 		return e, err
 	}
 
+	if e.Opcode == opcodeInvalidSession {
+		reader = bytes.NewBuffer(message)
+
+		if messageType == websocket.BinaryMessage {
+			z, _ := zlib.NewReader(reader)
+			reader = z
+		}
+
+		var eventInvalidSession *EventInvalidSession
+		decoder := json.NewDecoder(reader)
+		err := decoder.Decode(&eventInvalidSession)
+		if err != nil {
+			c.Log.Error(messageType, message)
+			return e, err
+		}
+	}
+
 	// Store sequence
 	atomic.StoreInt64(c.Sequence, e.Sequence)
 
