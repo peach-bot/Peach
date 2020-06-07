@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/sirupsen/logrus"
 )
 
 // CreateWebsocket creates a new websocket connection to Discord
@@ -76,9 +75,10 @@ func (c *Client) Listen(wsConn *websocket.Conn) {
 		}
 
 		// Resolve event
-		_, err = c.ResolveEvent(messageType, message)
+		e, err := c.DecodeMessage(messageType, message, false)
+		err = c.HandleEvent(e)
 		if err != nil {
-			c.Log.Errorf("Websocket: Error resolving event: %v", err)
+			c.Log.Errorf("Websocket: Error handling event: %v", err)
 		}
 
 		select {
@@ -90,8 +90,8 @@ func (c *Client) Listen(wsConn *websocket.Conn) {
 	}
 }
 
-// ResolveEvent decodes a message and resolves the Event within it
-func (c *Client) ResolveEvent(messageType int, message []byte) (*Event, error) {
+// DecodeMessage decodes a websocket message, duh
+func (c *Client) DecodeMessage(messageType int, message []byte, invalidSession bool) (*Event, error) {
 
 	var reader io.Reader
 	reader = bytes.NewBuffer(message)
@@ -100,32 +100,40 @@ func (c *Client) ResolveEvent(messageType int, message []byte) (*Event, error) {
 		z, _ := zlib.NewReader(reader)
 		reader = z
 	}
-
 	var e *Event
-	decoder := json.NewDecoder(reader)
-	err := decoder.Decode(&e)
-	if err != nil {
-		c.Log.Error(messageType, message)
-		return e, err
-	}
 
-	if e.Opcode == opcodeInvalidSession {
-		reader = bytes.NewBuffer(message)
-
-		if messageType == websocket.BinaryMessage {
-			z, _ := zlib.NewReader(reader)
-			reader = z
-		}
-
-		var eventInvalidSession *EventInvalidSession
+	if invalidSession {
+		var e *EventInvalidSession
 		decoder := json.NewDecoder(reader)
-		err := decoder.Decode(&eventInvalidSession)
+		err := decoder.Decode(&e)
 		if err != nil {
-			c.Log.Error(messageType, message)
-			return e, err
+			err = fmt.Errorf("Could not decode Event: %s", err)
+			return nil, err
+		}
+	} else {
+		decoder := json.NewDecoder(reader)
+		err := decoder.Decode(&e)
+		if err != nil {
+			err = fmt.Errorf("Could not decode Event: %s", err)
+			return nil, err
 		}
 	}
 
+	if e.Opcode == opcodeInvalidSession && invalidSession == false {
+		e, err := c.DecodeMessage(messageType, message, true)
+		if err != nil {
+			err = fmt.Errorf("Could not decode Event: %s", err)
+			return nil, err
+		}
+
+		return e, nil
+	}
+
+	return e, nil
+}
+
+// HandleEvent resolves messages and handles the events included within
+func (c *Client) HandleEvent(e *Event) error {
 	// Store sequence
 	atomic.StoreInt64(c.Sequence, e.Sequence)
 
@@ -133,29 +141,31 @@ func (c *Client) ResolveEvent(messageType int, message []byte) (*Event, error) {
 	if e.Opcode == opcodeHeartbeatACK {
 		c.LastHeartbeatAck = time.Now()
 		c.Log.Debug("Websocket: received opcode 11 HeartbeatACK.")
-		return e, nil
+		return nil
 	}
 
 	if e.Opcode == opcodeDispatch {
 		c.Log.Debugf("Websocket: received opcode 0 Dispatch with event %s from Discord.", e.Type)
 		e.Struct = eventHandlers[e.Type].New()
 
-		if err = json.Unmarshal(e.RawData, &e.Struct); err != nil {
+		if err := json.Unmarshal(e.RawData, &e.Struct); err != nil {
 			c.Log.Errorf("error unmarshalling %s event, %s", e.Type, err)
 		}
-		if e.Type == messageCreateEventType {
-			t := e.Struct.(*EventMessageCreate)
-			c.Log.WithFields(logrus.Fields{
-				"author":   t.Author.Username,
-				"message":  t.Content,
-				"serverid": t.GuildID,
-			}).Debug("Websocket: received message")
-		}
-		return e, nil
+
+		// if e.Type == messageCreateEventType {
+		// 	t := e.Struct.(*EventMessageCreate)
+		// 	c.Log.WithFields(logrus.Fields{
+		// 		"author":   t.Author.Username,
+		// 		"message":  t.Content,
+		// 		"serverid": t.GuildID,
+		// 	}).Debug("Websocket: received message")
+		// }
+
+		return nil
 	}
 
 	c.Log.Debugf("Websocket: received opcode %v %v from Discord.", e.Opcode, e.Opcode.String())
-	return e, nil
+	return nil
 
 }
 
@@ -206,7 +216,8 @@ func (c *Client) Hello() error {
 	}
 
 	// Retreive event out of message
-	event, err := c.ResolveEvent(messageType, message)
+	event, err := c.DecodeMessage(messageType, message, false)
+	fmt.Printf("%v", event)
 	if err != nil {
 		return err
 	}
