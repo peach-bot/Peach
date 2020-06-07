@@ -14,7 +14,7 @@ import (
 	"text/template"
 )
 
-var eventResolverTemplate = template.Must(template.New("eventResolver").Funcs(template.FuncMap{
+var eventHandlerTemplate = template.Must(template.New("eventHandler").Funcs(template.FuncMap{
 	"constName":      constName,
 	"isDiscordEvent": isDiscordEvent,
 	"privateName":    privateName,
@@ -26,47 +26,47 @@ const ({{range .}}
   {{privateName .}}EventType = "{{constName .}}"{{end}}
 )
 {{range .}}
-// {{privateName .}}EventResolver is an event resolver for {{.}} events.
-type {{privateName .}}EventResolver func(*Client, *Event{{.}})
+// {{privateName .}}EventHandler is an event handler for {{.}} events.
+type {{privateName .}}EventHandler func(*Client, *Event{{.}})
 // Type returns the event type for {{.}} events.
-func (eventresolver {{privateName .}}EventResolver) Type() string {
+func (eventhandler {{privateName .}}EventHandler) Type() string {
   return {{privateName .}}EventType
 }
 {{if isDiscordEvent .}}
 // New returns a new instance of {{.}}.
-func (eventresolver {{privateName .}}EventResolver) New() interface{} {
+func (eventhandler {{privateName .}}EventHandler) New() interface{} {
   return &Event{{.}}{}
 }{{end}}
 // Handle is the handler for {{.}} events.
-func (eventresolver {{privateName .}}EventResolver) Handle(c *Client, i interface{}) {
+func (eventhandler {{privateName .}}EventHandler) Handle(c *Client, i interface{}) {
   if t, ok := i.(*Event{{.}}); ok {
-    eventresolver(c, t)
+    eventhandler(c, t)
   }
 }
 {{end}}
-func handlerForInterface(resolver interface{}) EventResolver {
-  switch v := resolver.(type) { {{range .}}
+func handlerForInterface(handler interface{}) EventHandler {
+  switch v := handler.(type) { {{range .}}
   case func(*Client, *Event{{.}}):
-    return {{privateName .}}EventResolver(v){{end}}
+    return {{privateName .}}EventHandler(v){{end}}
   }
   return nil
 }
 
-// EventResolver represents any EventResolver
-type EventResolver interface {
+// EventHandler represents any EventHandler
+type EventHandler interface {
 	Type() string
 	New() interface{}
 }
 
-var eventResolvers = map[string]EventResolver{}
+var eventHandlers = map[string]EventHandler{}
 
-func addEventResolver(eventresolver EventResolver) {
-	eventResolvers[eventresolver.Type()] = eventresolver
+func addEventHandler(eventhandler EventHandler) {
+	eventHandlers[eventhandler.Type()] = eventhandler
 }
 
-// AddEventResolvers maps all event resolvers
-func AddEventResolvers() { {{range .}}{{if isDiscordEvent .}}
-  addEventResolver({{privateName .}}EventResolver(nil)){{end}}{{end}}
+// AddEventHandlers maps all event handlers
+func AddEventHandlers() { {{range .}}{{if isDiscordEvent .}}
+  addEventHandler({{privateName .}}EventHandler(nil)){{end}}{{end}}
 }
 `))
 
@@ -86,7 +86,7 @@ func main() {
 		names = append(names, object[5:])
 	}
 	sort.Strings(names)
-	eventResolverTemplate.Execute(&buf, names)
+	eventHandlerTemplate.Execute(&buf, names)
 
 	src, err := format.Source(buf.Bytes())
 	if err != nil {
@@ -94,7 +94,7 @@ func main() {
 		src = buf.Bytes()
 	}
 
-	err = ioutil.WriteFile(filepath.Join(dir, strings.ToLower("eventresolvers_generated.go")), src, 0644)
+	err = ioutil.WriteFile(filepath.Join(dir, strings.ToLower("eventhandlers_generated.go")), src, 0644)
 	if err != nil {
 		log.Fatal(buf, "writing output: %s", err)
 	}
