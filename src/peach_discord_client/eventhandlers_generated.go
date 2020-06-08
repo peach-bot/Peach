@@ -24,6 +24,7 @@ const (
 	presenceUpdateEventType          = "PRESENCE_UPDATE"
 	readyEventType                   = "READY"
 	resumedEventType                 = "RESUMED"
+	typingStartEventType             = "TYPING_START"
 	webhooksUpdateEventType          = "WEBHOOKS_UPDATE"
 )
 
@@ -467,6 +468,26 @@ func (eventhandler resumedEventHandler) Handle(c *Client, i interface{}) {
 	}
 }
 
+// typingStartEventHandler is an event handler for TypingStart events.
+type typingStartEventHandler func(*Client, *EventTypingStart)
+
+// Type returns the event type for TypingStart events.
+func (eventhandler typingStartEventHandler) Type() string {
+	return typingStartEventType
+}
+
+// New returns a new instance of TypingStart.
+func (eventhandler typingStartEventHandler) New() interface{} {
+	return &EventTypingStart{}
+}
+
+// Handle is the handler for TypingStart events.
+func (eventhandler typingStartEventHandler) Handle(c *Client, i interface{}) {
+	if t, ok := i.(*EventTypingStart); ok {
+		eventhandler(c, t)
+	}
+}
+
 // webhooksUpdateEventHandler is an event handler for WebhooksUpdate events.
 type webhooksUpdateEventHandler func(*Client, *EventWebhooksUpdate)
 
@@ -533,6 +554,8 @@ func handlerForInterface(handler interface{}) EventHandler {
 		return readyEventHandler(v)
 	case func(*Client, *EventResumed):
 		return resumedEventHandler(v)
+	case func(*Client, *EventTypingStart):
+		return typingStartEventHandler(v)
 	case func(*Client, *EventWebhooksUpdate):
 		return webhooksUpdateEventHandler(v)
 	}
@@ -575,5 +598,6 @@ func AddEventHandlers() {
 	addEventHandler(presenceUpdateEventHandler(nil))
 	addEventHandler(readyEventHandler(nil))
 	addEventHandler(resumedEventHandler(nil))
+	addEventHandler(typingStartEventHandler(nil))
 	addEventHandler(webhooksUpdateEventHandler(nil))
 }

@@ -148,6 +148,15 @@ type EventMessageCreate struct {
 	*Message
 }
 
+// EventTypingStart is sent when a user starts typing in a channel.
+type EventTypingStart struct {
+	ChannelID string      `json:"channel_id"`
+	GuildID   string      `json:"guild_id,omitempty"`
+	UserID    string      `json:"user_id"`
+	Timestamp int         `json:"timestamp"`
+	Member    GuildMember `json:"member,omitempty"`
+}
+
 //
 // PRESENCE
 //
