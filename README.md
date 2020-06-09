@@ -30,10 +30,8 @@ To leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/
  - [ ] Customizable prefixes
  - [ ] Custom commands
  - [ ] Funky text filters (make the bot speak fluent uwu)
- - [ ] Twitter annoucements (new tweet cool)
- - [ ] Twitch, YouTube, Mixer announcements (Lifestreams and videos)
 
-#### Fun
+#### Fun Stuff
  - [ ] Raffles
  - [ ] Economy system
  - [ ] Minigames (Duels, Roulette, Lottery)
@@ -42,6 +40,11 @@ To leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/
  - [ ] Urban Dictionary lookup
  - [ ] Spotify search
  - [ ] Quotes
+
+#### Other
+ - [ ] Twitter annoucements (new tweet cool)
+ - [ ] Twitch, YouTube, Mixer announcements (Lifestreams and videos)
+ - [ ] Minecraft server showcase (ip, current players)
 
 ## Contributors 
 
