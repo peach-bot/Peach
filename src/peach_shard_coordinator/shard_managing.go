@@ -30,8 +30,7 @@ func resetShardCount(shardCount int, reset bool) {
 		if err != nil {
 			log.Error(err)
 		}
-		// for testing purposes we increment this by one to enable sharding
-		shardCount = response.Shards + 1
+		shardCount = response.Shards
 		gatewayurl = response.URL
 	}
 

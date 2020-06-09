@@ -48,6 +48,9 @@ func main() {
 
 	done := make(chan bool)
 	err = c.Run()
+	if err != nil {
+		c.Log.Fatal(err)
+	}
 
 	<-done
 }

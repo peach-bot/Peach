@@ -25,8 +25,8 @@ type EventReady struct {
 	Shard           *[2]int             `json:"shard,omitempty"`
 }
 
-// EventResume is dispatched when a client has sent a resume payload to the gateway.
-type EventResume struct {
+// EventResumed is dispatched when a client has sent a resume payload to the gateway.
+type EventResumed struct {
 }
 
 //
@@ -146,6 +146,15 @@ type EventGuildRoleDelete struct {
 // EventMessageCreate is the data for a MessageCreate event.
 type EventMessageCreate struct {
 	*Message
+}
+
+// EventTypingStart is sent when a user starts typing in a channel.
+type EventTypingStart struct {
+	ChannelID string      `json:"channel_id"`
+	GuildID   string      `json:"guild_id,omitempty"`
+	UserID    string      `json:"user_id"`
+	Timestamp int         `json:"timestamp"`
+	Member    GuildMember `json:"member,omitempty"`
 }
 
 //
