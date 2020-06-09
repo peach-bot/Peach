@@ -16,25 +16,32 @@
 <img src=https://user-images.githubusercontent.com/45462701/67280986-b47c5c00-f4ce-11e9-8c9c-5ab70ec5e392.png width=12px></img>
 To leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/issues). Here is a list of features that are planned or already implemented:
 
- - [ ] Dynamic voice channels
- - [ ] More rich embeds (info cards)
- - [ ] Twitter annoucements
- - [ ] Twitch, YouTube, Mixer announcements
- - [ ] Fast channel configuring
- - [ ] Reaction role
+#### Moderation
+ - [ ] Moderation tools (Freeze, Kick, Ban, Mute, Jail)
+ - [ ] Raid & Spam protection
+
+#### Server Tools
+ - [ ] Dynamic voice channels (always have a free voice channel for your members to join)
+ - [ ] Fast channel configuring (create new sub only, announcement or secret channels with ease)
+ - [ ] Reaction role (click a thing, get a role, ez)
  - [ ] Automatic role assignment
+
+#### Customization
+ - [ ] Customizable prefixes
+ - [ ] Custom commands
+ - [ ] Funky text filters (make the bot speak fluent uwu)
+ - [ ] Twitter annoucements (new tweet cool)
+ - [ ] Twitch, YouTube, Mixer announcements (Lifestreams and videos)
+
+#### Fun
  - [ ] Raffles
  - [ ] Economy system
- - [ ] Funky text filters
- - [ ] Customizable prefixes
- - [ ] Moderation tools (Freeze, Kick, Ban, Mute, Jail)
- - [ ] Raid protection
- - [ ] Currency/Point system 
  - [ ] Minigames (Duels, Roulette, Lottery)
  - [ ] Leveling and ranking system
+ - [ ] Member of the day
  - [ ] Urban Dictionary lookup
  - [ ] Spotify search
- - [ ] Genius lyric search
+ - [ ] Quotes
 
 ## Contributors 
 
