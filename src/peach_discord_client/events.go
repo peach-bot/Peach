@@ -29,6 +29,10 @@ type EventReady struct {
 type EventResumed struct {
 }
 
+// EventReconnect is dispatched when a client should reconnect to the gateway
+type EventReconnect struct {
+}
+
 //
 // CHANNELS
 //
