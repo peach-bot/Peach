@@ -143,6 +143,28 @@ type EventGuildRoleDelete struct {
 // INVITES
 //
 
+// EventInviteCreate is sent when a new invite to a channel is created.
+type EventInviteCreate struct {
+	ChannelID      string `json:"channel_id"`
+	Code           string `json:"code"`
+	CreatedAt      int    `json:"created_at"`
+	GuildID        string `json:"guild_id,omitempty"`
+	Inviter        User   `json:"inviter,omitempty"`
+	MaxAge         int    `json:"max_age"`
+	MaxUses        int    `json:"max_uses"`
+	TargetUser     User   `json:"target_user,omitempty"`
+	TargetUserType int    `json:"target_user_type,omitempty"`
+	Temporary      bool   `json:"temporary"`
+	Uses           int    `json:"uses"`
+}
+
+// EventInviteDelete is sent when an invite is deleted.
+type EventInviteDelete struct {
+	ChannelID string `json:"channel_id"`
+	GuildID   string `json:"guild_id,omitempty"`
+	Code      string `json:"code"`
+}
+
 //
 // MESSAGES
 //
