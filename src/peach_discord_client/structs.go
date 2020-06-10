@@ -117,7 +117,7 @@ type UpdateStatus struct {
 // Activity represence a discord status activity
 type Activity struct {
 	Name          string             `json:"name"`
-	Type          int                `json:"type"`
+	Type          activitytype       `json:"type"`
 	URL           string             `json:"url,omitempty"`
 	CreatedAt     int                `json:"created_at"`
 	Timestamps    ActivityTimestamps `json:"timestamps,omitempty"`
