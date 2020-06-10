@@ -240,6 +240,18 @@ type EventPresenceUpdate struct {
 // VOICE
 //
 
+// EventVoiceStateUpdate is sent when someone joins/leaves/moves voice channels.
+type EventVoiceStateUpdate struct {
+	VoiceState
+}
+
+// EventVoiceServerUpdate is sent when a guild's voice server is updated.
+type EventVoiceServerUpdate struct {
+	Token    string `json:"token"`
+	GuildID  string `json:"guild_id"`
+	Endpoint string `json:"endpoint"`
+}
+
 //
 // WEBHOOKS
 //
