@@ -231,9 +231,23 @@ type EventMessageReactionRemoveEmoji struct {
 // PRESENCE
 //
 
-// EventPresenceUpdate is the data for a PresenceUpdate event.
+// EventPresenceUpdate is sent when a user's presence or info, such as name or avatar, is updated.
 type EventPresenceUpdate struct {
 	PresenceUpdate
+}
+
+// EventTypingStart is sent when a user starts typing in a channel.
+type EventTypingStart struct {
+	ChannelID string      `json:"channel_id"`
+	GuildID   string      `json:"guild_id,omitempty"`
+	UserID    string      `json:"user_id"`
+	Timestamp int         `json:"timestamp"`
+	Member    GuildMember `json:"member,omitempty"`
+}
+
+// EventUserUpdate is sent when properties about the user change.
+type EventUserUpdate struct {
+	User
 }
 
 //
