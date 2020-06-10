@@ -169,18 +169,62 @@ type EventInviteDelete struct {
 // MESSAGES
 //
 
-// EventMessageCreate is the data for a MessageCreate event.
+// EventMessageCreate is sent when a message is created.
 type EventMessageCreate struct {
 	*Message
 }
 
-// EventTypingStart is sent when a user starts typing in a channel.
-type EventTypingStart struct {
-	ChannelID string      `json:"channel_id"`
-	GuildID   string      `json:"guild_id,omitempty"`
+// EventMessageUpdate is sent when a message is updated.
+type EventMessageUpdate struct {
+	*Message
+}
+
+// EventMessageDelete is sent when a message is deleted.
+type EventMessageDelete struct {
+	ID        string `json:"id"`
+	ChannelID string `json:"channel_id"`
+	GuildID   string `json:"guild_id,omitempty"`
+}
+
+// EventMessageDeleteBulk is sent when a message is deleted.
+type EventMessageDeleteBulk struct {
+	IDs       []*string `json:"ids"`
+	ChannelID string    `json:"channel_id"`
+	GuildID   string    `json:"guild_id,omitempty"`
+}
+
+// EventMessageReactionAdd is sent when a user adds a reaction to a message.
+type EventMessageReactionAdd struct {
 	UserID    string      `json:"user_id"`
-	Timestamp int         `json:"timestamp"`
+	ChannelID string      `json:"channel_id"`
+	MessageID string      `json:"message_id"`
+	GuildID   string      `json:"guild_id,omitempty"`
 	Member    GuildMember `json:"member,omitempty"`
+	Emoji     Emoji       `json:"emoji"`
+}
+
+// EventMessageReactionRemove is sent when a user removes a reaction from a message.
+type EventMessageReactionRemove struct {
+	UserID    string `json:"user_id"`
+	ChannelID string `json:"channel_id"`
+	MessageID string `json:"message_id"`
+	GuildID   string `json:"guild_id,omitempty"`
+	Emoji     Emoji  `json:"emoji"`
+}
+
+// EventMessageReactionRemoveAll is sent when a user explicitly removes all reactions from a message.
+type EventMessageReactionRemoveAll struct {
+	ChannelID string `json:"channel_id"`
+	MessageID string `json:"message_id"`
+	GuildID   string `json:"guild_id,omitempty"`
+}
+
+// EventMessageReactionRemoveEmoji is sent when a bot removes all instances of a given emoji from the reactions of a message.
+type EventMessageReactionRemoveEmoji struct {
+	ChannelID string `json:"channel_id"`
+	GuildID   string `json:"guild_id,omitempty"`
+	MessageID string `json:"message_id"`
+	Emoji     Emoji  `json:"emoji"`
 }
 
 //
