@@ -116,9 +116,54 @@ type UpdateStatus struct {
 
 // Activity represence a discord status activity
 type Activity struct {
-	Name      string `json:"name"`
-	Type      int    `json:"type"`
-	CreatedAt int    `json:"created_at"`
+	Name          string             `json:"name"`
+	Type          activitytype       `json:"type"`
+	URL           string             `json:"url,omitempty"`
+	CreatedAt     int                `json:"created_at"`
+	Timestamps    ActivityTimestamps `json:"timestamps,omitempty"`
+	ApplicationID string             `json:"application_id,omitempty"`
+	Details       string             `json:"details,omitempty"`
+	State         string             `json:"state,omitempty"`
+	Emoji         ActivityEmoji      `json:"emoji,omitempty"`
+	Party         ActivityParty      `json:"party,omitempty"`
+	Assets        ActivityAssets     `json:"assets,omitempty"`
+	Secrets       ActivitySecrets    `json:"secrets,omitempty"`
+	Instance      bool               `json:"instance,omitempty"`
+	Flags         int                `json:"flags,omitempty"`
+}
+
+// ActivityTimestamps represents start and end time of a discord activity
+type ActivityTimestamps struct {
+	Start int `json:"start,omitempty"`
+	End   int `json:"end,omitempty"`
+}
+
+// ActivityEmoji includes information on the emoji used in cutom presences
+type ActivityEmoji struct {
+	Name     string `json:"name"`
+	ID       string `json:"id,omitempty"`
+	Animated bool   `json:"animated,omitempty"`
+}
+
+// ActivityParty includes information for the current party of the player
+type ActivityParty struct {
+	ID   string  `json:"id,omitempty"`
+	Size [2]*int `json:"size,omitempty"`
+}
+
+// ActivityAssets includes images for the presence and their hover texts
+type ActivityAssets struct {
+	LargeImage string `json:"large_image,omitempty"`
+	LargeText  string `json:"large_text,omitempty"`
+	SmallImage string `json:"small_image,omitempty"`
+	SmallText  string `json:"small_text,omitempty"`
+}
+
+// ActivitySecrets includes secrets for Rich Presence joining and spectating
+type ActivitySecrets struct {
+	Join     string `json:"join,omitempty"`
+	Spectate string `json:"spectate,omitempty"`
+	Match    string `json:"match,omitempty"`
 }
 
 // ClientStatus represents a user's active sessions
@@ -153,8 +198,8 @@ type Event struct {
 
 // EventInvalidSession is sent to indicate that the session could not be initialized, resumed or was invalidated.
 type EventInvalidSession struct {
-	Opcode   opcode `json:"op"`
-	Sequence int64  `json:"s"`
-	Type     string `json:"t"`
-	RawData  bool   `json:"d"`
+	Opcode    opcode `json:"op"`
+	Sequence  int64  `json:"s"`
+	Type      string `json:"t"`
+	Resumable bool   `json:"d"`
 }

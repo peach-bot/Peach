@@ -1,6 +1,6 @@
 package main
 
-//go:generate stringer -type opcode,closecode -output consts_generated.go
+//go:generate stringer -type opcode,closecode,activitytype -output consts_generated.go
 
 type opcode int
 
@@ -39,4 +39,14 @@ const (
 	closecodeInvalidAPIVersion                            // Sent an invalid gateway version.
 	closecodeInvalidIntents                               // Sent invalid gateway intent.
 	closecodeDisallowedIntents                            // Sent intent the account isn't eligible for.
+)
+
+type activitytype int
+
+const (
+	activitytypeGame activitytype = iota
+	activitytypeStreaming
+	activitytypeListening
+	_
+	activitytypeCustom
 )
