@@ -153,14 +153,10 @@ func (c *Client) HandleEvent(e *Event) error {
 			c.Log.Errorf("error unmarshalling %s event, %s", e.Type, err)
 		}
 
-		// if e.Type == messageCreateEventType {
-		// 	t := e.Struct.(*EventMessageCreate)
-		// 	c.Log.WithFields(logrus.Fields{
-		// 		"author":   t.Author.Username,
-		// 		"message":  t.Content,
-		// 		"serverid": t.GuildID,
-		// 	}).Debug("Websocket: received message")
-		// }
+		err := eventtypehandler.Handle(c, e.Struct)
+		if err != nil {
+			return err
+		}
 
 		return nil
 	}

@@ -39,9 +39,9 @@ func (eventTypeHandler {{privateName .}}EventTypeHandler) New() interface{} {
 }{{end}}
 // Handle is the handler for {{.}} events.
 func (eventTypeHandler {{privateName .}}EventTypeHandler) Handle(c *Client, i interface{}) error {
-  if t, ok := i.(*Event{{.}}); ok {
-    eventhandler(c, t)
-  }
+  e := i.(*Event{{.}}) 
+  err := c.on{{.}}(e)
+  return err
 }
 {{end}}
 func handlerForInterface(handler interface{}) EventTypeHandler {
@@ -70,6 +70,14 @@ func AddEventTypeHandlers() { {{range .}}{{if isDiscordEvent .}}
   addEventTypeHandler({{privateName .}}EventTypeHandler(nil)){{end}}{{end}}
 }
 `))
+
+// to generate empty eventhandlers add
+// {{range .}}
+// func (c *Client) on{{.}}(ctx *Event{{.}}) error {
+// 	return nil
+// }
+// {{end}}`
+// to the bottom of the template
 
 func main() {
 	var buf bytes.Buffer
