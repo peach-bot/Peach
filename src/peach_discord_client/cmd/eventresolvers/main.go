@@ -14,7 +14,7 @@ import (
 	"text/template"
 )
 
-var eventHandlerTemplate = template.Must(template.New("eventHandler").Funcs(template.FuncMap{
+var eventTypeHandlerTemplate = template.Must(template.New("eventTypeHandler").Funcs(template.FuncMap{
 	"constName":      constName,
 	"isDiscordEvent": isDiscordEvent,
 	"privateName":    privateName,
@@ -26,47 +26,48 @@ const ({{range .}}
   {{privateName .}}EventType = "{{constName .}}"{{end}}
 )
 {{range .}}
-// {{privateName .}}EventHandler is an event handler for {{.}} events.
-type {{privateName .}}EventHandler func(*Client, *Event{{.}})
+// {{privateName .}}EventTypeHandler is an event handler for {{.}} events.
+type {{privateName .}}EventTypeHandler func(*Client, *Event{{.}})
 // Type returns the event type for {{.}} events.
-func (eventhandler {{privateName .}}EventHandler) Type() string {
+func (eventTypeHandler {{privateName .}}EventTypeHandler) Type() string {
   return {{privateName .}}EventType
 }
 {{if isDiscordEvent .}}
 // New returns a new instance of {{.}}.
-func (eventhandler {{privateName .}}EventHandler) New() interface{} {
+func (eventTypeHandler {{privateName .}}EventTypeHandler) New() interface{} {
   return &Event{{.}}{}
 }{{end}}
 // Handle is the handler for {{.}} events.
-func (eventhandler {{privateName .}}EventHandler) Handle(c *Client, i interface{}) {
+func (eventTypeHandler {{privateName .}}EventTypeHandler) Handle(c *Client, i interface{}) error {
   if t, ok := i.(*Event{{.}}); ok {
     eventhandler(c, t)
   }
 }
 {{end}}
-func handlerForInterface(handler interface{}) EventHandler {
+func handlerForInterface(handler interface{}) EventTypeHandler {
   switch v := handler.(type) { {{range .}}
   case func(*Client, *Event{{.}}):
-    return {{privateName .}}EventHandler(v){{end}}
+    return {{privateName .}}EventTypeHandler(v){{end}}
   }
   return nil
 }
 
-// EventHandler represents any EventHandler
-type EventHandler interface {
+// EventTypeHandler represents any EventTypeHandler
+type EventTypeHandler interface {
 	Type() string
 	New() interface{}
+	Handle(c *Client, i interface{}) error
 }
 
-var eventHandlers = map[string]EventHandler{}
+var eventTypeHandlers = map[string]EventTypeHandler{}
 
-func addEventHandler(eventhandler EventHandler) {
-	eventHandlers[eventhandler.Type()] = eventhandler
+func addEventTypeHandler(eventTypeHandler EventTypeHandler) {
+	eventTypeHandlers[eventTypeHandler.Type()] = eventTypeHandler
 }
 
-// AddEventHandlers maps all event handlers
-func AddEventHandlers() { {{range .}}{{if isDiscordEvent .}}
-  addEventHandler({{privateName .}}EventHandler(nil)){{end}}{{end}}
+// AddEventTypeHandlers maps all event handlers
+func AddEventTypeHandlers() { {{range .}}{{if isDiscordEvent .}}
+  addEventTypeHandler({{privateName .}}EventTypeHandler(nil)){{end}}{{end}}
 }
 `))
 
@@ -86,7 +87,7 @@ func main() {
 		names = append(names, object[5:])
 	}
 	sort.Strings(names)
-	eventHandlerTemplate.Execute(&buf, names)
+	eventTypeHandlerTemplate.Execute(&buf, names)
 
 	src, err := format.Source(buf.Bytes())
 	if err != nil {
@@ -94,7 +95,7 @@ func main() {
 		src = buf.Bytes()
 	}
 
-	err = ioutil.WriteFile(filepath.Join(dir, strings.ToLower("eventhandlers_generated.go")), src, 0644)
+	err = ioutil.WriteFile(filepath.Join(dir, strings.ToLower("eventtypehandlers_generated.go")), src, 0644)
 	if err != nil {
 		log.Fatal(buf, "writing output: %s", err)
 	}
