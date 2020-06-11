@@ -214,7 +214,6 @@ func (c *Client) Hello() error {
 
 	// Retreive event out of message
 	event, err := c.DecodeMessage(messageType, message, false)
-	fmt.Printf("%v", event)
 	if err != nil {
 		return err
 	}
