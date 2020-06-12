@@ -50,3 +50,24 @@ const (
 	_
 	activitytypeCustom
 )
+
+type messagetype int
+
+const (
+	messagetypeDefault messagetype = iota
+	messagetypeRecipientAdd
+	messagetypeRecipientRemove
+	messagetypeCall
+	messagetypeChannelNameChange
+	messagetypeChannelIconChange
+	messagetypeChannelPinnedMessage
+	messagetypeGuildMemberJoin
+	messagetypeNitroBoost
+	messagetypeNitroBoostTier1
+	messagetypeNitroBoostTier2
+	messagetypeNitroBoostTier3
+	messagetypeChannelFollowAdd
+	_
+	messagetypeGuildDiscoveryDisqualified
+	messagetypeGuildDiscoveryRequalified
+)

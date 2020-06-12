@@ -50,7 +50,7 @@ type Message struct {
 	Reactions        []*Reaction        `json:"reactions,omitempty"`
 	Pinned           bool               `json:"pinned"`
 	WebhookID        string             `json:"webhook_id,omitempty"`
-	Type             int                `json:"type"`
+	Type             messagetype        `json:"type"`
 	Activity         MessageActivity    `json:"activity,omitempty"`
 	Application      MessageApplication `json:"application,omitempty"`
 	MessageReference MessageReference   `json:"message_reference,omitempty"`
