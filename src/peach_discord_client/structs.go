@@ -154,3 +154,10 @@ type EventInvalidSession struct {
 	Type      string `json:"t"`
 	Resumable bool   `json:"d"`
 }
+
+// NewMessage is used to create messages that are sent via the http api
+type NewMessage struct {
+	Content string      `json:"content,omitempty"`
+	TTS     bool        `json:"tts,omitempty"`
+	Embed   interface{} `json:"embed,omitempty"`
+}

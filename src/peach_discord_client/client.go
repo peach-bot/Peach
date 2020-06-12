@@ -157,5 +157,7 @@ func CreateClient(log *logrus.Logger) (c *Client, err error) {
 		return nil, err
 	}
 
+	c.httpClient = &http.Client{}
+
 	return
 }

@@ -83,11 +83,14 @@ func (c *Client) onInviteDelete(ctx *EventInviteDelete) error {
 }
 
 func (c *Client) onMessageCreate(ctx *EventMessageCreate) error {
-	c.Log.WithFields(logrus.Fields{
-		"author":   ctx.Author.Username,
-		"message":  ctx.Content,
-		"serverid": ctx.GuildID,
-	}).Debug("Websocket: received message")
+
+	if ctx.Author.ID != c.User.ID {
+		c.Log.WithFields(logrus.Fields{
+			"author":   ctx.Author.Username,
+			"message":  ctx.Content,
+			"serverid": ctx.GuildID,
+		}).Debug("Websocket: received message")
+	}
 	return nil
 }
 
