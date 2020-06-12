@@ -124,6 +124,8 @@ func (c *Client) onPresenceUpdate(ctx *EventPresenceUpdate) error {
 }
 
 func (c *Client) onReady(ctx *EventReady) error {
+	c.User = ctx.User
+
 	return nil
 }
 
