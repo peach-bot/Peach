@@ -34,12 +34,12 @@ type Overwrite struct {
 type Message struct {
 	ID               string             `json:"id"`
 	ChannelID        string             `json:"channel_id"`
-	GuildID          string             `json:"guild_id"`
+	GuildID          string             `json:"guild_id,omitempty"`
 	Author           User               `json:"author"`
 	Member           GuildMember        `json:"member,omitempty"`
 	Content          string             `json:"content"`
 	Timestamp        string             `json:"timestamp"`
-	EditedTimestamp  string             `json:"edited_timestamp"`
+	EditedTimestamp  string             `json:"edited_timestamp,omitempty"`
 	TTS              bool               `json:"tts"`
 	MentionEveryone  bool               `json:"mention_everyone"`
 	Mentions         []*User            `json:"mentions"`
