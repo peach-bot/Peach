@@ -91,6 +91,9 @@ type ResumePayload struct {
 
 // Resume is used to resume a connection
 type Resume struct {
+	Token     string `json:"token"`
+	SessionID string `json:"session_id"`
+	Sequence  int64  `json:"seq"`
 }
 
 // HeartbeatPayload is used to create a heartbeat message

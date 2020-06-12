@@ -253,15 +253,30 @@ func (c *Client) Login() error {
 
 // Resume resumes a connection
 func (c *Client) Resume() error {
-	return nil
+
+	c.Log.Info("Websocket: resuming gateway connection...")
+
+	// Build Resume payload
+	data := Resume{}
+	data.Sequence = atomic.LoadInt64(c.Sequence)
+	data.SessionID = c.SessionID
+	data.Token = c.TOKEN
+	payload := ResumePayload{6, data}
+
+	// Send message
+	c.wsMutex.Lock()
+	err := c.wsConn.WriteJSON(payload)
+	c.wsMutex.Unlock()
+	c.Log.Debug("Websocket: sent Resume payload.")
+	return err
 }
 
 // Identify sends an identify payload, duh
 func (c *Client) Identify() error {
 
-	c.Log.Debug("Websocket: is authenticating with gateway...")
+	c.Log.Info("Websocket: is authenticating with gateway...")
 
-	// Build Identify data
+	// Build Identify payload
 	data := Identify{}
 	data.Token = c.TOKEN
 	data.Compress = c.Compress
@@ -270,14 +285,11 @@ func (c *Client) Identify() error {
 	data.Properties.Browser = "Peach" + VERSION
 	data.Properties.Device = "Peach" + VERSION
 	data.Shard = [2]int{c.ShardID, c.ShardCount}
-
-	// Create Payload
 	payload := IdentifyPayload{2, data}
 
-	if c.ShardID != 0 {
-		queuetime, _ := time.ParseDuration(fmt.Sprintf("%vs", 6*c.ShardID))
-		time.Sleep(queuetime)
-	}
+	queuetime, _ := time.ParseDuration(fmt.Sprintf("%vs", 6*c.ShardID))
+	time.Sleep(queuetime)
+
 	// Send message
 	c.wsMutex.Lock()
 	err := c.wsConn.WriteJSON(payload)
