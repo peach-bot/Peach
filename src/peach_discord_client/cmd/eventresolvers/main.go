@@ -38,10 +38,12 @@ func (eventTypeHandler {{privateName .}}EventTypeHandler) New() interface{} {
   return &Event{{.}}{}
 }{{end}}
 // Handle is the handler for {{.}} events.
-func (eventTypeHandler {{privateName .}}EventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler {{privateName .}}EventTypeHandler) Handle(c *Client, i interface{}) {
   e := i.(*Event{{.}}) 
   err := c.on{{.}}(e)
-  return err
+  if err != nil {
+	  c.Log.Error(err)
+  }
 }
 {{end}}
 func handlerForInterface(handler interface{}) EventTypeHandler {
@@ -56,7 +58,7 @@ func handlerForInterface(handler interface{}) EventTypeHandler {
 type EventTypeHandler interface {
 	Type() string
 	New() interface{}
-	Handle(c *Client, i interface{}) error
+	Handle(c *Client, i interface{})
 }
 
 var eventTypeHandlers = map[string]EventTypeHandler{}

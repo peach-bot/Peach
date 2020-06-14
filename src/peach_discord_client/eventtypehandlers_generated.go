@@ -55,10 +55,12 @@ func (eventTypeHandler channelCreateEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for ChannelCreate events.
-func (eventTypeHandler channelCreateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler channelCreateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventChannelCreate)
 	err := c.onChannelCreate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // channelDeleteEventTypeHandler is an event handler for ChannelDelete events.
@@ -75,10 +77,12 @@ func (eventTypeHandler channelDeleteEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for ChannelDelete events.
-func (eventTypeHandler channelDeleteEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler channelDeleteEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventChannelDelete)
 	err := c.onChannelDelete(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // channelPinsUpdateEventTypeHandler is an event handler for ChannelPinsUpdate events.
@@ -95,10 +99,12 @@ func (eventTypeHandler channelPinsUpdateEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for ChannelPinsUpdate events.
-func (eventTypeHandler channelPinsUpdateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler channelPinsUpdateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventChannelPinsUpdate)
 	err := c.onChannelPinsUpdate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // channelUpdateEventTypeHandler is an event handler for ChannelUpdate events.
@@ -115,10 +121,12 @@ func (eventTypeHandler channelUpdateEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for ChannelUpdate events.
-func (eventTypeHandler channelUpdateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler channelUpdateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventChannelUpdate)
 	err := c.onChannelUpdate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // guildBanAddEventTypeHandler is an event handler for GuildBanAdd events.
@@ -135,10 +143,12 @@ func (eventTypeHandler guildBanAddEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for GuildBanAdd events.
-func (eventTypeHandler guildBanAddEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler guildBanAddEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventGuildBanAdd)
 	err := c.onGuildBanAdd(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // guildBanRemoveEventTypeHandler is an event handler for GuildBanRemove events.
@@ -155,10 +165,12 @@ func (eventTypeHandler guildBanRemoveEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for GuildBanRemove events.
-func (eventTypeHandler guildBanRemoveEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler guildBanRemoveEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventGuildBanRemove)
 	err := c.onGuildBanRemove(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // guildCreateEventTypeHandler is an event handler for GuildCreate events.
@@ -175,10 +187,12 @@ func (eventTypeHandler guildCreateEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for GuildCreate events.
-func (eventTypeHandler guildCreateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler guildCreateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventGuildCreate)
 	err := c.onGuildCreate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // guildDeleteEventTypeHandler is an event handler for GuildDelete events.
@@ -195,10 +209,12 @@ func (eventTypeHandler guildDeleteEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for GuildDelete events.
-func (eventTypeHandler guildDeleteEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler guildDeleteEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventGuildDelete)
 	err := c.onGuildDelete(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // guildEmojisUpdateEventTypeHandler is an event handler for GuildEmojisUpdate events.
@@ -215,10 +231,12 @@ func (eventTypeHandler guildEmojisUpdateEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for GuildEmojisUpdate events.
-func (eventTypeHandler guildEmojisUpdateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler guildEmojisUpdateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventGuildEmojisUpdate)
 	err := c.onGuildEmojisUpdate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // guildIntegrationsUpdateEventTypeHandler is an event handler for GuildIntegrationsUpdate events.
@@ -235,10 +253,12 @@ func (eventTypeHandler guildIntegrationsUpdateEventTypeHandler) New() interface{
 }
 
 // Handle is the handler for GuildIntegrationsUpdate events.
-func (eventTypeHandler guildIntegrationsUpdateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler guildIntegrationsUpdateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventGuildIntegrationsUpdate)
 	err := c.onGuildIntegrationsUpdate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // guildMemberAddEventTypeHandler is an event handler for GuildMemberAdd events.
@@ -255,10 +275,12 @@ func (eventTypeHandler guildMemberAddEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for GuildMemberAdd events.
-func (eventTypeHandler guildMemberAddEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler guildMemberAddEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventGuildMemberAdd)
 	err := c.onGuildMemberAdd(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // guildMemberRemoveEventTypeHandler is an event handler for GuildMemberRemove events.
@@ -275,10 +297,12 @@ func (eventTypeHandler guildMemberRemoveEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for GuildMemberRemove events.
-func (eventTypeHandler guildMemberRemoveEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler guildMemberRemoveEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventGuildMemberRemove)
 	err := c.onGuildMemberRemove(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // guildMemberUpdateEventTypeHandler is an event handler for GuildMemberUpdate events.
@@ -295,10 +319,12 @@ func (eventTypeHandler guildMemberUpdateEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for GuildMemberUpdate events.
-func (eventTypeHandler guildMemberUpdateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler guildMemberUpdateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventGuildMemberUpdate)
 	err := c.onGuildMemberUpdate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // guildRoleCreateEventTypeHandler is an event handler for GuildRoleCreate events.
@@ -315,10 +341,12 @@ func (eventTypeHandler guildRoleCreateEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for GuildRoleCreate events.
-func (eventTypeHandler guildRoleCreateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler guildRoleCreateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventGuildRoleCreate)
 	err := c.onGuildRoleCreate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // guildRoleDeleteEventTypeHandler is an event handler for GuildRoleDelete events.
@@ -335,10 +363,12 @@ func (eventTypeHandler guildRoleDeleteEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for GuildRoleDelete events.
-func (eventTypeHandler guildRoleDeleteEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler guildRoleDeleteEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventGuildRoleDelete)
 	err := c.onGuildRoleDelete(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // guildRoleUpdateEventTypeHandler is an event handler for GuildRoleUpdate events.
@@ -355,10 +385,12 @@ func (eventTypeHandler guildRoleUpdateEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for GuildRoleUpdate events.
-func (eventTypeHandler guildRoleUpdateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler guildRoleUpdateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventGuildRoleUpdate)
 	err := c.onGuildRoleUpdate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // guildUpdateEventTypeHandler is an event handler for GuildUpdate events.
@@ -375,10 +407,12 @@ func (eventTypeHandler guildUpdateEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for GuildUpdate events.
-func (eventTypeHandler guildUpdateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler guildUpdateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventGuildUpdate)
 	err := c.onGuildUpdate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // helloEventTypeHandler is an event handler for Hello events.
@@ -395,10 +429,12 @@ func (eventTypeHandler helloEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for Hello events.
-func (eventTypeHandler helloEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler helloEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventHello)
 	err := c.onHello(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // inviteCreateEventTypeHandler is an event handler for InviteCreate events.
@@ -415,10 +451,12 @@ func (eventTypeHandler inviteCreateEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for InviteCreate events.
-func (eventTypeHandler inviteCreateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler inviteCreateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventInviteCreate)
 	err := c.onInviteCreate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // inviteDeleteEventTypeHandler is an event handler for InviteDelete events.
@@ -435,10 +473,12 @@ func (eventTypeHandler inviteDeleteEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for InviteDelete events.
-func (eventTypeHandler inviteDeleteEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler inviteDeleteEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventInviteDelete)
 	err := c.onInviteDelete(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // messageCreateEventTypeHandler is an event handler for MessageCreate events.
@@ -455,10 +495,12 @@ func (eventTypeHandler messageCreateEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for MessageCreate events.
-func (eventTypeHandler messageCreateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler messageCreateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventMessageCreate)
 	err := c.onMessageCreate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // messageDeleteEventTypeHandler is an event handler for MessageDelete events.
@@ -475,10 +517,12 @@ func (eventTypeHandler messageDeleteEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for MessageDelete events.
-func (eventTypeHandler messageDeleteEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler messageDeleteEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventMessageDelete)
 	err := c.onMessageDelete(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // messageDeleteBulkEventTypeHandler is an event handler for MessageDeleteBulk events.
@@ -495,10 +539,12 @@ func (eventTypeHandler messageDeleteBulkEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for MessageDeleteBulk events.
-func (eventTypeHandler messageDeleteBulkEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler messageDeleteBulkEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventMessageDeleteBulk)
 	err := c.onMessageDeleteBulk(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // messageReactionAddEventTypeHandler is an event handler for MessageReactionAdd events.
@@ -515,10 +561,12 @@ func (eventTypeHandler messageReactionAddEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for MessageReactionAdd events.
-func (eventTypeHandler messageReactionAddEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler messageReactionAddEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventMessageReactionAdd)
 	err := c.onMessageReactionAdd(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // messageReactionRemoveEventTypeHandler is an event handler for MessageReactionRemove events.
@@ -535,10 +583,12 @@ func (eventTypeHandler messageReactionRemoveEventTypeHandler) New() interface{} 
 }
 
 // Handle is the handler for MessageReactionRemove events.
-func (eventTypeHandler messageReactionRemoveEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler messageReactionRemoveEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventMessageReactionRemove)
 	err := c.onMessageReactionRemove(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // messageReactionRemoveAllEventTypeHandler is an event handler for MessageReactionRemoveAll events.
@@ -555,10 +605,12 @@ func (eventTypeHandler messageReactionRemoveAllEventTypeHandler) New() interface
 }
 
 // Handle is the handler for MessageReactionRemoveAll events.
-func (eventTypeHandler messageReactionRemoveAllEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler messageReactionRemoveAllEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventMessageReactionRemoveAll)
 	err := c.onMessageReactionRemoveAll(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // messageReactionRemoveEmojiEventTypeHandler is an event handler for MessageReactionRemoveEmoji events.
@@ -575,10 +627,12 @@ func (eventTypeHandler messageReactionRemoveEmojiEventTypeHandler) New() interfa
 }
 
 // Handle is the handler for MessageReactionRemoveEmoji events.
-func (eventTypeHandler messageReactionRemoveEmojiEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler messageReactionRemoveEmojiEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventMessageReactionRemoveEmoji)
 	err := c.onMessageReactionRemoveEmoji(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // messageUpdateEventTypeHandler is an event handler for MessageUpdate events.
@@ -595,10 +649,12 @@ func (eventTypeHandler messageUpdateEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for MessageUpdate events.
-func (eventTypeHandler messageUpdateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler messageUpdateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventMessageUpdate)
 	err := c.onMessageUpdate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // presenceUpdateEventTypeHandler is an event handler for PresenceUpdate events.
@@ -615,10 +671,12 @@ func (eventTypeHandler presenceUpdateEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for PresenceUpdate events.
-func (eventTypeHandler presenceUpdateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler presenceUpdateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventPresenceUpdate)
 	err := c.onPresenceUpdate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // readyEventTypeHandler is an event handler for Ready events.
@@ -635,10 +693,12 @@ func (eventTypeHandler readyEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for Ready events.
-func (eventTypeHandler readyEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler readyEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventReady)
 	err := c.onReady(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // reconnectEventTypeHandler is an event handler for Reconnect events.
@@ -655,10 +715,12 @@ func (eventTypeHandler reconnectEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for Reconnect events.
-func (eventTypeHandler reconnectEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler reconnectEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventReconnect)
 	err := c.onReconnect(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // resumedEventTypeHandler is an event handler for Resumed events.
@@ -675,10 +737,12 @@ func (eventTypeHandler resumedEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for Resumed events.
-func (eventTypeHandler resumedEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler resumedEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventResumed)
 	err := c.onResumed(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // typingStartEventTypeHandler is an event handler for TypingStart events.
@@ -695,10 +759,12 @@ func (eventTypeHandler typingStartEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for TypingStart events.
-func (eventTypeHandler typingStartEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler typingStartEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventTypingStart)
 	err := c.onTypingStart(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // userUpdateEventTypeHandler is an event handler for UserUpdate events.
@@ -715,10 +781,12 @@ func (eventTypeHandler userUpdateEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for UserUpdate events.
-func (eventTypeHandler userUpdateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler userUpdateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventUserUpdate)
 	err := c.onUserUpdate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // voiceServerUpdateEventTypeHandler is an event handler for VoiceServerUpdate events.
@@ -735,10 +803,12 @@ func (eventTypeHandler voiceServerUpdateEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for VoiceServerUpdate events.
-func (eventTypeHandler voiceServerUpdateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler voiceServerUpdateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventVoiceServerUpdate)
 	err := c.onVoiceServerUpdate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // voiceStateUpdateEventTypeHandler is an event handler for VoiceStateUpdate events.
@@ -755,10 +825,12 @@ func (eventTypeHandler voiceStateUpdateEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for VoiceStateUpdate events.
-func (eventTypeHandler voiceStateUpdateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler voiceStateUpdateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventVoiceStateUpdate)
 	err := c.onVoiceStateUpdate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 // webhooksUpdateEventTypeHandler is an event handler for WebhooksUpdate events.
@@ -775,10 +847,12 @@ func (eventTypeHandler webhooksUpdateEventTypeHandler) New() interface{} {
 }
 
 // Handle is the handler for WebhooksUpdate events.
-func (eventTypeHandler webhooksUpdateEventTypeHandler) Handle(c *Client, i interface{}) error {
+func (eventTypeHandler webhooksUpdateEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventWebhooksUpdate)
 	err := c.onWebhooksUpdate(e)
-	return err
+	if err != nil {
+		c.Log.Error(err)
+	}
 }
 
 func handlerForInterface(handler interface{}) EventTypeHandler {
@@ -865,7 +939,7 @@ func handlerForInterface(handler interface{}) EventTypeHandler {
 type EventTypeHandler interface {
 	Type() string
 	New() interface{}
-	Handle(c *Client, i interface{}) error
+	Handle(c *Client, i interface{})
 }
 
 var eventTypeHandlers = map[string]EventTypeHandler{}

@@ -11,7 +11,7 @@ const (
 	opcodeIdentify                          // Send         | Starts a new session during the initial handshake.
 	opcodePresenceUpdate                    // Send         | Update the client's presence.
 	opcodeVoiceStateUpdate                  // Send         | Used to join/leave or move between voice channels.
-	_                                       // 6 is not a opcode
+	_                                       // 5 is not a opcode
 	opcodeResume                            // Send         | Resume a previous session that was disconnected.
 	opcodeReconnect                         // Receive      | You must reconnect with a new session immediately.
 	opcodeRequestGuildMembers               // Send         | Request information about offline guild members in a large guild.
@@ -49,4 +49,25 @@ const (
 	activitytypeListening
 	_
 	activitytypeCustom
+)
+
+type messagetype int
+
+const (
+	messagetypeDefault messagetype = iota
+	messagetypeRecipientAdd
+	messagetypeRecipientRemove
+	messagetypeCall
+	messagetypeChannelNameChange
+	messagetypeChannelIconChange
+	messagetypeChannelPinnedMessage
+	messagetypeGuildMemberJoin
+	messagetypeNitroBoost
+	messagetypeNitroBoostTier1
+	messagetypeNitroBoostTier2
+	messagetypeNitroBoostTier3
+	messagetypeChannelFollowAdd
+	_
+	messagetypeGuildDiscoveryDisqualified
+	messagetypeGuildDiscoveryRequalified
 )

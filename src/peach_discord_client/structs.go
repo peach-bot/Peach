@@ -7,59 +7,7 @@ package main
 
 import (
 	"encoding/json"
-	"sync"
-	"time"
-
-	"github.com/bwmarrin/snowflake"
-	"github.com/gorilla/websocket"
-	"github.com/sirupsen/logrus"
 )
-
-// Client represents connection to discord.
-type Client struct {
-
-	// Logger
-	Log *logrus.Logger
-
-	// Authentification
-	TOKEN string
-
-	// Settings
-	Compress           bool
-	LargeThreshold     int // total number of members where the gateway will stop sending offline members in the guild member list
-	GuildSubscriptions bool
-	Intents            int
-
-	// Sharding
-	ShardID    int
-	ShardCount int
-
-	// Gateway URL
-	GatewayURL string
-
-	// Shard Coordinator
-	ShardCoordinatorURL string
-
-	// Connected represents the clients connection status
-	Connected chan interface{}
-
-	// Session
-	SessionID string
-	Sequence  *int64
-
-	// Heartbeat
-	HeartbeatInterval    time.Duration // Interval in which client should sent heartbeats
-	LastHeartbeatAck     time.Time     // Last time the client received a heartbeat acknowledgement
-	MissingHeartbeatAcks time.Duration // Number of Acks that can be missed before reconnecting
-
-	// Websocket Connection
-	wsConn  *websocket.Conn
-	wsMutex sync.Mutex
-	sync.RWMutex
-
-	// Snowflake node to generate snowflakes
-	Snowflake snowflake.Node
-}
 
 // IdentifyPayload is used to create an identify message
 type IdentifyPayload struct {
@@ -91,6 +39,9 @@ type ResumePayload struct {
 
 // Resume is used to resume a connection
 type Resume struct {
+	Token     string `json:"token"`
+	SessionID string `json:"session_id"`
+	Sequence  int64  `json:"seq"`
 }
 
 // HeartbeatPayload is used to create a heartbeat message
@@ -202,4 +153,11 @@ type EventInvalidSession struct {
 	Sequence  int64  `json:"s"`
 	Type      string `json:"t"`
 	Resumable bool   `json:"d"`
+}
+
+// NewMessage is used to create messages that are sent via the http api
+type NewMessage struct {
+	Content string      `json:"content,omitempty"`
+	TTS     bool        `json:"tts,omitempty"`
+	Embed   interface{} `json:"embed,omitempty"`
 }
