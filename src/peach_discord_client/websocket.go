@@ -153,10 +153,7 @@ func (c *Client) HandleEvent(e *Event) error {
 			c.Log.Errorf("error unmarshalling %s event, %s", e.Type, err)
 		}
 
-		err := eventtypehandler.Handle(c, e.Struct)
-		if err != nil {
-			return err
-		}
+		go eventtypehandler.Handle(c, e.Struct)
 
 		return nil
 	}
