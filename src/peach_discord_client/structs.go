@@ -20,6 +20,21 @@ type Identify struct {
 	Token              string       `json:"token"`
 	Compress           bool         `json:"compress,omitempty"`
 	LargeThreshold     int          `json:"large_threshold,omitemtpy"`
+	Presence           UpdateStatus `json:"presence,omitempty"`
+	GuildSubscriptions bool         `json:"guild_subscriptions,omitempty"`
+	Intents            int          `json:"intents,omitempty"`
+	Properties         struct {
+		OS      string `json:"$os"`
+		Browser string `json:"$browser"`
+		Device  string `json:"$device"`
+	} `json:"properties"`
+}
+
+// IdentifyWithShards is used to trigger the initial handshake with the gateway (sharded version).
+type IdentifyWithShards struct {
+	Token              string       `json:"token"`
+	Compress           bool         `json:"compress,omitempty"`
+	LargeThreshold     int          `json:"large_threshold,omitemtpy"`
 	Shard              [2]int       `json:"shard,omitempty"`
 	Presence           UpdateStatus `json:"presence,omitempty"`
 	GuildSubscriptions bool         `json:"guild_subscriptions,omitempty"`

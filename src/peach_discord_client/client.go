@@ -30,6 +30,7 @@ type Client struct {
 	Intents            int
 
 	// Sharding
+	Sharded    bool
 	ShardID    int
 	ShardCount int
 
@@ -139,22 +140,24 @@ func SCReserveShard(c *Client) error {
 }
 
 // CreateClient creates a new discord client
-func CreateClient(log *logrus.Logger) (c *Client, err error) {
+func CreateClient(log *logrus.Logger, sharded bool) (c *Client, err error) {
 
 	c = &Client{Sequence: new(int64), Log: log}
 
 	// Parse shard coordinator for gateway url and shardID
 
-	// Set ShardCoordinatorURL
-	c.ShardCoordinatorURL = "http://" + os.Getenv("PEACH_SHARD_COORDINATOR_SERVICE_HOST") + ":8080/api/v1/"
+	if sharded {
+		// Set ShardCoordinatorURL
+		c.ShardCoordinatorURL = "http://" + os.Getenv("PEACH_SHARD_COORDINATOR_SERVICE_HOST") + ":8080/api/v1/"
 
-	err = SCGetShard(c)
-	if err != nil {
-		return nil, err
-	}
-	err = SCReserveShard(c)
-	if err != nil {
-		return nil, err
+		err = SCGetShard(c)
+		if err != nil {
+			return nil, err
+		}
+		err = SCReserveShard(c)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	c.httpClient = &http.Client{}
