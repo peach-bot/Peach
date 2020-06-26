@@ -274,18 +274,24 @@ func (c *Client) Identify() error {
 	c.Log.Info("Websocket: is authenticating with gateway...")
 
 	// Build Identify payload
+
 	data := Identify{}
+	if c.Sharded {
+		data := IdentifyWithShards{}
+		data.Shard = [2]int{c.ShardID, c.ShardCount}
+	}
 	data.Token = c.TOKEN
 	data.Compress = c.Compress
 	data.LargeThreshold = c.LargeThreshold
 	data.Properties.OS = runtime.GOOS
 	data.Properties.Browser = "Peach" + VERSION
 	data.Properties.Device = "Peach" + VERSION
-	data.Shard = [2]int{c.ShardID, c.ShardCount}
 	payload := IdentifyPayload{2, data}
 
-	queuetime, _ := time.ParseDuration(fmt.Sprintf("%vs", 6*c.ShardID))
-	time.Sleep(queuetime)
+	if c.Sharded {
+		queuetime, _ := time.ParseDuration(fmt.Sprintf("%vs", 6*c.ShardID))
+		time.Sleep(queuetime)
+	}
 
 	// Send message
 	c.wsMutex.Lock()
