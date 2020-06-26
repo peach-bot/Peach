@@ -127,3 +127,5 @@ test.py
 notes
 vidscripts
 secrets
+
+*.exe
