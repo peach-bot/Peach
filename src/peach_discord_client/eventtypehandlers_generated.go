@@ -855,8 +855,8 @@ func (eventTypeHandler webhooksUpdateEventTypeHandler) Handle(c *Client, i inter
 	}
 }
 
-func handlerForInterface(handler interface{}) EventTypeHandler {
-	switch v := handler.(type) {
+func handlerForInterface(event interface{}) EventTypeHandler {
+	switch v := event.(type) {
 	case func(*Client, *EventChannelCreate):
 		return channelCreateEventTypeHandler(v)
 	case func(*Client, *EventChannelDelete):

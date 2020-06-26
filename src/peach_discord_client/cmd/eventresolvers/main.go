@@ -46,8 +46,8 @@ func (eventTypeHandler {{privateName .}}EventTypeHandler) Handle(c *Client, i in
   }
 }
 {{end}}
-func handlerForInterface(handler interface{}) EventTypeHandler {
-  switch v := handler.(type) { {{range .}}
+func handlerForInterface(event interface{}) EventTypeHandler {
+  switch v := event.(type) { {{range .}}
   case func(*Client, *Event{{.}}):
     return {{privateName .}}EventTypeHandler(v){{end}}
   }
