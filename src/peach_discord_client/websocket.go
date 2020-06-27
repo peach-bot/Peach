@@ -26,11 +26,6 @@ func (c *Client) CreateWebsocket() error {
 	if err != nil {
 		return err
 	}
-	c.wsConn.SetCloseHandler(func(code int, text string) error {
-		c.Connected = nil
-		c.Log.WithField("Websocket closed:", code)
-		return nil
-	})
 
 	AddEventTypeHandlers()
 
@@ -49,42 +44,57 @@ func (c *Client) CreateWebsocket() error {
 	// Start listening and heartbeat
 	c.Connected = make(chan interface{})
 
-	go c.Heartbeat(c.wsConn)
-	go c.Listen(c.wsConn)
+	go c.Heartbeat()
+	go c.Listen()
 
 	c.Log.Info("Websocket: created")
 	return nil
 }
 
 // Listen retrieves messages from the websocket
-func (c *Client) Listen(wsConn *websocket.Conn) {
+func (c *Client) Listen() {
 	c.Log.Info("Websocket: started listening")
 
 	for {
 		// Read message from connection
-		messageType, message, err := wsConn.ReadMessage()
+		messageType, message, err := c.wsConn.ReadMessage()
 		if err != nil {
-			c.Log.Errorf("Websocket: was unable to read message: %v", err)
-		}
+			switch t := err.(type) {
+			case *websocket.CloseError:
+				c.Log.Error(t)
+				c.Log.Debug("restarting websocket")
+				c.Log.Debug("sent disconnect")
+				if closecode(t.Code) == closecodeReconnect {
+					c.Log.Debug("pepe")
+					c.Reconnect <- nil
+					c.Connected <- nil
+				} else {
+					c.Log.Debug("peepee")
+					c.Reconnect <- nil
+					c.Connected <- nil
+					c.Log.Debug("askldaskj")
+				}
+				return
+			default:
+				c.Log.Errorf("Websocket: was unable to read message: %v", err)
+			}
+		} else {
 
-		// If closed close connection
-		if messageType == -1 {
-			c.wsConn.Close()
-			c.Connected <- nil
-			break
-		}
-
-		// Resolve event
-		e, err := c.DecodeMessage(messageType, message, false)
-		err = c.HandleEvent(e)
-		if err != nil {
-			c.Log.Errorf("Websocket: Error handling event: %v", err)
+			// Resolve event
+			e, err := c.DecodeMessage(messageType, message, false)
+			if err != nil {
+				c.Log.Error(err)
+			}
+			err = c.HandleEvent(e)
+			if err != nil {
+				c.Log.Errorf("Websocket: Error handling event: %v", err)
+			}
 		}
 
 		select {
 		case <-c.Connected:
 			c.Log.Info("Websocket: stopped listening")
-			break
+			return
 		default:
 		}
 	}
@@ -100,33 +110,13 @@ func (c *Client) DecodeMessage(messageType int, message []byte, invalidSession b
 		z, _ := zlib.NewReader(reader)
 		reader = z
 	}
-	var e *Event
+	var e *Event = new(Event)
 
-	if invalidSession {
-		var e *EventInvalidSession
-		decoder := json.NewDecoder(reader)
-		err := decoder.Decode(&e)
-		if err != nil {
-			err = fmt.Errorf("Could not decode Event: %s", err)
-			return nil, err
-		}
-	} else {
-		decoder := json.NewDecoder(reader)
-		err := decoder.Decode(&e)
-		if err != nil {
-			err = fmt.Errorf("Could not decode Event: %s", err)
-			return nil, err
-		}
-	}
-
-	if e.Opcode == opcodeInvalidSession && invalidSession == false {
-		e, err := c.DecodeMessage(messageType, message, true)
-		if err != nil {
-			err = fmt.Errorf("Could not decode Event: %s", err)
-			return nil, err
-		}
-
-		return e, nil
+	decoder := json.NewDecoder(reader)
+	err := decoder.Decode(&e)
+	if err != nil {
+		err = fmt.Errorf("Could not decode Event: %s", err)
+		return nil, err
 	}
 
 	return e, nil
@@ -144,6 +134,14 @@ func (c *Client) HandleEvent(e *Event) error {
 		return nil
 	}
 
+	if e.Opcode == opcodeInvalidSession {
+		c.Log.Info("Websocket: invalid session")
+		err := c.Identify()
+		if err != nil {
+			return err
+		}
+	}
+
 	if e.Opcode == opcodeDispatch {
 		c.Log.Debugf("Websocket: received opcode 0 Dispatch with event %s from Discord.", e.Type)
 		eventtypehandler := eventTypeHandlers[e.Type]
@@ -158,13 +156,19 @@ func (c *Client) HandleEvent(e *Event) error {
 		return nil
 	}
 
+	if e.Opcode == opcodeReconnect {
+		c.wsConn.Close()
+		c.Connected <- nil
+		c.Reconnect <- nil
+	}
+
 	c.Log.Debugf("Websocket: received opcode %v %v from Discord.", e.Opcode, e.Opcode.String())
 	return nil
 
 }
 
 // Heartbeat sends heartbeat payloads to discord to signal discord that the client is still alive
-func (c *Client) Heartbeat(wsConn *websocket.Conn) {
+func (c *Client) Heartbeat() {
 
 	// Set up ticker
 	ticker := time.NewTicker(c.HeartbeatInterval)
@@ -189,7 +193,7 @@ func (c *Client) Heartbeat(wsConn *websocket.Conn) {
 		case <-ticker.C:
 			// continue loop
 		case <-c.Connected:
-			c.Log.Info("òwó")
+			c.Log.Info("Websocket: Stopped heartbeat")
 			return
 		}
 	}
@@ -233,6 +237,8 @@ func (c *Client) Hello() error {
 // Login resumes the connecting or sends and identify payload
 func (c *Client) Login() error {
 
+	c.Log.Info("Websocket: authenticating with gateway...")
+
 	if c.SessionID == "" && atomic.LoadInt64(c.Sequence) == 0 {
 		err := c.Identify()
 		if err != nil {
@@ -271,7 +277,7 @@ func (c *Client) Resume() error {
 // Identify sends an identify payload, duh
 func (c *Client) Identify() error {
 
-	c.Log.Info("Websocket: is authenticating with gateway...")
+	c.Log.Info("Websocket: identifying...")
 
 	// Build Identify payload
 

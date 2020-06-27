@@ -42,6 +42,8 @@ type Client struct {
 
 	// Connected represents the clients connection status
 	Connected chan interface{}
+	Reconnect chan interface{}
+	Quit      chan interface{}
 
 	// Session
 	SessionID string

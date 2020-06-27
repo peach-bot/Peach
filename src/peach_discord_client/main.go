@@ -60,11 +60,20 @@ func main() {
 	c.MissingHeartbeatAcks = 5
 	c.GatewayURL = c.GatewayURL + "?v=" + APIVersion + "&encoding=json"
 
-	done := make(chan bool)
-	err = c.Run()
-	if err != nil {
-		c.Log.Fatal(err)
-	}
+	for {
+		c.Reconnect = make(chan interface{})
+		c.Quit = make(chan interface{})
 
-	<-done
+		err = c.Run()
+		if err != nil {
+			c.Log.Fatal(err)
+		}
+		select {
+		case <-c.Reconnect:
+			c.Log.Info("Reconnecting...")
+		case <-c.Quit:
+			c.Log.Info("Quitting...")
+			return
+		}
+	}
 }

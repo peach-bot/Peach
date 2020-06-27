@@ -164,10 +164,10 @@ type Event struct {
 
 // EventInvalidSession is sent to indicate that the session could not be initialized, resumed or was invalidated.
 type EventInvalidSession struct {
-	Opcode    opcode `json:"op"`
-	Sequence  int64  `json:"s"`
-	Type      string `json:"t"`
-	Resumable bool   `json:"d"`
+	Opcode   opcode `json:"op"`
+	Sequence int64  `json:"s"`
+	Type     string `json:"t"`
+	RawData  bool   `json:"d"`
 }
 
 // NewMessage is used to create messages that are sent via the http api

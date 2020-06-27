@@ -41,6 +41,8 @@ const (
 	closecodeDisallowedIntents                            // Sent intent the account isn't eligible for.
 )
 
+const closecodeReconnect closecode = 1001
+
 type activitytype int
 
 const (
