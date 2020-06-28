@@ -9,7 +9,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/bwmarrin/snowflake"
 	"github.com/gorilla/websocket"
 	"github.com/sirupsen/logrus"
 )
@@ -64,9 +63,6 @@ type Client struct {
 
 	// HTTP Client
 	httpClient *http.Client
-
-	// Snowflake node to generate snowflakes
-	Snowflake snowflake.Node
 }
 
 // Run starts various background routines and starts listeners
