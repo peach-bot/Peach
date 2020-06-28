@@ -1,6 +1,11 @@
 package main
 
-import "github.com/sirupsen/logrus"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/sirupsen/logrus"
+)
 
 func (c *Client) onChannelCreate(ctx *EventChannelCreate) error {
 	return nil
@@ -84,6 +89,8 @@ func (c *Client) onInviteDelete(ctx *EventInviteDelete) error {
 
 func (c *Client) onMessageCreate(ctx *EventMessageCreate) error {
 
+	var err error
+
 	if ctx.Author.ID != c.User.ID {
 		c.Log.WithFields(logrus.Fields{
 			"author":   ctx.Author.Username,
@@ -91,6 +98,20 @@ func (c *Client) onMessageCreate(ctx *EventMessageCreate) error {
 			"serverid": ctx.GuildID,
 		}).Debug("Websocket: received message")
 	}
+
+	if strings.HasPrefix(ctx.Content, "!") {
+		noPrefix := ctx.Content[1:]
+		command := strings.Fields(noPrefix)[0]
+		args := strings.Fields(noPrefix)[1:]
+		switch command {
+		default:
+			err = nil
+		}
+		if err != nil {
+			return fmt.Errorf("Couldn't execute command: %s", err)
+		}
+	}
+
 	return nil
 }
 
