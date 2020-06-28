@@ -77,7 +77,7 @@ func (c *Client) GetChannelMessages(channelid string, around string, before stri
 	}
 
 	// Send Request
-	req, err := http.NewRequest("GET", EndpointChannelMessages(channelid)+addURLArg, *new(io.Reader))
+	req, err := http.NewRequest("GET", EndpointChannelMessages(channelid)+urlargs, *new(io.Reader))
 	if err != nil {
 		return nil, err
 	}
