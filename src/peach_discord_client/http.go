@@ -57,6 +57,51 @@ func (c *Client) SendMessage(channelid string, message NewMessage) (*Message, er
 	return sentMessage, nil
 }
 
+// GetChannelMessages posts a message to a guild text or DM channel.
+func (c *Client) GetChannelMessages(channelid string, around string, before string, after string, limit int) (*[]Message, error) {
+
+	var urlargs string
+	if around != "" {
+		urlargs = addURLArg(urlargs, "around", around)
+	}
+	if before != "" {
+		urlargs = addURLArg(urlargs, "before", before)
+	}
+	if after != "" {
+		urlargs = addURLArg(urlargs, "after", after)
+	}
+	if limit != 0 {
+		urlargs = addURLArg(urlargs, "limit", strconv.Itoa(limit))
+	}
+
+	// Send Request
+	req, err := http.NewRequest("GET", EndpointChannelMessages(channelid)+queryargs, *new(io.Reader))
+	if err != nil {
+		return nil, err
+	}
+
+	req = c.SetDefaultRequestHeaders(req)
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	// Decode Body
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+	}
+
+	data := new([]Message)
+
+	err = json.Unmarshal(bodyBytes, data)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
 	}
 
 	req = c.SetDefaultRequestHeaders(req)
