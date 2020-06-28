@@ -15,6 +15,13 @@ func (c *Client) SetDefaultRequestHeaders(req *http.Request) *http.Request {
 	return req
 }
 
+func addURLArg(query string, key string, value string) string {
+	if query == "" {
+		return fmt.Sprintf("?%s=%s", key, value)
+	}
+	return fmt.Sprintf("%s&%s=%s", query, key, value)
+}
+
 // SendMessage posts a message to a guild text or DM channel.
 func (c *Client) SendMessage(channelid string, message NewMessage) error {
 
