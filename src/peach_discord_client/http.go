@@ -23,16 +23,40 @@ func addURLArg(query string, key string, value string) string {
 }
 
 // SendMessage posts a message to a guild text or DM channel.
-func (c *Client) SendMessage(channelid string, message NewMessage) error {
+func (c *Client) SendMessage(channelid string, message NewMessage) (*Message, error) {
 
+	// Send Request
 	body, err := json.Marshal(message)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	req, err := http.NewRequest("POST", EndpointChannelMessages(channelid), bytes.NewBuffer(body))
 	if err != nil {
-		return err
+		return nil, err
+	}
+
+	req = c.SetDefaultRequestHeaders(req)
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	// Decode Body
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+	}
+
+	sentMessage := new(Message)
+	err = json.Unmarshal(bodyBytes, sentMessage)
+	if err != nil {
+		return nil, err
+	}
+
+	return sentMessage, nil
+}
+
 	}
 
 	req = c.SetDefaultRequestHeaders(req)
