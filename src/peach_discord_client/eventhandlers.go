@@ -104,6 +104,8 @@ func (c *Client) onMessageCreate(ctx *EventMessageCreate) error {
 		command := strings.Fields(noPrefix)[0]
 		args := strings.Fields(noPrefix)[1:]
 		switch command {
+		case "clear":
+			err = c.extClearOnMessage(ctx, args)
 		default:
 			err = nil
 		}
