@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 // SetDefaultRequestHeaders adds authorization and content type to request header
@@ -102,6 +104,22 @@ func (c *Client) GetChannelMessages(channelid string, around string, before stri
 	return data, nil
 }
 
+// BulkDeleteMessages deletes a lot of messages in a single request, duh
+func (c *Client) BulkDeleteMessages(channelid string, messages []string) error {
+
+	bodystruct := struct {
+		Messages []string `json:"messages"`
+	}{messages}
+
+	// Send Request
+	body, err := json.Marshal(bodystruct)
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequest("POST", EndpointChannelMessagesBulkDelete(channelid), bytes.NewBuffer(body))
+	if err != nil {
+		return err
 	}
 
 	req = c.SetDefaultRequestHeaders(req)
@@ -111,12 +129,9 @@ func (c *Client) GetChannelMessages(channelid string, around string, before stri
 		return err
 	}
 
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
+	if resp.StatusCode != http.StatusNoContent {
+		return fmt.Errorf("BulkDeleteMessages: unexpected response code. Want: 204 No Content, Got: %s instead", resp.Status)
 	}
-	bodyString := string(bodyBytes)
-
-	c.Log.Debug(resp.StatusCode, bodyString)
 
 	return nil
 }
