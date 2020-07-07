@@ -57,6 +57,11 @@ type Message struct {
 	Flags            int                `json:"flags,omitempty"`
 }
 
+func (m Message) delete(c *Client) error {
+	return c.DeleteMessage(m.ChannelID, m.ID)
+
+}
+
 // Attachment represents a Discord message's attachment
 type Attachment struct {
 	ID       string `json:"string"`
