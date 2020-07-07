@@ -4,7 +4,6 @@ import (
 	"flag"
 	"os"
 
-	"github.com/bwmarrin/snowflake"
 	"github.com/sirupsen/logrus"
 )
 
@@ -27,6 +26,7 @@ func createLog() *logrus.Logger {
 }
 
 func main() {
+
 	log := createLog()
 
 	log.Info("Shard node starting...")
@@ -35,34 +35,28 @@ func main() {
 	TOKEN := flag.String("token", "", "token override instead of secrets")
 	flag.Parse()
 
-	c, err := CreateClient(log, *sharded)
-	if err != nil {
-		log.Fatal(err, "\nUnable to create new client, exiting...")
-	}
-
-	if *sharded == false {
-		c.GatewayURL = "wss://gateway.discord.gg/"
-	}
-
-	// Set discord epoch and sequence
-	snowflake.Epoch = 1420070400000
-
-	// Settings
-	c.Sharded = *sharded
-	c.Compress = true
-	c.LargeThreshold = 250
-	c.GuildSubscriptions = true
-	if *TOKEN == "" {
-		c.TOKEN = os.Getenv("BOTTOKEN")
-	} else {
-		c.TOKEN = *TOKEN
-	}
-	c.MissingHeartbeatAcks = 5
-	c.GatewayURL = c.GatewayURL + "?v=" + APIVersion + "&encoding=json"
-
 	for {
-		c.Reconnect = make(chan interface{})
-		c.Quit = make(chan interface{})
+		c, err := CreateClient(log, *sharded)
+		if err != nil {
+			log.Fatal(err, "\nUnable to create new client, exiting...")
+		}
+
+		if *sharded == false {
+			c.GatewayURL = "wss://gateway.discord.gg/"
+		}
+
+		// Settings
+		c.Sharded = *sharded
+		c.Compress = true
+		c.LargeThreshold = 250
+		c.GuildSubscriptions = true
+		if *TOKEN == "" {
+			c.TOKEN = os.Getenv("BOTTOKEN")
+		} else {
+			c.TOKEN = *TOKEN
+		}
+		c.MissingHeartbeatAcks = 5
+		c.GatewayURL = c.GatewayURL + "?v=" + APIVersion + "&encoding=json"
 
 		err = c.Run()
 		if err != nil {
