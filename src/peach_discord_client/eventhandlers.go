@@ -27,6 +27,9 @@ func (c *Client) onChannelPinsUpdate(ctx *EventChannelPinsUpdate) error {
 }
 
 func (c *Client) onChannelUpdate(ctx *EventChannelUpdate) error {
+
+	c.ChannelCache.Set(ctx.ID, ctx.Channel, cache.DefaultExpiration)
+
 	return nil
 }
 
@@ -39,10 +42,21 @@ func (c *Client) onGuildBanRemove(ctx *EventGuildBanRemove) error {
 }
 
 func (c *Client) onGuildCreate(ctx *EventGuildCreate) error {
+
+	c.GuildCache.Set(ctx.ID, ctx.Guild, cache.DefaultExpiration)
+
 	return nil
 }
 
 func (c *Client) onGuildDelete(ctx *EventGuildDelete) error {
+
+	guild, cached := c.GuildCache.Get(ctx.UnavailableGuild.ID)
+	if cached {
+		guild := guild.(Guild)
+		guild.Unavailable = true
+		c.GuildCache.Set(guild.ID, guild, cache.DefaultExpiration)
+	}
+
 	return nil
 }
 
@@ -79,6 +93,9 @@ func (c *Client) onGuildRoleUpdate(ctx *EventGuildRoleUpdate) error {
 }
 
 func (c *Client) onGuildUpdate(ctx *EventGuildUpdate) error {
+
+	c.GuildCache.Set(ctx.ID, ctx.Guild, cache.DefaultExpiration)
+
 	return nil
 }
 
@@ -175,6 +192,9 @@ func (c *Client) onTypingStart(ctx *EventTypingStart) error {
 }
 
 func (c *Client) onUserUpdate(ctx *EventUserUpdate) error {
+
+	c.User = ctx.User
+
 	return nil
 }
 
