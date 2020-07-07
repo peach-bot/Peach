@@ -110,16 +110,16 @@ var (
 	EndpointChannelInvites  = func(channelID string) string { return EndpointChannels + channelID + "/invites" }
 	EndpointChannelTyping   = func(channelID string) string { return EndpointChannels + channelID + "/typing" }
 	EndpointChannelMessages = func(channelID string) string { return EndpointChannels + channelID + "/messages" }
-	EndpointChannelMessage  = func(channelID, messagemojiID string) string {
-		return EndpointChannels + channelID + "/messages/" + messagemojiID
+	EndpointChannelMessage  = func(channelID, messageID string) string {
+		return EndpointChannels + channelID + "/messages/" + messageID
 	}
-	EndpointChannelMessageAck = func(channelID, messagemojiID string) string {
-		return EndpointChannels + channelID + "/messages/" + messagemojiID + "/ack"
+	EndpointChannelMessageAck = func(channelID, messageID string) string {
+		return EndpointChannels + channelID + "/messages/" + messageID + "/ack"
 	}
 	EndpointChannelMessagesBulkDelete = func(channelID string) string { return EndpointChannel(channelID) + "/messages/bulk-delete" }
 	EndpointChannelMessagesPins       = func(channelID string) string { return EndpointChannel(channelID) + "/pins" }
-	EndpointChannelMessagePin         = func(channelID, messagemojiID string) string {
-		return EndpointChannel(channelID) + "/pins/" + messagemojiID
+	EndpointChannelMessagePin         = func(channelID, messageID string) string {
+		return EndpointChannel(channelID) + "/pins/" + messageID
 	}
 
 	EndpointGroupIcon = func(channelID, hash string) string { return EndpointCDNChannelIcons + channelID + "/" + hash + ".png" }
@@ -128,14 +128,14 @@ var (
 	EndpointWebhook         = func(webhookID string) string { return EndpointWebhooks + webhookID }
 	EndpointWebhookToken    = func(webhookID, token string) string { return EndpointWebhooks + webhookID + "/" + token }
 
-	EndpointMessageReactionsAll = func(channelID, messagemojiID string) string {
-		return EndpointChannelMessage(channelID, messagemojiID) + "/reactions"
+	EndpointMessageReactionsAll = func(channelID, messageID string) string {
+		return EndpointChannelMessage(channelID, messageID) + "/reactions"
 	}
-	EndpointMessageReactions = func(channelID, messagemojiID, emojiID string) string {
-		return EndpointChannelMessage(channelID, messagemojiID) + "/reactions/" + emojiID
+	EndpointMessageReactions = func(channelID, messageID, emojiID string) string {
+		return EndpointChannelMessage(channelID, messageID) + "/reactions/" + emojiID
 	}
-	EndpointMessageReaction = func(channelID, messagemojiID, emojiID, useroleID string) string {
-		return EndpointMessageReactions(channelID, messagemojiID, emojiID) + "/" + useroleID
+	EndpointMessageReaction = func(channelID, messageID, emojiID, useroleID string) string {
+		return EndpointMessageReactions(channelID, messageID, emojiID) + "/" + useroleID
 	}
 
 	EndpointRelationships       = func() string { return EndpointUsers + "@me" + "/relationships" }
