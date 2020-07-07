@@ -1,5 +1,9 @@
 echo "Building discord client..."
 go build ./src/peach_discord_client
-echo ".\n.\nRestarting service..."
+echo "."
+echo "."
+echo "Restarting service..."
 systemctl --user restart peach
-echo ".\n.\nDone :)"
+echo "."
+echo "."
+echo "Done :)"
