@@ -4,14 +4,21 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
 )
 
 func (c *Client) onChannelCreate(ctx *EventChannelCreate) error {
+
+	c.ChannelCache.Set(ctx.ID, ctx.Channel, cache.DefaultExpiration)
+
 	return nil
 }
 
 func (c *Client) onChannelDelete(ctx *EventChannelDelete) error {
+
+	c.ChannelCache.Set(ctx.ID, ctx.Channel, 0)
+
 	return nil
 }
 
