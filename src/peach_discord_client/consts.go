@@ -73,3 +73,37 @@ const (
 	messagetypeGuildDiscoveryDisqualified
 	messagetypeGuildDiscoveryRequalified
 )
+
+const (
+	permissionCreateInstantInvite = 0x00000001
+	permissionKickMembers         = 0x00000002
+	permissionBanMembers          = 0x00000004
+	permissionAdministrator       = 0x00000008
+	permissionManageChannels      = 0x00000010
+	permissionManageGuild         = 0x00000020
+	permissionAddReactions        = 0x00000040
+	permissionViewAuditLog        = 0x00000080
+	permissionPrioritySpeaker     = 0x00000100
+	permissionStream              = 0x00000200
+	permissionViewChannel         = 0x00000400
+	permissionSendMessages        = 0x00000800
+	permissionSendTtsMessages     = 0x00001000
+	permissionManageMessages      = 0x00002000
+	permissionEmbedLinks          = 0x00004000
+	permissionAttachFiles         = 0x00008000
+	permissionReadMessageHistory  = 0x00010000
+	permissionMentionEveryone     = 0x00020000
+	permissionUseExternalEmojis   = 0x00040000
+	permissionViewGuildInsights   = 0x00080000
+	permissionConnect             = 0x00100000
+	permissionSpeak               = 0x00200000
+	permissionMuteMembers         = 0x00400000
+	permissionDeafenMembers       = 0x00800000
+	permissionMoveMembers         = 0x01000000
+	permissionUseVad              = 0x02000000
+	permissionChangeNickname      = 0x04000000
+	permissionManageNicknames     = 0x08000000
+	permissionManageRoles         = 0x10000000
+	permissionManageWebhooks      = 0x20000000
+	permissionManageEmojis        = 0x40000000
+)
