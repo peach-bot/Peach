@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/bwmarrin/snowflake"
 	"github.com/gorilla/websocket"
+	"github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
 )
 
@@ -42,6 +42,8 @@ type Client struct {
 
 	// Connected represents the clients connection status
 	Connected chan interface{}
+	Reconnect chan interface{}
+	Quit      chan interface{}
 
 	// Session
 	SessionID string
@@ -63,8 +65,9 @@ type Client struct {
 	// HTTP Client
 	httpClient *http.Client
 
-	// Snowflake node to generate snowflakes
-	Snowflake snowflake.Node
+	// Cache
+	GuildCache   *cache.Cache
+	ChannelCache *cache.Cache
 }
 
 // Run starts various background routines and starts listeners
@@ -161,6 +164,43 @@ func CreateClient(log *logrus.Logger, sharded bool) (c *Client, err error) {
 	}
 
 	c.httpClient = &http.Client{}
+	c.GuildCache = cache.New(120*time.Minute, 5*time.Minute)
+	c.ChannelCache = cache.New(120*time.Minute, 5*time.Minute)
+
+	c.Reconnect = make(chan interface{})
+	c.Quit = make(chan interface{})
+
+	return
+}
+
+// GetChannel retrieves the Channel object for a given ID
+func (c *Client) GetChannel(ID string) (ch *Channel, err error) {
+
+	cachedChannel, cached := c.ChannelCache.Get(ID)
+
+	if cached {
+		channel := cachedChannel.(Channel)
+		ch = &channel
+	} else {
+		ch, err = c.getChannel(ID)
+		return
+	}
+
+	return
+}
+
+// GetGuild retrieves the Guild object for a given ID
+func (c *Client) GetGuild(ID string) (g *Guild, err error) {
+
+	cachedGuild, cached := c.GuildCache.Get(ID)
+
+	if cached {
+		guild := cachedGuild.(Guild)
+		g = &guild
+	} else {
+		g, err = c.getGuild(ID)
+		return
+	}
 
 	return
 }

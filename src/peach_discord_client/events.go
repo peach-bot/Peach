@@ -1,6 +1,6 @@
 package main
 
-//go:generate go run cmd/eventresolvers/main.go
+//go:generate go run tools/eventtypehandlers/main.go
 
 import (
 	"time"

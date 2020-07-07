@@ -1,12 +1,24 @@
 package main
 
-import "github.com/sirupsen/logrus"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/patrickmn/go-cache"
+	"github.com/sirupsen/logrus"
+)
 
 func (c *Client) onChannelCreate(ctx *EventChannelCreate) error {
+
+	c.ChannelCache.Set(ctx.ID, ctx.Channel, cache.DefaultExpiration)
+
 	return nil
 }
 
 func (c *Client) onChannelDelete(ctx *EventChannelDelete) error {
+
+	c.ChannelCache.Set(ctx.ID, ctx.Channel, 0)
+
 	return nil
 }
 
@@ -15,6 +27,9 @@ func (c *Client) onChannelPinsUpdate(ctx *EventChannelPinsUpdate) error {
 }
 
 func (c *Client) onChannelUpdate(ctx *EventChannelUpdate) error {
+
+	c.ChannelCache.Set(ctx.ID, ctx.Channel, cache.DefaultExpiration)
+
 	return nil
 }
 
@@ -27,10 +42,21 @@ func (c *Client) onGuildBanRemove(ctx *EventGuildBanRemove) error {
 }
 
 func (c *Client) onGuildCreate(ctx *EventGuildCreate) error {
+
+	c.GuildCache.Set(ctx.ID, ctx.Guild, cache.DefaultExpiration)
+
 	return nil
 }
 
 func (c *Client) onGuildDelete(ctx *EventGuildDelete) error {
+
+	guild, cached := c.GuildCache.Get(ctx.UnavailableGuild.ID)
+	if cached {
+		guild := guild.(Guild)
+		guild.Unavailable = true
+		c.GuildCache.Set(guild.ID, guild, cache.DefaultExpiration)
+	}
+
 	return nil
 }
 
@@ -67,6 +93,9 @@ func (c *Client) onGuildRoleUpdate(ctx *EventGuildRoleUpdate) error {
 }
 
 func (c *Client) onGuildUpdate(ctx *EventGuildUpdate) error {
+
+	c.GuildCache.Set(ctx.ID, ctx.Guild, cache.DefaultExpiration)
+
 	return nil
 }
 
@@ -84,6 +113,8 @@ func (c *Client) onInviteDelete(ctx *EventInviteDelete) error {
 
 func (c *Client) onMessageCreate(ctx *EventMessageCreate) error {
 
+	var err error
+
 	if ctx.Author.ID != c.User.ID {
 		c.Log.WithFields(logrus.Fields{
 			"author":   ctx.Author.Username,
@@ -91,6 +122,22 @@ func (c *Client) onMessageCreate(ctx *EventMessageCreate) error {
 			"serverid": ctx.GuildID,
 		}).Debug("Websocket: received message")
 	}
+
+	if strings.HasPrefix(ctx.Content, "!") {
+		noPrefix := ctx.Content[1:]
+		command := strings.Fields(noPrefix)[0]
+		args := strings.Fields(noPrefix)[1:]
+		switch command {
+		case "clear":
+			err = c.extClearOnMessage(ctx, args)
+		default:
+			err = nil
+		}
+		if err != nil {
+			return fmt.Errorf("Couldn't execute command: %s", err)
+		}
+	}
+
 	return nil
 }
 
@@ -145,6 +192,9 @@ func (c *Client) onTypingStart(ctx *EventTypingStart) error {
 }
 
 func (c *Client) onUserUpdate(ctx *EventUserUpdate) error {
+
+	c.User = ctx.User
+
 	return nil
 }
 

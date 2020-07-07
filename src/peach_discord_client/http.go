@@ -1,10 +1,7 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -15,32 +12,9 @@ func (c *Client) SetDefaultRequestHeaders(req *http.Request) *http.Request {
 	return req
 }
 
-// SendMessage posts a message to a guild text or DM channel.
-func (c *Client) SendMessage(channelid string, message NewMessage) error {
-
-	body, err := json.Marshal(message)
-	if err != nil {
-		return err
+func addURLArg(query string, key string, value string) string {
+	if query == "" {
+		return fmt.Sprintf("?%s=%s", key, value)
 	}
-
-	req, err := http.NewRequest("POST", EndpointChannelMessages(channelid), bytes.NewBuffer(body))
-	if err != nil {
-		return err
-	}
-
-	req = c.SetDefaultRequestHeaders(req)
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return err
-	}
-
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-	}
-	bodyString := string(bodyBytes)
-
-	c.Log.Debug(resp.StatusCode, bodyString)
-
-	return nil
+	return fmt.Sprintf("%s&%s=%s", query, key, value)
 }

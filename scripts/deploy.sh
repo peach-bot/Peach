@@ -1,1 +1,5 @@
-skaffold deploy --images sleepyjul/peach-discord-client:latest --images sleepyjul/peach-interface:latest --images sleepyjul/peach-shard-coordinator:latest
+echo "Building discord client..."
+go build ./src/peach_discord_client
+echo ".\n.\nRestarting service..."
+systemctl --user restart peach
+echo ".\n.\nDone :)"
