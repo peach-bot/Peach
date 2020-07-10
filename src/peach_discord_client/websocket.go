@@ -130,7 +130,8 @@ func (c *Client) HandleEvent(e *Event) {
 	// Do opcode specific things
 	if e.Opcode == opcodeHeartbeatACK {
 		c.LastHeartbeatAck = time.Now()
-		c.Log.Debug("Websocket: received opcode 11 HeartbeatACK.")
+		c.Log.Debug("Websocket: received heartbeat acknowledgement")
+		return
 	}
 
 	if e.Opcode == opcodeInvalidSession {
@@ -139,10 +140,11 @@ func (c *Client) HandleEvent(e *Event) {
 		if err != nil {
 			c.Log.Errorf("Error sending identify payload after receiving opcode inavlid session: %s", err)
 		}
+		return
 	}
 
 	if e.Opcode == opcodeDispatch {
-		c.Log.Debugf("Websocket: received opcode 0 Dispatch with event %s from Discord.", e.Type)
+		c.Log.Debugf("Websocket: received event %s from Discord", e.Type)
 		eventtypehandler := eventTypeHandlers[e.Type]
 
 		e.Struct = eventtypehandler.New()
@@ -150,7 +152,7 @@ func (c *Client) HandleEvent(e *Event) {
 			c.Log.Errorf("Error unmarshalling %s event, %s", e.Type, err)
 		}
 
-		go eventtypehandler.Handle(c, e.Struct)
+		eventtypehandler.Handle(c, e.Struct)
 	}
 
 	if e.Opcode == opcodeReconnect {
@@ -158,8 +160,6 @@ func (c *Client) HandleEvent(e *Event) {
 		c.Connected <- nil
 		c.Reconnect <- nil
 	}
-
-	c.Log.Debugf("Websocket: received opcode %v %v from Discord.", e.Opcode, e.Opcode.String())
 }
 
 // Heartbeat sends heartbeat payloads to discord to signal discord that the client is still alive
@@ -265,7 +265,7 @@ func (c *Client) Resume() error {
 	c.wsMutex.Lock()
 	err := c.wsConn.WriteJSON(payload)
 	c.wsMutex.Unlock()
-	c.Log.Debug("Websocket: sent Resume payload.")
+	c.Log.Debug("Websocket: sent Resume payload")
 	return err
 }
 
@@ -298,6 +298,6 @@ func (c *Client) Identify() error {
 	c.wsMutex.Lock()
 	err := c.wsConn.WriteJSON(payload)
 	c.wsMutex.Unlock()
-	c.Log.Debug("Websocket: sent Identify payload.")
+	c.Log.Debug("Websocket: sent identify payload")
 	return err
 }
