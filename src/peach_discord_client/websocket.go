@@ -68,11 +68,10 @@ func (c *Client) Listen() {
 					c.Reconnect <- nil
 					c.Connected <- nil
 					return
-				} else {
-					c.Reconnect <- nil
-					c.Connected <- nil
-					return
 				}
+				c.Reconnect <- nil
+				c.Connected <- nil
+				return
 			default:
 				c.Log.Errorf("Websocket: was unable to read message: %v", err)
 				return
