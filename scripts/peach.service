@@ -1,0 +1,12 @@
+[Unit]
+Description=Peach Discord Bot
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/pi/Peach/peach_discord_client -token=$BOTTOKEN -log=info
+Restart=on-failure
+WorkingDirectory=/home/pi
+
+[Install]
+WantedBy=default.target

@@ -21,19 +21,28 @@ func createLog() *logrus.Logger {
 		TimestampFormat:  "2006-01-02 15:04:05",
 	})
 	l.SetOutput(os.Stdout)
-	l.SetLevel(logrus.DebugLevel)
+	l.SetLevel(logrus.InfoLevel)
 	return l
 }
 
 func main() {
-
 	log := createLog()
-
 	log.Info("Shard node starting...")
 
+	// command line flags
 	sharded := flag.Bool("sharded", false, "determines weather bot runs in shards or not")
 	TOKEN := flag.String("token", "", "token override instead of secrets")
+	loglevel := flag.String("log", "info", "declares how verbose the logging should be ('debug', 'info', 'error')")
 	flag.Parse()
+
+	switch *loglevel {
+	case "debug":
+		log.SetLevel(logrus.DebugLevel)
+	case "info":
+		log.SetLevel(logrus.InfoLevel)
+	case "error":
+		log.SetLevel(logrus.ErrorLevel)
+	}
 
 	for {
 		c, err := CreateClient(log, *sharded)
