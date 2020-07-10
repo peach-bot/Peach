@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/home/pi/Peach/peach_discord_client -token=$BOTTOKEN
+ExecStart=/home/pi/Peach/peach_discord_client -token=$BOTTOKEN -level=info
 Restart=on-failure
 WorkingDirectory=/home/pi
 
