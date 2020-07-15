@@ -8,14 +8,14 @@ build:
     context: src/peach_discord_client
   - image: sleepyjul/peach-interface
     context: src/peach_interface
-  - image: sleepyjul/peach-shard-coordinator
-    context: src/peach_shard_coordinator
+  - image: sleepyjul/peach-client-coordinator
+    context: src/peach_client_coordinator
 deploy:
   kubectl:
     manifests:
     - kubernetes-manifests/peach_discord_client.yaml
     - kubernetes-manifests/peach_interface.yaml
-    - kubernetes-manifests/peach_shard_coordinator.yaml
+    - kubernetes-manifests/peach_client_coordinator.yaml
 profiles:
   - name: nopush
     build:

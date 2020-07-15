@@ -37,8 +37,8 @@ type Client struct {
 	// Gateway URL
 	GatewayURL string
 
-	// Shard Coordinator
-	ShardCoordinatorURL string
+	// Client Coordinator
+	ClientCoordinatorURL string
 
 	// Connected represents the clients connection status
 	Connected chan interface{}
@@ -82,11 +82,11 @@ func (c *Client) Run() error {
 	return nil
 }
 
-// SCGetShard sends a getshard request to the shard coordinator
+// SCGetShard sends a getshard request to the client coordinator
 func SCGetShard(c *Client) error {
 
 	tempClient := &http.Client{}
-	req, err := http.NewRequest("GET", c.ShardCoordinatorURL+"getshard", nil)
+	req, err := http.NewRequest("GET", c.ClientCoordinatorURL+"getshard", nil)
 	if err != nil && err == errors.New("EOF") {
 		time.Sleep(time.Second * 5)
 	} else if err != nil {
@@ -101,16 +101,16 @@ func SCGetShard(c *Client) error {
 		return errors.New("Requesting ShardID failed - all shards assigned")
 	}
 
-	ShardCoordinator := ShardCoordinatorResponse{}
-	err = json.NewDecoder(resp.Body).Decode(&ShardCoordinator)
+	ClientCoordinator := ClientCoordinatorResponse{}
+	err = json.NewDecoder(resp.Body).Decode(&ClientCoordinator)
 	if err != nil {
 		return err
 	}
-	c.ShardCount = ShardCoordinator.TotalShards
-	c.ShardID = ShardCoordinator.ShardID
-	c.GatewayURL = ShardCoordinator.GatewayURL
+	c.ShardCount = ClientCoordinator.TotalShards
+	c.ShardID = ClientCoordinator.ShardID
+	c.GatewayURL = ClientCoordinator.GatewayURL
 
-	c.Log.Debugf("Websocket: Received from shard coordinator: %v", ShardCoordinator)
+	c.Log.Debugf("Websocket: Received from client coordinator: %v", ClientCoordinator)
 	return nil
 }
 
@@ -118,7 +118,7 @@ func SCGetShard(c *Client) error {
 func SCReserveShard(c *Client) error {
 
 	tempClient := &http.Client{}
-	URL := c.ShardCoordinatorURL + fmt.Sprintf("reserveshard?shardid=%v", c.ShardID)
+	URL := c.ClientCoordinatorURL + fmt.Sprintf("reserveshard?shardid=%v", c.ShardID)
 	req, err := http.NewRequest("POST", URL, nil)
 	if err != nil {
 		return err
@@ -137,7 +137,7 @@ func SCReserveShard(c *Client) error {
 			return err
 		}
 	} else if resp.StatusCode != http.StatusCreated {
-		c.Log.Errorf("Websocket received unexpected response from shard coordinator. Expected StatusCode 200 got %v instead", resp.StatusCode)
+		c.Log.Errorf("Websocket received unexpected response from client coordinator. Expected StatusCode 200 got %v instead", resp.StatusCode)
 	}
 	return nil
 }
@@ -147,11 +147,11 @@ func CreateClient(log *logrus.Logger, sharded bool) (c *Client, err error) {
 
 	c = &Client{Sequence: new(int64), Log: log}
 
-	// Parse shard coordinator for gateway url and shardID
+	// Parse client coordinator for gateway url and shardID
 
 	if sharded {
-		// Set ShardCoordinatorURL
-		c.ShardCoordinatorURL = "http://" + os.Getenv("PEACH_SHARD_COORDINATOR_SERVICE_HOST") + ":8080/api/v1/"
+		// Set ClientCoordinatorURL
+		c.ClientCoordinatorURL = "http://" + os.Getenv("PEACH_CLIENT_COORDINATOR_SERVICE_HOST") + ":8080/api/v1/"
 
 		err = SCGetShard(c)
 		if err != nil {
