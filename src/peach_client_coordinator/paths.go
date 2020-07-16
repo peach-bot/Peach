@@ -1,96 +1,103 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
-
-	log "github.com/sirupsen/logrus"
+	"time"
 )
 
-// Function used by clients to get acquire a shard number for login
-func getShard(w http.ResponseWriter, r *http.Request) {
-	// response setup
+func (c *clientCoordinator) verifyAuth(w http.ResponseWriter, r *http.Request) error {
 	w.Header().Set("Content-Type", "application/json")
-
-	// get next unreserved shard
-	for pos, thisshard := range shards {
-		if thisshard.Reserved == false {
-
-			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(fmt.Sprintf(`{"total_shards": %d, "assigned_shard": %d, "gatewayurl": "%s"}`, len(shards), thisshard.ShardID, gatewayurl)))
-			log.WithFields(log.Fields{
-				"total_shards": len(shards),
-				"shardID":      thisshard.ShardID,
-				"active":       shards[thisshard.ShardID].Active,
-			}).Info("GET 200 api/v1/getshard - shard assigned")
-			break
-		}
-		if pos == (len(shards) - 1) {
-			w.WriteHeader(http.StatusNoContent)
-			log.Info("GET 204 api/v1/getshard - all shards assigned")
-		}
+	authsecret := r.Header.Get("authorization")
+	if authsecret != clustersecret {
+		w.WriteHeader(http.StatusUnauthorized)
+		return errors.New(("Auth code didn't match cluster secret"))
 	}
+	return nil
 }
 
-// Function used to reserve a shard number for a client
-func reserveShard(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	shardID, err := strconv.Atoi(r.URL.Query().Get("shardid"))
-	if err != nil {
-		log.Fatal(err)
-	}
-	/*
-		Because of the split shard 0 shard 1 has the index 2 in the shards list.
-		When using the api -1 refers to the DM shard and 0 refers to the server shard 0. 1 then refers to the server shard 1.
-	*/
+func (c *clientCoordinator) verifyBotShard(w http.ResponseWriter, r *http.Request) (*Bot, *Shard, error) {
 
-	if shardID >= len(shards) || shardID < 0 {
-		// requested shard out of range
-		w.WriteHeader(http.StatusNotAcceptable)
-		w.Write([]byte("Requested shard out of range"))
-		log.WithFields(log.Fields{
-			"shardID": shardID,
-		}).Info("POST 406 api/v1/reserveshard - requested shard out of range")
-	} else if shards[shardID].Reserved {
-		// shard already reserved
-		w.WriteHeader(http.StatusNotAcceptable)
-		w.Write([]byte("Requested shard already reserved"))
-		log.WithFields(log.Fields{
-			"shardID":  shardID,
-			"reserved": shards[shardID].Reserved,
-			"active":   shards[shardID].Active,
-		}).Info("POST 406 api/v1/reserveshard - requested shard already reserved")
-	} else {
-		// set shard reservation
-		shards[shardID].Reserved = true
-		w.WriteHeader(http.StatusCreated)
-		log.WithFields(log.Fields{
-			"shardID":   shardID,
-			"reserved":  shards[shardID].Reserved,
-			"active":    shards[shardID].Active,
-			"is_server": shards[shardID].Server,
-		}).Info("POST 201 api/v1/reserveshard - shard reserved")
+	botID := r.Header.Get("bot_id")
+	if botID == "" {
+		return nil, nil, errors.New("Header missing bot_id")
 	}
+
+	sid := r.Header.Get("shard_id")
+	if sid == "" {
+		return nil, nil, errors.New("Header missing shard_id")
+	}
+
+	shardID, err := strconv.Atoi(sid)
+	if err != nil {
+		return nil, nil, errors.New("invalid shard_id")
+	}
+
+	bot := c.Bots[botID]
+	shard := bot.Shards[shardID]
+	if bot == nil {
+		return nil, nil, errors.New("invalid bot_id")
+	}
+	if shard == nil {
+		return nil, nil, errors.New("invalid shard_id")
+	}
+
+	return bot, shard, nil
 }
 
-// Function used to update the state of a single shard
-func updateShard(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusNotImplemented)
+func (c *clientCoordinator) pathLogin(w http.ResponseWriter, r *http.Request) {
+	err := c.verifyAuth(w, r)
+	if err != nil {
+		return
+	}
+
+	bot, shard := c.nextShard()
+	if bot == nil || shard == nil {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	response := fmt.Sprintf(`{"token": "%s", "total_shards": %d, "assigned_shard": %d, "gateway_url": "%s"}`, bot.Token, bot.ShardCount, shard.ShardID, c.GatewayURL)
+	shard.Reserved = true
+	shard.LastHeartbeat = time.Now()
+	go c.shardManager(bot, shard)
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(response))
 }
 
-// Function to reset shards object and update shard amount
-func scale(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	amount, err := strconv.Atoi(r.URL.Query().Get("amount"))
+func (c *clientCoordinator) pathReady(w http.ResponseWriter, r *http.Request) {
+	err := c.verifyAuth(w, r)
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
-	reset, err := strconv.ParseBool((r.URL.Query().Get("reset")))
+	_, shard, err := c.verifyBotShard(w, r)
 	if err != nil {
-		log.Fatal(err)
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte(err.Error()))
+		return
 	}
-	go resetShardCount(amount, reset)
+	if shard.Active {
+		w.WriteHeader(http.StatusForbidden)
+		w.Write([]byte("Shard already active"))
+	}
+	shard.Active = true
+	w.WriteHeader(http.StatusOK)
+}
+
+func (c *clientCoordinator) pathHeartbeat(w http.ResponseWriter, r *http.Request) {
+	err := c.verifyAuth(w, r)
+	if err != nil {
+		return
+	}
+	_, shard, err := c.verifyBotShard(w, r)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	shard.LastHeartbeat = time.Now()
+	shard.MissedHeartbeats = 0
+	w.WriteHeader(http.StatusOK)
 }

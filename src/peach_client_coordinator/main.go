@@ -6,46 +6,50 @@ import (
 
 	"github.com/gorilla/mux"
 
+	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 )
 
-var shards []shard
-var bottoken string = os.Getenv("BOTTOKEN")
+var clustersecret string = os.Getenv("CLUSTERSECRET")
 
-func init() {
+func createlog() *logrus.Logger {
 	// Set log format, output and level
-	log.SetFormatter(&log.TextFormatter{
+	l := logrus.New()
+	l.SetFormatter(&log.TextFormatter{
 		ForceColors:      true,
 		QuoteEmptyFields: true,
 		DisableTimestamp: false,
 		FullTimestamp:    true,
 		TimestampFormat:  "2006-01-02 15:04:05",
 	})
-	log.SetOutput(os.Stdout)
-	log.SetLevel(log.InfoLevel)
+	l.SetOutput(os.Stdout)
+	l.SetLevel(log.InfoLevel)
+	return l
 }
 
 func main() {
-	log.Info("shard coordinator starting...")
+	l := createlog()
+	l.Info("shard coordinator starting...")
+
+	c := new(clientCoordinator)
+	c.log = l
+	err := c.create()
+	if err != nil {
+		c.log.Fatal(err)
+	}
 
 	// setup paths
 	r := mux.NewRouter()
-	api := r.PathPrefix("/api/v1").Subrouter()
-	api.HandleFunc("/getshard", getShard).Methods(http.MethodGet)
-	api.HandleFunc("/reserveshard", reserveShard).Methods(http.MethodPost)
-	api.HandleFunc("/updateshard", updateShard).Methods(http.MethodPost)
-	api.HandleFunc("/scale", scale).Methods(http.MethodGet)
-
-	// initial creation of shards list
-	resetShardCount(0, true)
+	api := r.PathPrefix("/api").Subrouter()
+	api.HandleFunc("/login", c.pathLogin).Methods(http.MethodGet)
+	api.HandleFunc("/ready", c.pathReady).Methods(http.MethodGet)
+	api.HandleFunc("/heartbeat", c.pathHeartbeat).Methods(http.MethodGet)
 
 	// run
 	done := make(chan bool)
 	go http.ListenAndServe(":8080", r)
 
 	// log ready
-	log.Info("shard coordinator online")
-
-	// wait for goroutine to finish
+	l.Info("shard coordinator online")
 	<-done
 }
