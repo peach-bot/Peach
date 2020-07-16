@@ -53,6 +53,7 @@ func (c *clientCoordinator) pathLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	c.lock.Lock()
 	bot, shard := c.nextShard()
 	if bot == nil || shard == nil {
 		w.WriteHeader(http.StatusNoContent)
@@ -61,6 +62,7 @@ func (c *clientCoordinator) pathLogin(w http.ResponseWriter, r *http.Request) {
 
 	response := fmt.Sprintf(`{"token": "%s", "total_shards": %d, "assigned_shard": %d, "gateway_url": "%s"}`, bot.Token, bot.ShardCount, shard.ShardID, c.GatewayURL)
 	shard.Reserved = true
+	c.lock.Unlock()
 	shard.LastHeartbeat = time.Now()
 	go c.shardManager(bot, shard)
 	w.WriteHeader(http.StatusOK)
