@@ -68,6 +68,9 @@ type Client struct {
 	// Cache
 	GuildCache   *cache.Cache
 	ChannelCache *cache.Cache
+
+	// Starttime
+	Starttime time.Time
 }
 
 // Run starts various background routines and starts listeners
@@ -146,6 +149,7 @@ func SCReserveShard(c *Client) error {
 func CreateClient(log *logrus.Logger, sharded bool) (c *Client, err error) {
 
 	c = &Client{Sequence: new(int64), Log: log}
+	c.Starttime = time.Now()
 
 	// Parse client coordinator for gateway url and shardID
 
@@ -162,10 +166,6 @@ func CreateClient(log *logrus.Logger, sharded bool) (c *Client, err error) {
 			return nil, err
 		}
 	}
-
-	c.httpClient = &http.Client{}
-	c.GuildCache = cache.New(120*time.Minute, 5*time.Minute)
-	c.ChannelCache = cache.New(120*time.Minute, 5*time.Minute)
 
 	c.Reconnect = make(chan interface{})
 	c.Quit = make(chan interface{})

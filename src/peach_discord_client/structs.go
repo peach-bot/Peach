@@ -11,8 +11,8 @@ import (
 
 // IdentifyPayload is used to create an identify message
 type IdentifyPayload struct {
-	Opcode int      `json:"op"`
-	Data   Identify `json:"d"`
+	Opcode int         `json:"op"`
+	Data   interface{} `json:"d"`
 }
 
 // Identify is used to trigger the initial handshake with the gateway.

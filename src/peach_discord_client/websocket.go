@@ -157,8 +157,8 @@ func (c *Client) HandleEvent(e *Event) {
 
 	if e.Opcode == opcodeReconnect {
 		c.Connected <- nil
-		c.Reconnect <- nil
 		c.wsConn.Close()
+		c.Reconnect <- nil
 	}
 }
 
