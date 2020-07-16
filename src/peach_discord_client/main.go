@@ -61,9 +61,7 @@ func main() {
 	c.Compress = true
 	c.LargeThreshold = 250
 	c.GuildSubscriptions = true
-	if *TOKEN == "" {
-		c.TOKEN = os.Getenv("BOTTOKEN")
-	} else {
+	if *TOKEN != "" {
 		c.TOKEN = *TOKEN
 	}
 	c.MissingHeartbeatAcks = 5
