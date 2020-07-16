@@ -175,9 +175,11 @@ func (c *Client) onPresenceUpdate(ctx *EventPresenceUpdate) error {
 
 func (c *Client) onReady(ctx *EventReady) error {
 	c.User = ctx.User
-	err := CCReady(c)
-	if err != nil {
-		return err
+	if c.Sharded {
+		err := CCReady(c)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
