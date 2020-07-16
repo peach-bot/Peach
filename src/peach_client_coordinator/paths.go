@@ -83,6 +83,7 @@ func (c *clientCoordinator) pathReady(w http.ResponseWriter, r *http.Request) {
 	if shard.Active {
 		w.WriteHeader(http.StatusForbidden)
 		w.Write([]byte("Shard already active"))
+		return
 	}
 	shard.Active = true
 	w.WriteHeader(http.StatusOK)
