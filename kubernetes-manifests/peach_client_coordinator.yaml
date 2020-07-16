@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: peach-shard-coordinator
+  name: peach-client-coordinator
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: peach-shard-coordinator
+      app: peach-client-coordinator
   template:
     metadata:
       labels:
-        app: peach-shard-coordinator
+        app: peach-client-coordinator
     spec:
       terminationGracePeriodSeconds: 5
       containers:
-      - name: peach-shard-coordinator
-        image: sleepyjul/peach-shard-coordinator
+      - name: peach-client-coordinator
+        image: sleepyjul/peach-client-coordinator
         ports:
         - containerPort: 8080
         env:
@@ -24,11 +24,16 @@ spec:
               secretKeyRef:
                 name: discord
                 key: BOTTOKEN
+          - name: CLUSTERSECRET
+            valueFrom:
+              secretKeyRef:
+                name: clustersecret
+                key: CLUSTERSECRET
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: peach-shard-coordinator
+  name: peach-client-coordinator
 spec:
   type: NodePort 
   ports:
@@ -38,4 +43,4 @@ spec:
     name: http
     protocol: TCP
   selector:
-    app: peach-shard-coordinator
+    app: peach-client-coordinator

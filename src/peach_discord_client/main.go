@@ -2,8 +2,11 @@ package main
 
 import (
 	"flag"
+	"net/http"
 	"os"
+	"time"
 
+	"github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
 )
 
@@ -44,28 +47,32 @@ func main() {
 		log.SetLevel(logrus.ErrorLevel)
 	}
 
+	c, err := CreateClient(log, *sharded)
+	if err != nil {
+		log.Fatal(err, "\nUnable to create new client, exiting...")
+	}
+
+	if *sharded == false {
+		c.GatewayURL = "wss://gateway.discord.gg/"
+	}
+
+	// Settings
+	c.Sharded = *sharded
+	c.Compress = true
+	c.LargeThreshold = 250
+	c.GuildSubscriptions = true
+	if *TOKEN != "" {
+		c.TOKEN = *TOKEN
+	}
+	c.MissingHeartbeatAcks = 5
+	c.GatewayURL = c.GatewayURL + "?v=" + APIVersion + "&encoding=json"
+
 	for {
-		c, err := CreateClient(log, *sharded)
-		if err != nil {
-			log.Fatal(err, "\nUnable to create new client, exiting...")
-		}
 
-		if *sharded == false {
-			c.GatewayURL = "wss://gateway.discord.gg/"
-		}
-
-		// Settings
-		c.Sharded = *sharded
-		c.Compress = true
-		c.LargeThreshold = 250
-		c.GuildSubscriptions = true
-		if *TOKEN == "" {
-			c.TOKEN = os.Getenv("BOTTOKEN")
-		} else {
-			c.TOKEN = *TOKEN
-		}
-		c.MissingHeartbeatAcks = 5
-		c.GatewayURL = c.GatewayURL + "?v=" + APIVersion + "&encoding=json"
+		c.wsConn = nil
+		c.httpClient = &http.Client{}
+		c.GuildCache = cache.New(120*time.Minute, 5*time.Minute)
+		c.ChannelCache = cache.New(120*time.Minute, 5*time.Minute)
 
 		err = c.Run()
 		if err != nil {

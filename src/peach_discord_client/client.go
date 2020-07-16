@@ -3,9 +3,9 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 	"sync"
 	"time"
 
@@ -21,7 +21,8 @@ type Client struct {
 	Log *logrus.Logger
 
 	// Authentification
-	TOKEN string
+	TOKEN         string
+	CLUSTERSECRET string
 
 	// Settings
 	Compress           bool
@@ -37,8 +38,8 @@ type Client struct {
 	// Gateway URL
 	GatewayURL string
 
-	// Shard Coordinator
-	ShardCoordinatorURL string
+	// Client Coordinator
+	ClientCoordinatorURL string
 
 	// Connected represents the clients connection status
 	Connected chan interface{}
@@ -68,6 +69,9 @@ type Client struct {
 	// Cache
 	GuildCache   *cache.Cache
 	ChannelCache *cache.Cache
+
+	// Starttime
+	Starttime time.Time
 }
 
 // Run starts various background routines and starts listeners
@@ -82,90 +86,109 @@ func (c *Client) Run() error {
 	return nil
 }
 
-// SCGetShard sends a getshard request to the shard coordinator
-func SCGetShard(c *Client) error {
+// CCLogin registeres the client in the client coordinator and reserves a shard
+func CCLogin(c *Client) error {
 
 	tempClient := &http.Client{}
-	req, err := http.NewRequest("GET", c.ShardCoordinatorURL+"getshard", nil)
+	req, err := http.NewRequest("GET", c.ClientCoordinatorURL+"login", nil)
 	if err != nil && err == errors.New("EOF") {
 		time.Sleep(time.Second * 5)
+		return CCLogin(c)
 	} else if err != nil {
 		return err
 	}
+	req.Header.Add("authorization", c.CLUSTERSECRET)
 	resp, err := tempClient.Do(req)
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusNoContent {
 		return errors.New("Requesting ShardID failed - all shards assigned")
 	}
 
-	ShardCoordinator := ShardCoordinatorResponse{}
-	err = json.NewDecoder(resp.Body).Decode(&ShardCoordinator)
+	ClientCoordinator := ClientCoordinatorResponse{}
+	err = json.NewDecoder(resp.Body).Decode(&ClientCoordinator)
 	if err != nil {
 		return err
 	}
-	c.ShardCount = ShardCoordinator.TotalShards
-	c.ShardID = ShardCoordinator.ShardID
-	c.GatewayURL = ShardCoordinator.GatewayURL
+	c.TOKEN = ClientCoordinator.Token
+	c.ShardCount = ClientCoordinator.TotalShards
+	c.ShardID = ClientCoordinator.ShardID
+	c.GatewayURL = ClientCoordinator.GatewayURL
 
-	c.Log.Debugf("Websocket: Received from shard coordinator: %v", ShardCoordinator)
+	c.Log.Debugf("Websocket: Received from client coordinator: %v", ClientCoordinator)
 	return nil
 }
 
-// SCReserveShard reserves a shard
-func SCReserveShard(c *Client) error {
+// CCReady asdasd
+func CCReady(c *Client) error {
 
 	tempClient := &http.Client{}
-	URL := c.ShardCoordinatorURL + fmt.Sprintf("reserveshard?shardid=%v", c.ShardID)
-	req, err := http.NewRequest("POST", URL, nil)
+	req, err := http.NewRequest("GET", c.ClientCoordinatorURL+"ready", nil)
 	if err != nil {
 		return err
 	}
+	req.Header.Add("authorization", c.CLUSTERSECRET)
+	req.Header.Add("bot_id", c.User.ID)
+	req.Header.Add("shard_id", strconv.Itoa(c.ShardID))
 	resp, err := tempClient.Do(req)
 	if err != nil {
 		return err
 	}
-	if resp.StatusCode == http.StatusNotAcceptable {
-		err := SCGetShard(c)
-		if err != nil {
-			return err
-		}
-		err = SCReserveShard(c)
-		if err != nil {
-			return err
-		}
-	} else if resp.StatusCode != http.StatusCreated {
-		c.Log.Errorf("Websocket received unexpected response from shard coordinator. Expected StatusCode 200 got %v instead", resp.StatusCode)
+	if resp.StatusCode != http.StatusOK {
+		c.Log.Errorf("Websocket received unexpected response from client coordinator. Expected Status 200 OK got %s instead", resp.Status)
 	}
 	return nil
+}
+
+// CCHeartbeat stfu
+func (c *Client) CCHeartbeat() {
+	ticker := time.NewTicker(30000 * time.Millisecond)
+	time.Sleep(25 * time.Second)
+	for {
+		tempClient := &http.Client{}
+		req, err := http.NewRequest("GET", c.ClientCoordinatorURL+"heartbeat", nil)
+		if err != nil {
+			c.Log.Error(err)
+		}
+		req.Header.Add("authorization", c.CLUSTERSECRET)
+		req.Header.Add("bot_id", c.User.ID)
+		req.Header.Add("shard_id", strconv.Itoa(c.ShardID))
+		resp, err := tempClient.Do(req)
+		if err != nil {
+			c.Log.Error(err)
+		}
+		if resp.StatusCode != http.StatusOK {
+			c.Log.Errorf("Websocket received unexpected response from client coordinator. Expected Status 200 OK got %s instead", resp.Status)
+		}
+		select {
+		case <-ticker.C:
+		}
+	}
 }
 
 // CreateClient creates a new discord client
 func CreateClient(log *logrus.Logger, sharded bool) (c *Client, err error) {
 
 	c = &Client{Sequence: new(int64), Log: log}
+	c.Starttime = time.Now()
 
-	// Parse shard coordinator for gateway url and shardID
+	// Parse client coordinator for gateway url and shardID
 
 	if sharded {
-		// Set ShardCoordinatorURL
-		c.ShardCoordinatorURL = "http://" + os.Getenv("PEACH_SHARD_COORDINATOR_SERVICE_HOST") + ":8080/api/v1/"
+		// Set ClientCoordinatorURL and cluster secret
+		c.ClientCoordinatorURL = "http://" + os.Getenv("PEACH_CLIENT_COORDINATOR_SERVICE_HOST") + ":8080/api/"
+		c.CLUSTERSECRET = os.Getenv("CLUSTERSECRET")
 
-		err = SCGetShard(c)
+		err = CCLogin(c)
 		if err != nil {
 			return nil, err
 		}
-		err = SCReserveShard(c)
-		if err != nil {
-			return nil, err
-		}
+
+		go c.CCHeartbeat()
 	}
-
-	c.httpClient = &http.Client{}
-	c.GuildCache = cache.New(120*time.Minute, 5*time.Minute)
-	c.ChannelCache = cache.New(120*time.Minute, 5*time.Minute)
 
 	c.Reconnect = make(chan interface{})
 	c.Quit = make(chan interface{})

@@ -8,5 +8,5 @@ RUN go get -d ./...
 RUN CGO_ENABLED=0 go build -o /app -a -ldflags '-extldflags "-static"' .
 
 FROM alpine:3.11
-CMD ./app
+CMD ./app -sharded=true -log=info
 COPY --from=builder /app .
