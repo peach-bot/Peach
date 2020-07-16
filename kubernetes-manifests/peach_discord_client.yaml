@@ -24,3 +24,8 @@ spec:
               secretKeyRef:
                 name: discord
                 key: BOTTOKEN
+          - name: CLUSTERSECRET
+            valueFrom:
+              secretKeyRef:
+                name: clustersecret
+                key: CLUSTERSECRET
