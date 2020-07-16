@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -31,6 +32,7 @@ type clientCoordinator struct {
 	log        *logrus.Logger
 	GatewayURL string
 	Bots       map[string]*Bot
+	lock       sync.Mutex
 }
 
 // Bot shutup compiler
