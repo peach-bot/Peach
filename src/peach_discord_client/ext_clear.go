@@ -38,8 +38,8 @@ func (c *Client) extClearOnMessage(ctx *EventMessageCreate, args []string) error
 	}
 
 	amount, err := strconv.Atoi(args[0])
-	if err != nil || amount > 50 || amount < 2 {
-		c.SendMessage(ctx.ChannelID, NewMessage{"Please provide an amount (Min: 2, Max: 50) of messages to clear. Example: `!clear 10`", false, nil})
+	if err != nil || amount > 100 || amount < 1 {
+		c.SendMessage(ctx.ChannelID, NewMessage{"Please provide an amount of messages to clear (Max 100). Example: `!clear 10`", false, nil})
 		return nil
 	}
 
@@ -57,12 +57,18 @@ func (c *Client) extClearOnMessage(ctx *EventMessageCreate, args []string) error
 		messageIDs = append(messageIDs, message.ID)
 	}
 
-	err = c.BulkDeleteMessages(ctx.ChannelID, messageIDs)
-	if err != nil {
-		return err
+	lolplural := ""
+	if amount > 1 {
+		err = c.BulkDeleteMessages(ctx.ChannelID, messageIDs)
+		if err != nil {
+			return err
+		}
+		lolplural = "s"
+	} else {
+		err = c.DeleteMessage(ctx.ChannelID, messageIDs[0])
 	}
 
-	success, err := c.SendMessage(ctx.ChannelID, NewMessage{fmt.Sprintf("Deleted %s messages for you :slight_smile:", args[0]), false, nil})
+	success, err := c.SendMessage(ctx.ChannelID, NewMessage{fmt.Sprintf("Deleted %s message%s for you :slight_smile:", args[0], lolplural), false, nil})
 	if err != nil {
 		return err
 	}
