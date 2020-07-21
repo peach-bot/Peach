@@ -146,7 +146,6 @@ func CCReady(c *Client) error {
 // CCHeartbeat stfu
 func (c *Client) CCHeartbeat() {
 	ticker := time.NewTicker(30000 * time.Millisecond)
-	time.Sleep(25 * time.Second)
 	for {
 		tempClient := &http.Client{}
 		req, err := http.NewRequest("GET", c.ClientCoordinatorURL+"heartbeat", nil)
@@ -186,8 +185,6 @@ func CreateClient(log *logrus.Logger, sharded bool) (c *Client, err error) {
 		if err != nil {
 			return nil, err
 		}
-
-		go c.CCHeartbeat()
 	}
 
 	c.Reconnect = make(chan interface{})

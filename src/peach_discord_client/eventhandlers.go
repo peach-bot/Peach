@@ -174,13 +174,20 @@ func (c *Client) onPresenceUpdate(ctx *EventPresenceUpdate) error {
 }
 
 func (c *Client) onReady(ctx *EventReady) error {
+
+	//Cache User object
 	c.User = ctx.User
+
+	//Store session ID
 	c.SessionID = ctx.SessionID
+
+	//If sharded start heartbeat and tell client coordinator that client is running
 	if c.Sharded {
 		err := CCReady(c)
 		if err != nil {
 			return err
 		}
+		go c.CCHeartbeat()
 	}
 
 	return nil
