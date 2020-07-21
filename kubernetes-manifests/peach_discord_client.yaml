@@ -19,11 +19,6 @@ spec:
         ports:
         - containerPort: 8080
         env:
-          - name: BOTTOKEN
-            valueFrom:
-              secretKeyRef:
-                name: discord
-                key: BOTTOKEN
           - name: CLUSTERSECRET
             valueFrom:
               secretKeyRef:
