@@ -3,17 +3,14 @@ package main
 var tokens []string
 
 func (c *clientCoordinator) gettokens() {
-	tokenrows, err := db.dbconn.Query("SELECT * FROM tokens ORDER BY priority ASC")
+	rows, err := db.dbconn.Query("SELECT token FROM tokens ORDER BY priority ASC")
 	if err != nil {
 		c.log.Error(err)
 	}
+	defer rows.Close()
 	tokens = []string{}
-	for {
-		outofrange := tokenrows.Next()
-		if !outofrange {
-			break
-		}
-		values, err := tokenrows.Values()
+	for rows.Next() {
+		values, err := rows.Values()
 		if err != nil {
 			c.log.Error(err)
 		}
