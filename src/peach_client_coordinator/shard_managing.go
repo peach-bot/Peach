@@ -97,6 +97,7 @@ func (c *clientCoordinator) nextShard() (*Bot, *Shard) {
 }
 
 func (c *clientCoordinator) shardManager(bot *Bot, shard *Shard) {
+	time.Sleep((30000 * time.Millisecond) - time.Since(shard.LastHeartbeat))
 	ticker := time.NewTicker(30000 * time.Millisecond)
 	shard.MissedHeartbeats = 0
 	defer ticker.Stop()
