@@ -1,4 +1,4 @@
 cd src/peach_client_coordinator
-dep ensure
+dep ensure --vendor-only
 cd ../peach_discord_client
-dep ensure  
+dep ensure --vendor-only
