@@ -3,3 +3,5 @@ notes
 secrets
 vendor
 *.exe
+build
+node_modules
