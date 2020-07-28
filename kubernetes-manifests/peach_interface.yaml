@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: peach-interface
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: interface
@@ -17,4 +17,19 @@ spec:
       - name: peach-interface
         image: sleepyjul/peach-interface
         ports:
-        - containerPort: 8080
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: peach-interface
+spec:
+  type: NodePort 
+  ports:
+  - port: 5000
+    targetPort: 5000
+    nodePort: 30001
+    name: http
+    protocol: TCP
+  selector:
+    app: interface
