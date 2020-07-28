@@ -1,9 +1,9 @@
-FROM golang:1.13 as builder
-RUN go get -t github.com/stretchr/testify
+FROM node:13.12.0-alpine
+COPY package.json .
+COPY package-lock.json .
+RUN npm install --silent
+RUN npm install -g serve
 COPY . .
-RUN go get -d ./...
-RUN CGO_ENABLED=0 go build -o /app -a -ldflags '-extldflags "-static"' .
-
-FROM alpine:3.11
-CMD ./app
-COPY --from=builder /app .
+RUN npm run build
+CMD serve -s build -l tcp://0.0.0.0:5000
+EXPOSE 5000
