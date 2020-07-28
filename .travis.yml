@@ -10,14 +10,15 @@ install:
 - curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/v1.3.1/skaffold-linux-amd64
 - chmod +x skaffold
 - sudo mv skaffold /usr/local/bin
+- curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
 jobs:
   include:
   - stage: test
     script:
-      - go get -d -t ./src/./...
       - go get golang.org/x/tools/cmd/stringer
-      - ./scripts/generate.sh
+      - ./scripts/ensure.sh
+      - go generate ./...
       - ./scripts/test.sh
   - stage: deploy
     script:
