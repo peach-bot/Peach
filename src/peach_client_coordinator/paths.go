@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -103,4 +104,25 @@ func (c *clientCoordinator) pathHeartbeat(w http.ResponseWriter, r *http.Request
 	shard.LastHeartbeat = time.Now()
 	shard.MissedHeartbeats = 0
 	w.WriteHeader(http.StatusOK)
+func (c *clientCoordinator) pathGetShards(w http.ResponseWriter, r *http.Request) {
+	err := c.verifyAuth(w, r)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		c.log.Info("GET 401 api/shards")
+		return
+	}
+
+	bots := c.Bots
+	for _, bot := range bots {
+		bot.Token = ""
+	}
+
+	jsons, err := json.Marshal(bots)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		c.log.Errorf("GET 500 api/shards: %s", err)
+		return
+	}
+	w.Write(jsons)
+	c.log.Info("GET 200 api/shards")
 }

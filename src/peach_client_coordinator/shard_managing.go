@@ -52,6 +52,7 @@ func (c *clientCoordinator) create() error {
 		c.GatewayURL = gwr.URL
 		c.Bots[user.ID] = &Bot{}
 		bot := c.Bots[user.ID]
+		bot.Username = user.Username + "#" + user.Discriminator
 		bot.ShardCount = gwr.Shards
 		bot.Token = token
 		bot.Shards = make(map[int]*Shard)
