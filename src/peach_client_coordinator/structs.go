@@ -10,11 +10,11 @@ import (
 
 // Shard shutup compiler
 type Shard struct {
-	ShardID          int
-	Reserved         bool
-	Active           bool
-	LastHeartbeat    time.Time
-	MissedHeartbeats int
+	ShardID          int       `json:"shard_id"`
+	Reserved         bool      `json:"reserved"`
+	Active           bool      `json:"active"`
+	LastHeartbeat    time.Time `json:"last_heartbeat"`
+	MissedHeartbeats int       `json:"missed_heartbeats"`
 }
 
 type getgatewayresponse struct {
@@ -28,18 +28,20 @@ type getgatewayresponse struct {
 }
 
 type clientCoordinator struct {
-	httpClient *http.Client
-	log        *logrus.Logger
-	GatewayURL string
-	Bots       map[string]*Bot
-	lock       sync.Mutex
+	httpClient        *http.Client
+	log               *logrus.Logger
+	GatewayURL        string
+	Bots              map[string]*Bot `json:"bots"`
+	lock              sync.Mutex
+	heartbeatInterval string
 }
 
 // Bot shutup compiler
 type Bot struct {
-	Shards     map[int]*Shard
-	ShardCount int
-	Token      string
+	Username   string         `json:"username"`
+	ShardCount int            `json:"shard_count"`
+	Shards     map[int]*Shard `json:"shards"`
+	Token      string         `json:"token"`
 }
 
 // User represents a discord user

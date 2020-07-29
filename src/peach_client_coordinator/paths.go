@@ -61,7 +61,7 @@ func (c *clientCoordinator) pathLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := fmt.Sprintf(`{"token": "%s", "total_shards": %d, "assigned_shard": %d, "gateway_url": "%s"}`, bot.Token, bot.ShardCount, shard.ShardID, c.GatewayURL)
+	response := fmt.Sprintf(`{"token": "%s", "total_shards": %d, "assigned_shard": %d, "gateway_url": "%s", "heartbeat_interval": "%s"}`, bot.Token, bot.ShardCount, shard.ShardID, c.GatewayURL, c.heartbeatInterval)
 	shard.Reserved = true
 	c.lock.Unlock()
 	shard.LastHeartbeat = time.Now()
@@ -73,37 +73,49 @@ func (c *clientCoordinator) pathLogin(w http.ResponseWriter, r *http.Request) {
 func (c *clientCoordinator) pathReady(w http.ResponseWriter, r *http.Request) {
 	err := c.verifyAuth(w, r)
 	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		c.log.Info("GET 401 api/ready")
 		return
 	}
 	_, shard, err := c.verifyBotShard(w, r)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte(err.Error()))
+		c.log.Info("GET 404 api/ready")
 		return
 	}
 	if shard.Active {
 		w.WriteHeader(http.StatusForbidden)
 		w.Write([]byte("Shard already active"))
+		c.log.Info("GET 403 api/ready")
 		return
 	}
 	shard.Active = true
 	w.WriteHeader(http.StatusOK)
+	c.log.Info("GET 200 api/ready")
 }
 
 func (c *clientCoordinator) pathHeartbeat(w http.ResponseWriter, r *http.Request) {
 	err := c.verifyAuth(w, r)
 	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		c.log.Info("GET 401 api/heartbeat")
 		return
 	}
 	_, shard, err := c.verifyBotShard(w, r)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte(err.Error()))
+		c.log.Info("GET 404 api/heartbeat")
 		return
 	}
 	shard.LastHeartbeat = time.Now()
 	shard.MissedHeartbeats = 0
 	w.WriteHeader(http.StatusOK)
+	c.log.Info("GET 200 api/heartbeat")
+}
+
+
 func (c *clientCoordinator) pathGetShards(w http.ResponseWriter, r *http.Request) {
 	err := c.verifyAuth(w, r)
 	if err != nil {

@@ -57,6 +57,7 @@ type Client struct {
 	HeartbeatInterval    time.Duration // Interval in which client should sent heartbeats
 	LastHeartbeatAck     time.Time     // Last time the client received a heartbeat acknowledgement
 	MissingHeartbeatAcks time.Duration // Number of Acks that can be missed before reconnecting
+	CCHeartbeatInterval  string
 
 	// Websocket Connection
 	wsConn  *websocket.Conn
@@ -117,7 +118,7 @@ func CCLogin(c *Client) error {
 	c.ShardCount = ClientCoordinator.TotalShards
 	c.ShardID = ClientCoordinator.ShardID
 	c.GatewayURL = ClientCoordinator.GatewayURL
-
+	c.CCHeartbeatInterval = ClientCoordinator.HeartbeatInterval
 	c.Log.Debugf("Websocket: Received from client coordinator: %v", ClientCoordinator)
 	return nil
 }
@@ -145,7 +146,11 @@ func CCReady(c *Client) error {
 
 // CCHeartbeat stfu
 func (c *Client) CCHeartbeat() {
-	ticker := time.NewTicker(30000 * time.Millisecond)
+	interval, err := time.ParseDuration(c.CCHeartbeatInterval)
+	if err != nil {
+		c.Log.Fatal(err)
+	}
+	ticker := time.NewTicker(interval * time.Millisecond)
 	for {
 		tempClient := &http.Client{}
 		req, err := http.NewRequest("GET", c.ClientCoordinatorURL+"heartbeat", nil)

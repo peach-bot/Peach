@@ -19,7 +19,7 @@ var db database
 func createlog() *logrus.Logger {
 	// Set log format, output and level
 	l := logrus.New()
-	l.SetFormatter(&log.TextFormatter{
+	l.SetFormatter(&logrus.TextFormatter{
 		ForceColors:      true,
 		QuoteEmptyFields: true,
 		DisableTimestamp: false,
@@ -27,7 +27,7 @@ func createlog() *logrus.Logger {
 		TimestampFormat:  "2006-01-02 15:04:05",
 	})
 	l.SetOutput(os.Stdout)
-	l.SetLevel(log.DebugLevel)
+	l.SetLevel(logrus.DebugLevel)
 	return l
 }
 
@@ -50,6 +50,9 @@ func main() {
 
 	c := new(clientCoordinator)
 	c.log = l
+
+	c.heartbeatInterval = "10000ms"
+
 	err = c.create()
 	if err != nil {
 		c.log.Fatal(err)
@@ -60,10 +63,12 @@ func main() {
 	api := r.PathPrefix("/api").Subrouter()
 	api.HandleFunc("/login", c.pathLogin).Methods(http.MethodGet)
 	api.HandleFunc("/ready", c.pathReady).Methods(http.MethodGet)
+	api.HandleFunc("/shards", c.pathGetShards).Methods(http.MethodGet)
 	api.HandleFunc("/heartbeat", c.pathHeartbeat).Methods(http.MethodGet)
 
 	// run
 	done := make(chan bool)
+
 	go http.ListenAndServe(":8080", r)
 
 	// log ready
