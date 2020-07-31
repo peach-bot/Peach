@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 func (c *clientCoordinator) verifyAuth(w http.ResponseWriter, r *http.Request) error {
@@ -115,6 +117,38 @@ func (c *clientCoordinator) pathHeartbeat(w http.ResponseWriter, r *http.Request
 	c.log.Info("GET 200 api/heartbeat")
 }
 
+func (c *clientCoordinator) pathGetServerSettings(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	err := c.verifyAuth(w, r)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		c.log.Info("GET 401 api/guilds/%s", vars["serverID"])
+		return
+	}
+	_, _, err = c.verifyBotShard(w, r)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte(err.Error()))
+		c.log.Info("GET 404 api/guilds/%s", vars["serverID"])
+		return
+	}
+
+	s, err := db.getGuildSettings(vars["serverID"])
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		c.log.Errorf("GET 500 api/guilds/%s: %s", vars["serverID"], err)
+		return
+	}
+
+	jsons, err := json.Marshal(*s)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		c.log.Errorf("GET 500 api/guilds/%s: %s", vars["serverID"], err)
+		return
+	}
+	w.Write(jsons)
+	c.log.Infof("GET 200 api/guilds/%s", vars["serverID"])
+}
 
 func (c *clientCoordinator) pathGetShards(w http.ResponseWriter, r *http.Request) {
 	err := c.verifyAuth(w, r)

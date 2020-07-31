@@ -45,7 +45,8 @@ func (c *Client) onGuildCreate(ctx *EventGuildCreate) error {
 
 	c.GuildCache.Set(ctx.ID, *ctx.Guild, cache.DefaultExpiration)
 
-	return nil
+	err := c.getGuildSettings(ctx.ID)
+	return err
 }
 
 func (c *Client) onGuildDelete(ctx *EventGuildDelete) error {
@@ -113,8 +114,6 @@ func (c *Client) onInviteDelete(ctx *EventInviteDelete) error {
 
 func (c *Client) onMessageCreate(ctx *EventMessageCreate) error {
 
-	var err error
-
 	if ctx.Author.ID != c.User.ID {
 		c.Log.WithFields(logrus.Fields{
 			"author":   ctx.Author.Username,
@@ -123,16 +122,17 @@ func (c *Client) onMessageCreate(ctx *EventMessageCreate) error {
 		}).Debug("Websocket: received message")
 	}
 
-	if strings.HasPrefix(ctx.Content, "!") {
+	if ctx.WebhookID != "" || ctx.Author.Bot {
+		return nil
+	}
+
+	prefix := c.getSetting(ctx.GuildID, "bot", "prefix")
+
+	if strings.HasPrefix(ctx.Content, prefix) {
 		noPrefix := ctx.Content[1:]
-		command := strings.Fields(noPrefix)[0]
+		invoke := strings.Fields(noPrefix)[0]
 		args := strings.Fields(noPrefix)[1:]
-		switch command {
-		case "clear":
-			err = c.extClearOnMessage(ctx, args)
-		default:
-			err = nil
-		}
+		err := c.runOnMessage(invoke, args, ctx)
 		if err != nil {
 			return fmt.Errorf("Couldn't execute command: %s", err)
 		}

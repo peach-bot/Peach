@@ -70,6 +70,7 @@ type Client struct {
 	// Cache
 	GuildCache   *cache.Cache
 	ChannelCache *cache.Cache
+	Settings     map[string]cfgSettings // Map guildIDs to settings and cache that shit
 
 	// Starttime
 	Starttime time.Time
@@ -123,23 +124,29 @@ func CCLogin(c *Client) error {
 	return nil
 }
 
+func setCCRequestHeaders(c *Client, req *http.Request) *http.Request {
+	req.Header.Add("authorization", c.CLUSTERSECRET)
+	req.Header.Add("bot_id", c.User.ID)
+	req.Header.Add("shard_id", strconv.Itoa(c.ShardID))
+	req.Close = true
+	return req
+}
+
 // CCReady asdasd
 func CCReady(c *Client) error {
-
 	tempClient := &http.Client{}
 	req, err := http.NewRequest("GET", c.ClientCoordinatorURL+"ready", nil)
 	if err != nil {
 		return err
 	}
-	req.Header.Add("authorization", c.CLUSTERSECRET)
-	req.Header.Add("bot_id", c.User.ID)
-	req.Header.Add("shard_id", strconv.Itoa(c.ShardID))
+	req = setCCRequestHeaders(c, req)
 	resp, err := tempClient.Do(req)
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		c.Log.Errorf("Websocket received unexpected response from client coordinator. Expected Status 200 OK got %s instead", resp.Status)
+		c.Log.Fatalf("Websocket received unexpected response from client coordinator. Expected Status 200 OK got %s instead", resp.Status)
 	}
 	return nil
 }
@@ -157,13 +164,12 @@ func (c *Client) CCHeartbeat() {
 		if err != nil {
 			c.Log.Error(err)
 		}
-		req.Header.Add("authorization", c.CLUSTERSECRET)
-		req.Header.Add("bot_id", c.User.ID)
-		req.Header.Add("shard_id", strconv.Itoa(c.ShardID))
+		req = setCCRequestHeaders(c, req)
 		resp, err := tempClient.Do(req)
 		if err != nil {
 			c.Log.Error(err)
 		}
+		defer resp.Body.Close()
 		if resp.StatusCode != http.StatusOK {
 			c.Log.Errorf("Websocket received unexpected response from client coordinator. Expected Status 200 OK got %s instead", resp.Status)
 		}
@@ -178,6 +184,7 @@ func CreateClient(log *logrus.Logger, sharded bool) (c *Client, err error) {
 
 	c = &Client{Sequence: new(int64), Log: log}
 	c.Starttime = time.Now()
+	c.Settings = make(map[string]cfgSettings)
 
 	// Parse client coordinator for gateway url and shardID
 

@@ -3,14 +3,10 @@ package main
 import (
 	"net/http"
 	"os"
-	"strconv"
-	"strings"
 
 	"github.com/gorilla/mux"
-	"github.com/jackc/pgx"
 
 	"github.com/sirupsen/logrus"
-	log "github.com/sirupsen/logrus"
 )
 
 var clustersecret string = os.Getenv("CLUSTERSECRET")
@@ -36,17 +32,7 @@ func main() {
 	l := createlog()
 	l.Info("shard coordinator starting...")
 
-	dbc := strings.Split(os.Getenv("DATABASE"), ", ")
-	port, err := strconv.Atoi(dbc[4])
-	if err != nil {
-		log.Fatal("Passed invalid database port.")
-	}
-	db = database{nil}
-	db.dbconn, err = pgx.Connect(pgx.ConnConfig{Database: dbc[0], User: dbc[1], Password: dbc[2], Host: dbc[3], Port: uint16(port)})
-	if err != nil {
-		l.Fatal(err)
-	}
-	defer db.dbconn.Close()
+	createdb(l)
 
 	c := new(clientCoordinator)
 	c.log = l
@@ -65,6 +51,7 @@ func main() {
 	api.HandleFunc("/ready", c.pathReady).Methods(http.MethodGet)
 	api.HandleFunc("/shards", c.pathGetShards).Methods(http.MethodGet)
 	api.HandleFunc("/heartbeat", c.pathHeartbeat).Methods(http.MethodGet)
+	api.HandleFunc("/guilds/{serverID}", c.pathGetServerSettings).Methods(http.MethodGet)
 
 	// run
 	done := make(chan bool)
