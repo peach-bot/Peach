@@ -15,21 +15,8 @@ func (c *Client) extClearOnMessage(ctx *EventMessageCreate, args []string) error
 	}
 
 	if !hasPerm {
-		sorry, err := c.SendMessage(ctx.ChannelID, NewMessage{":no_entry: It seems like you do not have the permissions to use this command.", false, nil})
-		if err != nil {
-			return err
-		}
-
-		time.Sleep(5 * time.Second)
-
-		err = sorry.delete(c)
-		if err != nil {
-			return err
-		}
-		err = ctx.delete(c)
-		if err != nil {
-			return err
-		}
+		err = c.handleNoPermission(ctx.Message)
+		return err
 	}
 
 	if len(args) > 1 || len(args) == 0 {
