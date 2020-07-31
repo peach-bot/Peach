@@ -1,5 +1,7 @@
 package main
 
+import "time"
+
 // Role represents a discord guild role
 type Role struct {
 	ID          string `json:"id"`
@@ -12,9 +14,11 @@ type Role struct {
 	Mentionable bool   `json:"mentionable"`
 }
 
-func (c *Client) hasPermission(channelID string, member GuildMember, perm int) (bool, error) {
+func (c *Client) hasPermission(channelID string, author User, member GuildMember, perm int) (bool, error) {
 
 	var permissions int
+
+	member.User = author
 
 	channel, err := c.GetChannel(channelID)
 	if err != nil {

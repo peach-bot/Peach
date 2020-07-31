@@ -9,7 +9,7 @@ import (
 func (c *Client) extClearOnMessage(ctx *EventMessageCreate, args []string) error {
 
 	// Check if user is allowed to delete messages
-	hasPerm, err := c.hasPermission(ctx.ChannelID, ctx.Member, permissionManageMessages)
+	hasPerm, err := c.hasPermission(ctx.ChannelID, ctx.Author, ctx.Member, permissionManageMessages)
 	if err != nil {
 		return err
 	}
