@@ -123,14 +123,14 @@ func (c *clientCoordinator) pathGetServerSettings(w http.ResponseWriter, r *http
 	err := c.verifyAuth(w, r)
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
-		c.log.Info("GET 401 api/guilds/%s", vars["serverID"])
+		c.log.Infof("GET 401 api/guilds/%s", vars["serverID"])
 		return
 	}
 	_, _, err = c.verifyBotShard(w, r)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte(err.Error()))
-		c.log.Info("GET 404 api/guilds/%s", vars["serverID"])
+		c.log.Infof("GET 404 api/guilds/%s", vars["serverID"])
 		return
 	}
 
