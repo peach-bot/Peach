@@ -3,6 +3,9 @@ dist: xenial
 
 language: go
 
+go:
+  - 1.13.x
+
 services:
 - docker
 
