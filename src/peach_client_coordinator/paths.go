@@ -39,10 +39,11 @@ func (c *clientCoordinator) verifyBotShard(w http.ResponseWriter, r *http.Reques
 	}
 
 	bot := c.Bots[botID]
-	shard := bot.Shards[shardID]
 	if bot == nil {
 		return nil, nil, errors.New("invalid bot_id")
 	}
+
+	shard := bot.Shards[shardID]
 	if shard == nil {
 		return nil, nil, errors.New("invalid shard_id")
 	}
