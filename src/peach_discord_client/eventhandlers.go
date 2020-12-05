@@ -69,6 +69,18 @@ func (c *Client) onGuildIntegrationsUpdate(ctx *EventGuildIntegrationsUpdate) er
 	return nil
 }
 
+func (c *Client) onIntegrationUpdate(ctx *EventIntegrationUpdate) error {
+	return nil
+}
+
+func (c *Client) onIntegrationCreate(ctx *EventIntegrationCreate) error {
+	return nil
+}
+
+func (c *Client) onIntegrationDelete(ctx *EventIntegrationDelete) error {
+	return nil
+}
+
 func (c *Client) onGuildMemberAdd(ctx *EventGuildMemberAdd) error {
 	return nil
 }
