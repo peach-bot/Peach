@@ -1,6 +1,7 @@
 .vscode
 notes
 secrets
+devsecrets
 vendor
 *.exe
 build
