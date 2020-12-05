@@ -178,3 +178,29 @@ type NewMessage struct {
 	TTS     bool        `json:"tts,omitempty"`
 	Embed   interface{} `json:"embed,omitempty"`
 }
+
+// Account is some weird thing in the undocumented integration events
+type Account struct {
+	Name string `json:"name"`
+	ID   string `json:"id"`
+}
+
+// Application is another weird field in the undocumented INTEGRATION_CREATE event
+type Application struct {
+	Summary     string `json:"summary"`
+	Name        string `json:"name"`
+	ID          string `json:"id"`
+	Icon        string `json:"icon"`
+	Description string `json:"description"`
+	Bot         Bot    `json:"bot"`
+}
+
+// Bot see above
+type Bot struct {
+	Username      string `json:"username"`
+	PublicFlags   int    `json:"public_flags"`
+	ID            string `json:"id"`
+	Discriminator string `json:"discriminator"`
+	IsBot         bool   `json:"bot"`
+	Avatar        string `json:"avatar"`
+}
