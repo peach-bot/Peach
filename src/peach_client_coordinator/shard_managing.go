@@ -102,8 +102,8 @@ func (c *clientCoordinator) shardManager(bot *Bot, shard *Shard) {
 	if err != nil {
 		c.log.Fatal(err)
 	}
-	time.Sleep((interval * time.Millisecond) - time.Since(shard.LastHeartbeat))
-	ticker := time.NewTicker(interval * time.Millisecond)
+	time.Sleep((interval) - time.Since(shard.LastHeartbeat))
+	ticker := time.NewTicker(interval)
 	shard.MissedHeartbeats = 0
 	defer ticker.Stop()
 	for {

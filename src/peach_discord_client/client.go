@@ -157,7 +157,7 @@ func (c *Client) CCHeartbeat() {
 	if err != nil {
 		c.Log.Fatal(err)
 	}
-	ticker := time.NewTicker(interval * time.Millisecond)
+	ticker := time.NewTicker(interval)
 	for {
 		tempClient := &http.Client{}
 		req, err := http.NewRequest("GET", c.ClientCoordinatorURL+"heartbeat", nil)
