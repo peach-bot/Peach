@@ -2,9 +2,8 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strconv"
 	"strings"
+	"time"
 
 	"github.com/jackc/pgx"
 	"github.com/pkg/errors"
@@ -16,21 +15,49 @@ type database struct {
 	dbconn *pgx.Conn
 }
 
-func createdb(log *logrus.Logger) {
-	dbc := strings.Split(os.Getenv("DATABASE"), ", ")
-
-	port, err := strconv.Atoi(dbc[4])
-	if err != nil {
-		log.Fatal("Passed invalid database port.")
+func refreshconn() {
+	for {
+		if !db.dbconn.IsAlive() {
+			createdb(db.log)
+			break
+		}
+		time.Sleep(5)
 	}
+}
+
+func createdb(log *logrus.Logger) {
+	// dbc := strings.Split(os.Getenv("DATABASE"), ", ")
+	dbc := strings.Split("d7fgrduk29kj9i, auelxrhcsfvmky, 369b77800b0e7a4643efa655d00b7d55f91cbfb533a3c59a839e4b8032bd4c19, ec2-18-203-7-163.eu-west-1.compute.amazonaws.com, 5432", ", ")
 
 	db = database{log, nil}
-	rp := map[string]string{"application_name": "peach-discord-client"}
 
-	db.dbconn, err = pgx.Connect(pgx.ConnConfig{Database: dbc[0], User: dbc[1], Password: dbc[2], Host: dbc[3], Port: uint16(port), RuntimeParams: rp, PreferSimpleProtocol: true})
+	dsn := ""
+	dbname := dbc[0]
+	dsn = dsn + "dbname=" + dbname
+	user := dbc[1]
+	dsn = dsn + " user=" + user
+	password := dbc[2]
+	dsn = dsn + " password=" + password
+	host := dbc[3]
+	dsn = dsn + " host=" + host
+	port := dbc[4]
+	dsn = dsn + " port=" + port
+	dsn = dsn + " sslmode=require"
+
+	conncfg, err := pgx.ParseDSN(dsn)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	rp := map[string]string{"application_name": "peach-discord-client"}
+	conncfg.RuntimeParams = rp
+
+	db.dbconn, err = pgx.Connect(conncfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	go refreshconn()
 
 	err = db.prepare()
 	if err != nil {

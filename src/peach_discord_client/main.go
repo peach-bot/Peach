@@ -37,6 +37,7 @@ func main() {
 	TOKEN := flag.String("token", "", "token override instead of secrets")
 	loglevel := flag.String("log", "info", "declares how verbose the logging should be ('debug', 'info', 'error')")
 	flag.Parse()
+	log.Infof("Sharded: %t, LogLevel: %s", *sharded, *loglevel)
 
 	switch *loglevel {
 	case "debug":

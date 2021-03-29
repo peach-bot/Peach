@@ -52,15 +52,20 @@ func (c *clientCoordinator) verifyBotShard(w http.ResponseWriter, r *http.Reques
 }
 
 func (c *clientCoordinator) pathLogin(w http.ResponseWriter, r *http.Request) {
+	c.log.Debug("GET called api/login")
 	err := c.verifyAuth(w, r)
 	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		c.log.Infof("GET 401 api/login: %s", err)
 		return
 	}
 
 	c.lock.Lock()
 	bot, shard := c.nextShard()
 	if bot == nil || shard == nil {
+		c.lock.Unlock()
 		w.WriteHeader(http.StatusNoContent)
+		c.log.Info("GET 204 api/ready: all shards assigned")
 		return
 	}
 
@@ -71,6 +76,7 @@ func (c *clientCoordinator) pathLogin(w http.ResponseWriter, r *http.Request) {
 	go c.shardManager(bot, shard)
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(response))
+	c.log.Info("GET 200 api/login")
 }
 
 func (c *clientCoordinator) pathReady(w http.ResponseWriter, r *http.Request) {
@@ -160,9 +166,9 @@ func (c *clientCoordinator) pathGetShards(w http.ResponseWriter, r *http.Request
 	}
 
 	bots := c.Bots
-	for _, bot := range bots {
-		bot.Token = ""
-	}
+	// for _, bot := range bots {
+	// 	bot.Token = ""
+	// }
 
 	jsons, err := json.Marshal(bots)
 	if err != nil {

@@ -68,6 +68,7 @@ type Client struct {
 	httpClient *http.Client
 
 	// Cache
+	Guilds       *[]Guild
 	GuildCache   *cache.Cache
 	ChannelCache *cache.Cache
 	Settings     map[string]cfgSettings // Map guildIDs to settings and cache that shit
@@ -81,6 +82,11 @@ func (c *Client) Run() error {
 	c.Log.Info("Starting Websocket")
 
 	err := c.CreateWebsocket()
+	if err != nil {
+		return err
+	}
+
+	c.Guilds, err = c.getUserGuilds()
 	if err != nil {
 		return err
 	}
@@ -120,7 +126,7 @@ func CCLogin(c *Client) error {
 	c.ShardID = ClientCoordinator.ShardID
 	c.GatewayURL = ClientCoordinator.GatewayURL
 	c.CCHeartbeatInterval = ClientCoordinator.HeartbeatInterval
-	c.Log.Debugf("Websocket: Received from client coordinator: %v", ClientCoordinator)
+	c.Log.Debugf("Websocket: Received from client coordinator: %s", ClientCoordinator.Token)
 	return nil
 }
 
@@ -153,6 +159,7 @@ func CCReady(c *Client) error {
 
 // CCHeartbeat stfu
 func (c *Client) CCHeartbeat() {
+	c.Log.Info("Started sending heartbeat to client coordinator.")
 	interval, err := time.ParseDuration(c.CCHeartbeatInterval)
 	if err != nil {
 		c.Log.Fatal(err)
@@ -190,7 +197,8 @@ func CreateClient(log *logrus.Logger, sharded bool) (c *Client, err error) {
 
 	if sharded {
 		// Set ClientCoordinatorURL and cluster secret
-		c.ClientCoordinatorURL = "http://" + os.Getenv("PEACH_CLIENT_COORDINATOR_SERVICE_HOST") + ":8080/api/"
+		// c.ClientCoordinatorURL = "http://" + os.Getenv("PEACH_CLIENT_COORDINATOR_SERVICE_HOST") + ":8080/api/"
+		c.ClientCoordinatorURL = "http://localhost:8080/api/"
 		c.CLUSTERSECRET = os.Getenv("CLUSTERSECRET")
 
 		err = CCLogin(c)
@@ -235,4 +243,28 @@ func (c *Client) GetGuild(ID string) (g *Guild, err error) {
 	}
 
 	return
+}
+
+// FetchAll retrieves all Guild settings from the database
+func (c *Client) FetchAll() (err error) {
+	if c.Guilds == nil {
+		c.Guilds, err = c.getUserGuilds()
+		if err != nil {
+			return err
+		}
+
+	}
+
+	c.Log.Debug(*c.Guilds)
+
+	for _, guild := range *c.Guilds {
+		err = c.getGuildSettings(guild.ID)
+
+		if err != nil {
+			c.Log.Error(err)
+		}
+	}
+
+	return nil
+
 }

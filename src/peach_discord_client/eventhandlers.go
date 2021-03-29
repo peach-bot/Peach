@@ -45,8 +45,7 @@ func (c *Client) onGuildCreate(ctx *EventGuildCreate) error {
 
 	c.GuildCache.Set(ctx.ID, *ctx.Guild, cache.DefaultExpiration)
 
-	err := c.getGuildSettings(ctx.ID)
-	return err
+	return nil
 }
 
 func (c *Client) onGuildDelete(ctx *EventGuildDelete) error {
@@ -139,7 +138,7 @@ func (c *Client) onMessageCreate(ctx *EventMessageCreate) error {
 	}
 
 	prefix := c.getSetting(ctx.GuildID, "bot", "prefix")
-
+	c.Log.Debugf("Prefix: %s", prefix)
 	if strings.HasPrefix(ctx.Content, prefix) {
 		noPrefix := ctx.Content[1:]
 		invoke := strings.Fields(noPrefix)[0]
@@ -195,14 +194,18 @@ func (c *Client) onReady(ctx *EventReady) error {
 
 	//If sharded start heartbeat and tell client coordinator that client is running
 	if c.Sharded {
+
 		err := CCReady(c)
 		if err != nil {
 			return err
 		}
+
 		go c.CCHeartbeat()
 	}
 
-	return nil
+	err := c.FetchAll()
+
+	return err
 }
 
 func (c *Client) onReconnect(ctx *EventReconnect) error {

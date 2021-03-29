@@ -115,7 +115,7 @@ func (c *Client) DecodeMessage(messageType int, message []byte, invalidSession b
 	decoder := json.NewDecoder(reader)
 	err := decoder.Decode(&e)
 	if err != nil {
-		err = fmt.Errorf("Could not decode Event: %s", err)
+		err = fmt.Errorf("Websocket: Could not decode Event: %s", err)
 		return nil, err
 	}
 
@@ -124,6 +124,15 @@ func (c *Client) DecodeMessage(messageType int, message []byte, invalidSession b
 
 // HandleEvent resolves messages and handles the events included within
 func (c *Client) HandleEvent(e *Event) {
+
+	if e == nil {
+		c.Log.Error("Websocket: Event is nil.")
+	}
+
+	if e.RawData == nil {
+		c.Log.Error("Websocket: RawData is nil.")
+	}
+
 	// Store sequence
 	atomic.StoreInt64(c.Sequence, e.Sequence)
 
@@ -146,10 +155,9 @@ func (c *Client) HandleEvent(e *Event) {
 	if e.Opcode == opcodeDispatch {
 		c.Log.Debugf("Websocket: received event %s from Discord", e.Type)
 		eventtypehandler := eventTypeHandlers[e.Type]
-
 		e.Struct = eventtypehandler.New()
 		if err := json.Unmarshal(e.RawData, &e.Struct); err != nil {
-			c.Log.Errorf("Error unmarshalling %s event, %s", e.Type, err)
+			c.Log.Errorf("Websocket: Error unmarshalling %s event, %s", e.Type, err)
 		}
 
 		eventtypehandler.Handle(c, e.Struct)

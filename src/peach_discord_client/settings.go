@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type cfgOption struct {
@@ -41,13 +42,23 @@ func (c *Client) getGuildSettings(guildID string) error {
 		return err
 	}
 	req = setCCRequestHeaders(c, req)
-	resp, err := tempClient.Do(req)
-	if err != nil {
-		return err
+
+	r := http.Response{}
+	resp := &r
+
+	for {
+		resp, err = tempClient.Do(req)
+		if err != nil || resp.StatusCode == http.StatusInternalServerError {
+			c.Log.Error(err)
+			time.Sleep(1 * time.Second)
+		} else {
+			break
+		}
 	}
+
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		c.Log.Errorf("Websocket received unexpected response from client coordinator. Expected Status 200 OK got %s instead", resp.Status)
+		return fmt.Errorf("Websocket received unexpected response from client coordinator. Expected Status 200 OK got %s instead", resp.Status)
 	}
 
 	settings := cfgSettings{}
@@ -58,6 +69,7 @@ func (c *Client) getGuildSettings(guildID string) error {
 
 	//cache the settings
 	c.Settings[guildID] = settings
+	c.Log.Debug(c.Settings[guildID].Extensions["bot"].Options["prefix"].OptionValue)
 
 	return nil
 }
