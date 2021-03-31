@@ -18,14 +18,6 @@
   version = "v1.4.2"
 
 [[projects]]
-  digest = "1:09cb61dc19af93deae01587e2fdb1c081e0bf48f1a5ad5fa24f48750dc57dce8"
-  name = "github.com/konsorten/go-windows-terminal-sequences"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "edb144dfd453055e1e49a3d8b410a660b5a87613"
-  version = "v1.0.3"
-
-[[projects]]
   digest = "1:808cdddf087fb64baeae67b8dfaee2069034d9704923a3cb8bd96a995421a625"
   name = "github.com/patrickmn/go-cache"
   packages = ["."]
@@ -42,39 +34,40 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:05eebdd5727fea23083fce0d98d307d70c86baed644178e81608aaa9f09ea469"
+  digest = "1:819b22a75ddd43c69965c9582dcab34a077f2d3f543bf8832126b275ea6953e6"
   name = "github.com/sirupsen/logrus"
   packages = ["."]
   pruneopts = "UT"
-  revision = "60c74ad9be0d874af0ab0daef6ab07c5c5911f0d"
-  version = "v1.6.0"
+  revision = "bdc0db8ead3853c56b7cd1ac2ba4e11b47d7da6b"
+  version = "v1.8.1"
 
 [[projects]]
-  digest = "1:2c8bb9a0858e2ab458c1641345b6eaa3754b7ae453f8d30b15701f8b12b7ead7"
+  digest = "1:edb231f4f062fe87e1cc93351e1ee06d4cebf553d1f85f9f3b9b4903df42df20"
   name = "github.com/stretchr/testify"
   packages = ["assert"]
   pruneopts = "UT"
-  revision = "f654a9112bbeac49ca2cd45bfbe11533c4666cf8"
-  version = "v1.6.1"
+  revision = "acba37e5db06f0093b465a7d47822bf13644b66c"
+  version = "v1.7.0"
 
 [[projects]]
   branch = "master"
-  digest = "1:de18db9b6b884884bbb43eafaee3c72a06c8d4ac69d87411c52b5801a5e814f7"
+  digest = "1:b7f5b613b7abdeaf5f9a911cbf2b271db6dfda084d968847f0577fab37977a92"
   name = "golang.org/x/sys"
   packages = [
     "internal/unsafeheader",
     "unix",
+    "windows",
   ]
   pruneopts = "UT"
-  revision = "ddb9806d33aed8dbaac1cd6f1cba58952e87f933"
+  revision = "43e1dd70ce54ee5b1711930029ae5b4926f78f72"
 
 [[projects]]
   branch = "v3"
-  digest = "1:229cb0f6192914f518cc1241ede6d6f1f458b31debfa18bf3a5c9e4f7b01e24b"
+  digest = "1:107a619d3c3bcca214b2b7db810a5dffcd74b5d0262813cb2986e063fae2722f"
   name = "gopkg.in/yaml.v3"
   packages = ["."]
   pruneopts = "UT"
-  revision = "eeeca48fe7764f320e4870d231902bf9c1be2c08"
+  revision = "496545a6307b2a7d7a710fd516e5e16e8ab62dbc"
 
 [solve-meta]
   analyzer-name = "dep"

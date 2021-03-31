@@ -14,7 +14,6 @@ jobs:
   - stage: test
     script:
       - go get golang.org/x/tools/cmd/stringer
-      - go get ./...
       - ./scripts/ensure.sh
       - go generate ./...
       - ./scripts/test.sh

@@ -2,12 +2,12 @@
 
 
 [[projects]]
-  digest = "1:25ebe6496abb289ef977c081b2d49f56dd97c32db4ca083d37f95923909ced02"
+  digest = "1:6078383dbb7405bfa3ce16957f37564e3b716afa29b6eb45ffdb6674624d1e0d"
   name = "github.com/gorilla/mux"
   packages = ["."]
   pruneopts = "UT"
-  revision = "75dcda0896e109a2a22c9315bca3bb21b87b2ba5"
-  version = "v1.7.4"
+  revision = "98cb6bf42e086f6af920b965c38cacc07402d51b"
+  version = "v1.8.0"
 
 [[projects]]
   digest = "1:d0fd048e36f6d46cdb8424cac7109244d73db58a07dff2cb389cb9a6c64499bb"
@@ -25,14 +25,6 @@
   version = "v3.6.2"
 
 [[projects]]
-  digest = "1:09cb61dc19af93deae01587e2fdb1c081e0bf48f1a5ad5fa24f48750dc57dce8"
-  name = "github.com/konsorten/go-windows-terminal-sequences"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "edb144dfd453055e1e49a3d8b410a660b5a87613"
-  version = "v1.0.3"
-
-[[projects]]
   digest = "1:9e1d37b58d17113ec3cb5608ac0382313c5b59470b94ed97d0976e69c7022314"
   name = "github.com/pkg/errors"
   packages = ["."]
@@ -41,12 +33,12 @@
   version = "v0.9.1"
 
 [[projects]]
-  digest = "1:05eebdd5727fea23083fce0d98d307d70c86baed644178e81608aaa9f09ea469"
+  digest = "1:819b22a75ddd43c69965c9582dcab34a077f2d3f543bf8832126b275ea6953e6"
   name = "github.com/sirupsen/logrus"
   packages = ["."]
   pruneopts = "UT"
-  revision = "60c74ad9be0d874af0ab0daef6ab07c5c5911f0d"
-  version = "v1.6.0"
+  revision = "bdc0db8ead3853c56b7cd1ac2ba4e11b47d7da6b"
+  version = "v1.8.1"
 
 [[projects]]
   branch = "master"
@@ -54,21 +46,22 @@
   name = "golang.org/x/crypto"
   packages = ["pbkdf2"]
   pruneopts = "UT"
-  revision = "948cd5f35899cbf089c620b3caeac9b60fa08704"
+  revision = "0c34fe9e7dc2486962ef9867e3edb3503537209f"
 
 [[projects]]
   branch = "master"
-  digest = "1:de18db9b6b884884bbb43eafaee3c72a06c8d4ac69d87411c52b5801a5e814f7"
+  digest = "1:b7f5b613b7abdeaf5f9a911cbf2b271db6dfda084d968847f0577fab37977a92"
   name = "golang.org/x/sys"
   packages = [
     "internal/unsafeheader",
     "unix",
+    "windows",
   ]
   pruneopts = "UT"
-  revision = "ddb9806d33aed8dbaac1cd6f1cba58952e87f933"
+  revision = "43e1dd70ce54ee5b1711930029ae5b4926f78f72"
 
 [[projects]]
-  digest = "1:a978249a0ab76f75e6fbaf0aa8d8aa833c0b2115a5599c964833aeed9b5b7751"
+  digest = "1:1b2318fb4f48c54fd45ab783776bbf05e65e05707f06931ed0eac8022308912f"
   name = "golang.org/x/text"
   packages = [
     "cases",
@@ -94,8 +87,8 @@
     "width",
   ]
   pruneopts = "UT"
-  revision = "23ae387dee1f90d29a23c0e87ee0b46038fbed0e"
-  version = "v0.3.3"
+  revision = "75a595aef632b07c6eeaaa805adb6f0f66e4130e"
+  version = "v0.3.5"
 
 [solve-meta]
   analyzer-name = "dep"
@@ -103,6 +96,7 @@
   input-imports = [
     "github.com/gorilla/mux",
     "github.com/jackc/pgx",
+    "github.com/pkg/errors",
     "github.com/sirupsen/logrus",
   ]
   solver-name = "gps-cdcl"
