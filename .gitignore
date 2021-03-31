@@ -7,3 +7,8 @@ vendor
 build
 node_modules
 launchcfg.json
+scripts/getguildsettings.sql
+
+scripts/getusersettings.sql
+
+TODO.txt

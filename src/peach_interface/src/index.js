@@ -1,12 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+import Dashboard from './dashboard';
+import Background from './background'
+import './css/dashboard.css';
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Router>
+        <Route path = "/dashboard" component={ Dashboard } />
+    </Router>
+    <Background />
   </React.StrictMode>,
   document.getElementById('root')
 );

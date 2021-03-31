@@ -8,6 +8,16 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+body {
+  height: 100vh;
+  background-color: #777;
+}
+
+#root {
+  display: grid;
+  grid-template-columns: 15% 85%;
+  height: 100%;
 }
