@@ -128,7 +128,7 @@ func CCLogin(c *Client) error {
 	c.ShardID = ClientCoordinator.ShardID
 	c.GatewayURL = ClientCoordinator.GatewayURL
 	c.CCHeartbeatInterval = ClientCoordinator.HeartbeatInterval
-	c.Log.Debugf("Websocket: Received from client coordinator: %s", ClientCoordinator)
+	c.Log.Debugf("Websocket: Received from client coordinator: %v", ClientCoordinator)
 	return nil
 }
 
