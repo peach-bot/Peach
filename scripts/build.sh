@@ -10,6 +10,13 @@ build () {
     cp launchcfg.json build/launchcfg.json
     printf "done\n"
 
+    printf "\nCollecting dependencies..."
+    if [[ $args == *"d"* ]]
+    then
+    go mod download
+    fi
+    printf "done\n"
+
     builddiscordclient
     buildcoordinator
     buildlauncher
@@ -72,13 +79,6 @@ buildcoordinator() {
         return
     fi
 
-    if [[ $args == *"d"* ]]
-    then
-        printf "\nCollecting dependencies..."
-        cd src/peach_client_coordinator
-        go get ./... || fail
-        cd ../..
-    fi
     printf "\nCompiling..."
     go build -o build/coordinator.exe ./src/peach_client_coordinator || fail
     if [[ $args == *"i"* ]]
@@ -101,13 +101,6 @@ builddiscordclient() {
         return
     fi
 
-    if [[ $args == *"d"* ]]
-    then
-        printf "\nCollecting dependencies..."
-        cd src/peach_discord_client
-        go get ./... || fail
-        cd ../..
-    fi
     printf "\nCompiling..."
     go build -o build/discordclient.exe ./src/peach_discord_client || fail
     if [[ $args == *"i"* ]]
@@ -130,13 +123,6 @@ buildlauncher() {
         return
     fi
 
-    if [[ $args == *"d"* ]]
-    then
-        printf "\nCollecting dependencies..."
-        cd src/peach_launcher
-        go get ./... || fail
-        cd ../..
-    fi
     printf "\nCompiling..."
     go build -o build/launcher.exe ./src/peach_launcher || fail
     if [[ $args == *"i"* ]]
