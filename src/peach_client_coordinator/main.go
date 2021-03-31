@@ -34,10 +34,11 @@ func main() {
 	l.Info("shard coordinator starting...")
 
 	secret := flag.String("secret", "", "secret")
+	dbc := flag.String("dbc", "", "data base credentials string")
 	flag.Parse()
 	clustersecret = *secret
 
-	createdb(l)
+	createdb(l, *dbc)
 
 	c := new(clientCoordinator)
 	c.log = l

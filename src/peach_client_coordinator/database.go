@@ -16,19 +16,19 @@ type database struct {
 	dbconn *pgx.Conn
 }
 
-func refreshconn() {
+func refreshconn(dbcstring string) {
 	for {
 		if db.dbconn.IsClosed() {
-			createdb(db.log)
+			createdb(db.log, dbcstring)
 			break
 		}
 		time.Sleep(5)
 	}
 }
 
-func createdb(log *logrus.Logger) {
+func createdb(log *logrus.Logger, dbcstring string) {
 	// dbc := strings.Split(os.Getenv("DATABASE"), ", ")
-	dbc := strings.Split("d7fgrduk29kj9i, auelxrhcsfvmky, 369b77800b0e7a4643efa655d00b7d55f91cbfb533a3c59a839e4b8032bd4c19, ec2-18-203-7-163.eu-west-1.compute.amazonaws.com, 5432", ", ")
+	dbc := strings.Split(dbcstring, ", ")
 
 	db = database{log, nil}
 
@@ -58,7 +58,7 @@ func createdb(log *logrus.Logger) {
 		log.Fatal(err)
 	}
 
-	go refreshconn()
+	go refreshconn(dbcstring)
 
 	err = db.prepare()
 	if err != nil {

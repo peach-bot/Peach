@@ -6,3 +6,4 @@ vendor
 *.exe
 build
 node_modules
+launchcfg.json

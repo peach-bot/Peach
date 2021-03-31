@@ -8,7 +8,8 @@
     },
     "clientcoordinator": {
         "launch": true,
-        "port": 8080
+        "port": 8080,
+        "dbc": "database, user, password, host, port"
     },
     "secret": ""
 }
