@@ -13,6 +13,7 @@ spec:
       labels:
         app: discordshard
     spec:
+      restartPolicy: Always
       containers:
       - name: peach-discord-client
         image: sleepyjul/peach-discord-client
