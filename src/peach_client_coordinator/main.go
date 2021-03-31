@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"net/http"
 	"os"
 
@@ -9,7 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var clustersecret string = os.Getenv("CLUSTERSECRET")
+var clustersecret string
 var db database
 
 func createlog() *logrus.Logger {
@@ -31,6 +32,10 @@ func main() {
 	var err error
 	l := createlog()
 	l.Info("shard coordinator starting...")
+
+	secret := flag.String("secret", "", "secret")
+	flag.Parse()
+	clustersecret = *secret
 
 	createdb(l)
 

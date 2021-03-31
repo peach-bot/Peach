@@ -4,6 +4,8 @@ import (
 	"flag"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/patrickmn/go-cache"
@@ -36,8 +38,10 @@ func main() {
 	sharded := flag.Bool("sharded", false, "determines weather bot runs in shards or not")
 	TOKEN := flag.String("token", "", "token override instead of secrets")
 	loglevel := flag.String("log", "info", "declares how verbose the logging should be ('debug', 'info', 'error')")
+	ccURL := flag.String("ccurl", "", "url of the client coordinator")
+	secret := flag.String("secret", "", "secret for communicating with the client coordinator")
 	flag.Parse()
-	log.Infof("Sharded: %t, LogLevel: %s", *sharded, *loglevel)
+	log.Infof("Sharded: %t, LogLevel: %s, coordinator URL: %s", *sharded, *loglevel, *ccURL)
 
 	switch *loglevel {
 	case "debug":
@@ -48,7 +52,10 @@ func main() {
 		log.SetLevel(logrus.ErrorLevel)
 	}
 
-	c, err := CreateClient(log, *sharded)
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, syscall.SIGTERM)
+
+	c, err := CreateClient(log, *sharded, *ccURL, *secret)
 	if err != nil {
 		log.Fatal(err, "\nUnable to create new client, exiting...")
 	}
@@ -83,6 +90,10 @@ func main() {
 		case <-c.Reconnect:
 			c.Log.Info("Reconnecting...")
 		case <-c.Quit:
+			c.Log.Info("Quitting...")
+			return
+		case <-stop:
+			c.Quit <- nil
 			c.Log.Info("Quitting...")
 			return
 		}

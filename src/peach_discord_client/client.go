@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
-	"os"
 	"strconv"
 	"sync"
 	"time"
@@ -114,6 +114,8 @@ func CCLogin(c *Client) error {
 
 	if resp.StatusCode == http.StatusNoContent {
 		return errors.New("Requesting ShardID failed - all shards assigned")
+	} else if resp.StatusCode != http.StatusOK {
+		return errors.New(fmt.Sprintf("ClientCoordinator sent unexpected response: Want 200Ok Got %s", resp.Status))
 	}
 
 	ClientCoordinator := ClientCoordinatorResponse{}
@@ -126,7 +128,7 @@ func CCLogin(c *Client) error {
 	c.ShardID = ClientCoordinator.ShardID
 	c.GatewayURL = ClientCoordinator.GatewayURL
 	c.CCHeartbeatInterval = ClientCoordinator.HeartbeatInterval
-	c.Log.Debugf("Websocket: Received from client coordinator: %s", ClientCoordinator.Token)
+	c.Log.Debugf("Websocket: Received from client coordinator: %s", ClientCoordinator)
 	return nil
 }
 
@@ -187,7 +189,7 @@ func (c *Client) CCHeartbeat() {
 }
 
 // CreateClient creates a new discord client
-func CreateClient(log *logrus.Logger, sharded bool) (c *Client, err error) {
+func CreateClient(log *logrus.Logger, sharded bool, ccURL string, secret string) (c *Client, err error) {
 
 	c = &Client{Sequence: new(int64), Log: log}
 	c.Starttime = time.Now()
@@ -196,10 +198,8 @@ func CreateClient(log *logrus.Logger, sharded bool) (c *Client, err error) {
 	// Parse client coordinator for gateway url and shardID
 
 	if sharded {
-		// Set ClientCoordinatorURL and cluster secret
-		// c.ClientCoordinatorURL = "http://" + os.Getenv("PEACH_CLIENT_COORDINATOR_SERVICE_HOST") + ":8080/api/"
-		c.ClientCoordinatorURL = "http://localhost:8080/api/"
-		c.CLUSTERSECRET = os.Getenv("CLUSTERSECRET")
+		c.ClientCoordinatorURL = ccURL
+		c.CLUSTERSECRET = secret
 
 		err = CCLogin(c)
 		if err != nil {
