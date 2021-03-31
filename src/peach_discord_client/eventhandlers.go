@@ -139,7 +139,7 @@ func (c *Client) onMessageCreate(ctx *EventMessageCreate) error {
 
 	prefix := c.getSetting(ctx.GuildID, "bot", "prefix")
 	c.Log.Debugf("Prefix: %s", prefix)
-	if strings.HasPrefix(ctx.Content, prefix) {
+	if strings.HasPrefix(ctx.Content, prefix) && len(ctx.Content) > 1 {
 		noPrefix := ctx.Content[1:]
 		invoke := strings.Fields(noPrefix)[0]
 		args := strings.Fields(noPrefix)[1:]
