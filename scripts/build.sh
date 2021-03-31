@@ -6,11 +6,11 @@ build () {
     printf "Building project\n"
     mkdir -p build || fail
 
-    printf "\nCopying files..."
+    printf "Copying files..."
     cp launchcfg.json build/launchcfg.json
     printf "done\n"
 
-    printf "\nCollecting dependencies..."
+    printf "Collecting dependencies..."
     if [[ $args == *"d"* ]]
     then
     go mod download

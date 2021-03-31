@@ -4,14 +4,21 @@ import "time"
 
 // Role represents a discord guild role
 type Role struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Color       int    `json:"color"`
-	Hoist       bool   `json:"hoist"`
-	Position    int    `json:"position"`
-	Permissions int    `json:"permissions"`
-	Managed     bool   `json:"managed"`
-	Mentionable bool   `json:"mentionable"`
+	ID          string  `json:"id"`
+	Name        string  `json:"name"`
+	Color       int     `json:"color"`
+	Hoist       bool    `json:"hoist"`
+	Position    int     `json:"position"`
+	Permissions int     `json:"permissions"`
+	Managed     bool    `json:"managed"`
+	Mentionable bool    `json:"mentionable"`
+	Tags        RoleTag `json:"tags,omitempty"`
+}
+
+type RoleTag struct {
+	BotID             string `json:"bot_id,omitempty"`
+	IntegrationID     string `json:"tags,omitempty"`
+	PremiumSubscriber string `json:"premium_subscriber,omitempty"` // Don't use this it's weird!!!!!!!!!
 }
 
 func (c *Client) hasPermission(channelID string, author User, member GuildMember, perm int) (bool, error) {
