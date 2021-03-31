@@ -10,14 +10,14 @@ import (
 
 func (c *Client) onChannelCreate(ctx *EventChannelCreate) error {
 
-	c.ChannelCache.Set(ctx.ID, ctx.Channel, cache.DefaultExpiration)
+	c.ChannelCache.Set(ctx.ID, *ctx.Channel, cache.DefaultExpiration)
 
 	return nil
 }
 
 func (c *Client) onChannelDelete(ctx *EventChannelDelete) error {
 
-	c.ChannelCache.Set(ctx.ID, ctx.Channel, 0)
+	c.ChannelCache.Set(ctx.ID, *ctx.Channel, 0)
 
 	return nil
 }
@@ -28,7 +28,7 @@ func (c *Client) onChannelPinsUpdate(ctx *EventChannelPinsUpdate) error {
 
 func (c *Client) onChannelUpdate(ctx *EventChannelUpdate) error {
 
-	c.ChannelCache.Set(ctx.ID, ctx.Channel, cache.DefaultExpiration)
+	c.ChannelCache.Set(ctx.ID, *ctx.Channel, cache.DefaultExpiration)
 
 	return nil
 }
@@ -43,7 +43,7 @@ func (c *Client) onGuildBanRemove(ctx *EventGuildBanRemove) error {
 
 func (c *Client) onGuildCreate(ctx *EventGuildCreate) error {
 
-	c.GuildCache.Set(ctx.ID, ctx.Guild, cache.DefaultExpiration)
+	c.GuildCache.Set(ctx.ID, *ctx.Guild, cache.DefaultExpiration)
 
 	return nil
 }
@@ -65,6 +65,18 @@ func (c *Client) onGuildEmojisUpdate(ctx *EventGuildEmojisUpdate) error {
 }
 
 func (c *Client) onGuildIntegrationsUpdate(ctx *EventGuildIntegrationsUpdate) error {
+	return nil
+}
+
+func (c *Client) onIntegrationUpdate(ctx *EventIntegrationUpdate) error {
+	return nil
+}
+
+func (c *Client) onIntegrationCreate(ctx *EventIntegrationCreate) error {
+	return nil
+}
+
+func (c *Client) onIntegrationDelete(ctx *EventIntegrationDelete) error {
 	return nil
 }
 
@@ -94,7 +106,7 @@ func (c *Client) onGuildRoleUpdate(ctx *EventGuildRoleUpdate) error {
 
 func (c *Client) onGuildUpdate(ctx *EventGuildUpdate) error {
 
-	c.GuildCache.Set(ctx.ID, ctx.Guild, cache.DefaultExpiration)
+	c.GuildCache.Set(ctx.ID, *ctx.Guild, cache.DefaultExpiration)
 
 	return nil
 }
@@ -113,8 +125,6 @@ func (c *Client) onInviteDelete(ctx *EventInviteDelete) error {
 
 func (c *Client) onMessageCreate(ctx *EventMessageCreate) error {
 
-	var err error
-
 	if ctx.Author.ID != c.User.ID {
 		c.Log.WithFields(logrus.Fields{
 			"author":   ctx.Author.Username,
@@ -123,16 +133,17 @@ func (c *Client) onMessageCreate(ctx *EventMessageCreate) error {
 		}).Debug("Websocket: received message")
 	}
 
-	if strings.HasPrefix(ctx.Content, "!") {
+	if ctx.WebhookID != "" || ctx.Author.Bot {
+		return nil
+	}
+
+	prefix := c.getSetting(ctx.GuildID, "bot", "prefix")
+	c.Log.Debugf("Prefix: %s", prefix)
+	if strings.HasPrefix(ctx.Content, prefix) && len(ctx.Content) > 1 {
 		noPrefix := ctx.Content[1:]
-		command := strings.Fields(noPrefix)[0]
+		invoke := strings.Fields(noPrefix)[0]
 		args := strings.Fields(noPrefix)[1:]
-		switch command {
-		case "clear":
-			err = c.extClearOnMessage(ctx, args)
-		default:
-			err = nil
-		}
+		err := c.runOnMessage(invoke, args, ctx)
 		if err != nil {
 			return fmt.Errorf("Couldn't execute command: %s", err)
 		}
@@ -174,16 +185,27 @@ func (c *Client) onPresenceUpdate(ctx *EventPresenceUpdate) error {
 }
 
 func (c *Client) onReady(ctx *EventReady) error {
+
+	//Cache User object
 	c.User = ctx.User
+
+	//Store session ID
 	c.SessionID = ctx.SessionID
+
+	//If sharded start heartbeat and tell client coordinator that client is running
 	if c.Sharded {
+
 		err := CCReady(c)
 		if err != nil {
 			return err
 		}
+
+		go c.CCHeartbeat()
 	}
 
-	return nil
+	err := c.FetchAll()
+
+	return err
 }
 
 func (c *Client) onReconnect(ctx *EventReconnect) error {

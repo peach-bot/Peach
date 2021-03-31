@@ -1,0 +1,15 @@
+{
+    "clients": {
+        "sharded": true,
+        "shards": 2,
+        "token": "",
+        "loglevel": "info",
+        "coordinator": "http://localhost:8080/api/"
+    },
+    "clientcoordinator": {
+        "launch": true,
+        "port": 8080,
+        "dbc": "database, user, password, host, port"
+    },
+    "secret": ""
+}

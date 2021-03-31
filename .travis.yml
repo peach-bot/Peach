@@ -3,27 +3,14 @@ dist: xenial
 
 language: go
 
-services:
-- docker
-
-install:
-- curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/v1.3.1/skaffold-linux-amd64
-- chmod +x skaffold
-- sudo mv skaffold /usr/local/bin
+go:
+  - 1.13.x
 
 jobs:
   include:
   - stage: test
     script:
-      - go get -d -t ./src/./...
       - go get golang.org/x/tools/cmd/stringer
-      - ./scripts/generate.sh
+      - go mod download
+      - go generate ./...
       - ./scripts/test.sh
-  - stage: deploy
-    script:
-    - if [ $TRAVIS_BRANCH == "master" ] && [ $TRAVIS_PULL_REQUEST == false ]; then
-      docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD;
-      skaffold build --profile push;
-      else
-      skaffold build --profile nopush;
-      fi

@@ -1,20 +1,31 @@
 package main
 
+import "time"
+
 // Role represents a discord guild role
 type Role struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Color       int    `json:"color"`
-	Hoist       bool   `json:"hoist"`
-	Position    int    `json:"position"`
-	Permissions int    `json:"permissions"`
-	Managed     bool   `json:"managed"`
-	Mentionable bool   `json:"mentionable"`
+	ID          string  `json:"id"`
+	Name        string  `json:"name"`
+	Color       int     `json:"color"`
+	Hoist       bool    `json:"hoist"`
+	Position    int     `json:"position"`
+	Permissions int     `json:"permissions"`
+	Managed     bool    `json:"managed"`
+	Mentionable bool    `json:"mentionable"`
+	Tags        RoleTag `json:"tags,omitempty"`
 }
 
-func (c *Client) hasPermission(channelID string, member GuildMember, perm int) (bool, error) {
+type RoleTag struct {
+	BotID             string `json:"bot_id,omitempty"`
+	IntegrationID     string `json:"tags,omitempty"`
+	PremiumSubscriber string `json:"premium_subscriber,omitempty"` // Don't use this it's weird!!!!!!!!!
+}
+
+func (c *Client) hasPermission(channelID string, author User, member GuildMember, perm int) (bool, error) {
 
 	var permissions int
+
+	member.User = author
 
 	channel, err := c.GetChannel(channelID)
 	if err != nil {
@@ -89,4 +100,23 @@ func (c *Client) hasPermission(channelID string, member GuildMember, perm int) (
 		return true, nil
 	}
 	return false, nil
+}
+
+func (c *Client) handleNoPermission(m *Message) error {
+	sorry, err := c.SendMessage(m.ChannelID, NewMessage{":no_entry: It seems like you do not have the permissions to use this command.", false, nil})
+	if err != nil {
+		return err
+	}
+
+	time.Sleep(5 * time.Second)
+
+	err = sorry.delete(c)
+	if err != nil {
+		return err
+	}
+	err = m.delete(c)
+	if err != nil {
+		return err
+	}
+	return nil
 }

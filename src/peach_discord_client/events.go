@@ -101,6 +101,44 @@ type EventGuildIntegrationsUpdate struct {
 	GuildID string `json:"guild_id"`
 }
 
+// EventIntegrationUpdate is sent when an integration is updated.
+type EventIntegrationUpdate struct {
+	User              User    `json:"user"`
+	Type              string  `json:"type"`
+	Syncing           bool    `json:"syncing"`
+	SyncedAt          string  `json:"synced_at"`
+	SubscriberCount   int     `json:"subscriber_count"`
+	RoleID            string  `json:"role_id"`
+	Revoked           bool    `json:"revoked"`
+	Name              string  `json:"name"`
+	ID                string  `json:"id"`
+	ExpireGracePeriod int     `json:"expire_grace_period"`
+	ExpireBehavior    int     `json:"expire_behavior"`
+	Enabled           bool    `json:"enabled"`
+	EnableEmoticons   bool    `json:"enable_emoticons"`
+	Account           Account `json:"account"`
+	GuildID           string  `json:"guild_id"`
+}
+
+// EventIntegrationCreate is sent when an integration is created.
+type EventIntegrationCreate struct {
+	User        User        `json:"user"`
+	Type        string      `json:"type"`
+	Name        string      `json:"name"`
+	ID          string      `json:"id"`
+	Enabled     bool        `json:"enabled"`
+	Application Application `json:"application"`
+	Account     Account     `json:"account"`
+	GuildID     string      `json:"guild_id"`
+}
+
+// EventIntegrationDelete is sent when an integration is deleted.
+type EventIntegrationDelete struct {
+	ID          string      `json:"id"`
+	Application Application `json:"application"`
+	GuildID     string      `json:"guild_id"`
+}
+
 // EventGuildMemberAdd is sent when a new user joins a guild.
 type EventGuildMemberAdd struct {
 	GuildMember

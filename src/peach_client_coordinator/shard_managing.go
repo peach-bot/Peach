@@ -52,6 +52,7 @@ func (c *clientCoordinator) create() error {
 		c.GatewayURL = gwr.URL
 		c.Bots[user.ID] = &Bot{}
 		bot := c.Bots[user.ID]
+		bot.Username = user.Username + "#" + user.Discriminator
 		bot.ShardCount = gwr.Shards
 		bot.Token = token
 		bot.Shards = make(map[int]*Shard)
@@ -97,8 +98,12 @@ func (c *clientCoordinator) nextShard() (*Bot, *Shard) {
 }
 
 func (c *clientCoordinator) shardManager(bot *Bot, shard *Shard) {
-	time.Sleep((30000 * time.Millisecond) - time.Since(shard.LastHeartbeat))
-	ticker := time.NewTicker(30000 * time.Millisecond)
+	interval, err := time.ParseDuration(c.heartbeatInterval)
+	if err != nil {
+		c.log.Fatal(err)
+	}
+	time.Sleep((interval) - time.Since(shard.LastHeartbeat))
+	ticker := time.NewTicker(interval)
 	shard.MissedHeartbeats = 0
 	defer ticker.Stop()
 	for {

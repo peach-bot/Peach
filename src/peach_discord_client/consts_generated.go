@@ -60,26 +60,30 @@ func _() {
 	_ = x[closecodeInvalidAPIVersion-4012]
 	_ = x[closecodeInvalidIntents-4013]
 	_ = x[closecodeDisallowedIntents-4014]
+	_ = x[closecodeReconnect-1001]
 }
 
 const (
-	_closecode_name_0 = "closecodeUnknownErrorclosecodeUnknownOpCodeclosecodeDecodeErrorclosecodeNotAuthenticatedclosecodeAuthenticationFailedclosecodeAlreadyAuthenticated"
-	_closecode_name_1 = "closecodeInvalidSquenceclosecodeRateLimitedclosecodeSessionTimedOutclosecodeInvalidShardclosecodeShardingRequiredclosecodeInvalidAPIVersionclosecodeInvalidIntentsclosecodeDisallowedIntents"
+	_closecode_name_0 = "closecodeReconnect"
+	_closecode_name_1 = "closecodeUnknownErrorclosecodeUnknownOpCodeclosecodeDecodeErrorclosecodeNotAuthenticatedclosecodeAuthenticationFailedclosecodeAlreadyAuthenticated"
+	_closecode_name_2 = "closecodeInvalidSquenceclosecodeRateLimitedclosecodeSessionTimedOutclosecodeInvalidShardclosecodeShardingRequiredclosecodeInvalidAPIVersionclosecodeInvalidIntentsclosecodeDisallowedIntents"
 )
 
 var (
-	_closecode_index_0 = [...]uint8{0, 21, 43, 63, 88, 117, 146}
-	_closecode_index_1 = [...]uint8{0, 23, 43, 67, 88, 113, 139, 162, 188}
+	_closecode_index_1 = [...]uint8{0, 21, 43, 63, 88, 117, 146}
+	_closecode_index_2 = [...]uint8{0, 23, 43, 67, 88, 113, 139, 162, 188}
 )
 
 func (i closecode) String() string {
 	switch {
+	case i == 1001:
+		return _closecode_name_0
 	case 4000 <= i && i <= 4005:
 		i -= 4000
-		return _closecode_name_0[_closecode_index_0[i]:_closecode_index_0[i+1]]
+		return _closecode_name_1[_closecode_index_1[i]:_closecode_index_1[i+1]]
 	case 4007 <= i && i <= 4014:
 		i -= 4007
-		return _closecode_name_1[_closecode_index_1[i]:_closecode_index_1[i+1]]
+		return _closecode_name_2[_closecode_index_2[i]:_closecode_index_2[i+1]]
 	default:
 		return "closecode(" + strconv.FormatInt(int64(i), 10) + ")"
 	}

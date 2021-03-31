@@ -67,10 +67,11 @@ type HeartbeatPayload struct {
 
 // ClientCoordinatorResponse is used to unmarshal the client coordinator response
 type ClientCoordinatorResponse struct {
-	Token       string `json:"token"`
-	TotalShards int    `json:"total_shards"`
-	ShardID     int    `json:"assigned_shard"`
-	GatewayURL  string `json:"gateway_url"`
+	Token             string `json:"token"`
+	TotalShards       int    `json:"total_shards"`
+	ShardID           int    `json:"assigned_shard"`
+	GatewayURL        string `json:"gateway_url"`
+	HeartbeatInterval string `json:"heartbeat_interval"`
 }
 
 // UpdateStatus is sent by the client to indicate a presence or status update.
@@ -176,4 +177,30 @@ type NewMessage struct {
 	Content string      `json:"content,omitempty"`
 	TTS     bool        `json:"tts,omitempty"`
 	Embed   interface{} `json:"embed,omitempty"`
+}
+
+// Account is some weird thing in the undocumented integration events
+type Account struct {
+	Name string `json:"name"`
+	ID   string `json:"id"`
+}
+
+// Application is another weird field in the undocumented INTEGRATION_CREATE event
+type Application struct {
+	Summary     string `json:"summary"`
+	Name        string `json:"name"`
+	ID          string `json:"id"`
+	Icon        string `json:"icon"`
+	Description string `json:"description"`
+	Bot         Bot    `json:"bot"`
+}
+
+// Bot see above
+type Bot struct {
+	Username      string `json:"username"`
+	PublicFlags   int    `json:"public_flags"`
+	ID            string `json:"id"`
+	Discriminator string `json:"discriminator"`
+	IsBot         bool   `json:"bot"`
+	Avatar        string `json:"avatar"`
 }

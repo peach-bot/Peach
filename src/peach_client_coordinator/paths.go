@@ -1,11 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 func (c *clientCoordinator) verifyAuth(w http.ResponseWriter, r *http.Request) error {
@@ -36,10 +39,11 @@ func (c *clientCoordinator) verifyBotShard(w http.ResponseWriter, r *http.Reques
 	}
 
 	bot := c.Bots[botID]
-	shard := bot.Shards[shardID]
 	if bot == nil {
 		return nil, nil, errors.New("invalid bot_id")
 	}
+
+	shard := bot.Shards[shardID]
 	if shard == nil {
 		return nil, nil, errors.New("invalid shard_id")
 	}
@@ -48,59 +52,130 @@ func (c *clientCoordinator) verifyBotShard(w http.ResponseWriter, r *http.Reques
 }
 
 func (c *clientCoordinator) pathLogin(w http.ResponseWriter, r *http.Request) {
+	c.log.Debug("GET called api/login")
 	err := c.verifyAuth(w, r)
 	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		c.log.Infof("GET 401 api/login: %s", err)
 		return
 	}
 
 	c.lock.Lock()
 	bot, shard := c.nextShard()
 	if bot == nil || shard == nil {
+		c.lock.Unlock()
 		w.WriteHeader(http.StatusNoContent)
+		c.log.Info("GET 204 api/ready: all shards assigned")
 		return
 	}
 
-	response := fmt.Sprintf(`{"token": "%s", "total_shards": %d, "assigned_shard": %d, "gateway_url": "%s"}`, bot.Token, bot.ShardCount, shard.ShardID, c.GatewayURL)
+	response := fmt.Sprintf(`{"token": "%s", "total_shards": %d, "assigned_shard": %d, "gateway_url": "%s", "heartbeat_interval": "%s"}`, bot.Token, bot.ShardCount, shard.ShardID, c.GatewayURL, c.heartbeatInterval)
 	shard.Reserved = true
 	c.lock.Unlock()
 	shard.LastHeartbeat = time.Now()
 	go c.shardManager(bot, shard)
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(response))
+	c.log.Info("GET 200 api/login")
 }
 
 func (c *clientCoordinator) pathReady(w http.ResponseWriter, r *http.Request) {
 	err := c.verifyAuth(w, r)
 	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		c.log.Info("GET 401 api/ready")
 		return
 	}
 	_, shard, err := c.verifyBotShard(w, r)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte(err.Error()))
+		c.log.Info("GET 404 api/ready")
 		return
 	}
 	if shard.Active {
 		w.WriteHeader(http.StatusForbidden)
 		w.Write([]byte("Shard already active"))
+		c.log.Info("GET 403 api/ready")
 		return
 	}
 	shard.Active = true
 	w.WriteHeader(http.StatusOK)
+	c.log.Info("GET 200 api/ready")
 }
 
 func (c *clientCoordinator) pathHeartbeat(w http.ResponseWriter, r *http.Request) {
 	err := c.verifyAuth(w, r)
 	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		c.log.Info("GET 401 api/heartbeat")
 		return
 	}
 	_, shard, err := c.verifyBotShard(w, r)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte(err.Error()))
+		c.log.Info("GET 404 api/heartbeat")
 		return
 	}
 	shard.LastHeartbeat = time.Now()
 	shard.MissedHeartbeats = 0
 	w.WriteHeader(http.StatusOK)
+	c.log.Info("GET 200 api/heartbeat")
+}
+
+func (c *clientCoordinator) pathGetServerSettings(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	err := c.verifyAuth(w, r)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		c.log.Infof("GET 401 api/guilds/%s", vars["serverID"])
+		return
+	}
+	_, _, err = c.verifyBotShard(w, r)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte(err.Error()))
+		c.log.Infof("GET 404 api/guilds/%s", vars["serverID"])
+		return
+	}
+
+	s, err := db.getGuildSettings(vars["serverID"])
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		c.log.Errorf("GET 500 api/guilds/%s: %s", vars["serverID"], err)
+		return
+	}
+
+	jsons, err := json.Marshal(*s)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		c.log.Errorf("GET 500 api/guilds/%s: %s", vars["serverID"], err)
+		return
+	}
+	w.Write(jsons)
+	c.log.Infof("GET 200 api/guilds/%s", vars["serverID"])
+}
+
+func (c *clientCoordinator) pathGetShards(w http.ResponseWriter, r *http.Request) {
+	err := c.verifyAuth(w, r)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		c.log.Info("GET 401 api/shards")
+		return
+	}
+
+	bots := c.Bots
+	// for _, bot := range bots {
+	// 	bot.Token = ""
+	// }
+
+	jsons, err := json.Marshal(bots)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		c.log.Errorf("GET 500 api/shards: %s", err)
+		return
+	}
+	w.Write(jsons)
+	c.log.Info("GET 200 api/shards")
 }

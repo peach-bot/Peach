@@ -20,6 +20,9 @@ const (
 	guildRoleUpdateEventType            = "GUILD_ROLE_UPDATE"
 	guildUpdateEventType                = "GUILD_UPDATE"
 	helloEventType                      = "HELLO"
+	integrationCreateEventType          = "INTEGRATION_CREATE"
+	integrationDeleteEventType          = "INTEGRATION_DELETE"
+	integrationUpdateEventType          = "INTEGRATION_UPDATE"
 	inviteCreateEventType               = "INVITE_CREATE"
 	inviteDeleteEventType               = "INVITE_DELETE"
 	messageCreateEventType              = "MESSAGE_CREATE"
@@ -432,6 +435,72 @@ func (eventTypeHandler helloEventTypeHandler) New() interface{} {
 func (eventTypeHandler helloEventTypeHandler) Handle(c *Client, i interface{}) {
 	e := i.(*EventHello)
 	err := c.onHello(e)
+	if err != nil {
+		c.Log.Error(err)
+	}
+}
+
+// integrationCreateEventTypeHandler is an event handler for IntegrationCreate events.
+type integrationCreateEventTypeHandler func(*Client, *EventIntegrationCreate)
+
+// Type returns the event type for IntegrationCreate events.
+func (eventTypeHandler integrationCreateEventTypeHandler) Type() string {
+	return integrationCreateEventType
+}
+
+// New returns a new instance of IntegrationCreate.
+func (eventTypeHandler integrationCreateEventTypeHandler) New() interface{} {
+	return &EventIntegrationCreate{}
+}
+
+// Handle is the handler for IntegrationCreate events.
+func (eventTypeHandler integrationCreateEventTypeHandler) Handle(c *Client, i interface{}) {
+	e := i.(*EventIntegrationCreate)
+	err := c.onIntegrationCreate(e)
+	if err != nil {
+		c.Log.Error(err)
+	}
+}
+
+// integrationDeleteEventTypeHandler is an event handler for IntegrationDelete events.
+type integrationDeleteEventTypeHandler func(*Client, *EventIntegrationDelete)
+
+// Type returns the event type for IntegrationDelete events.
+func (eventTypeHandler integrationDeleteEventTypeHandler) Type() string {
+	return integrationDeleteEventType
+}
+
+// New returns a new instance of IntegrationDelete.
+func (eventTypeHandler integrationDeleteEventTypeHandler) New() interface{} {
+	return &EventIntegrationDelete{}
+}
+
+// Handle is the handler for IntegrationDelete events.
+func (eventTypeHandler integrationDeleteEventTypeHandler) Handle(c *Client, i interface{}) {
+	e := i.(*EventIntegrationDelete)
+	err := c.onIntegrationDelete(e)
+	if err != nil {
+		c.Log.Error(err)
+	}
+}
+
+// integrationUpdateEventTypeHandler is an event handler for IntegrationUpdate events.
+type integrationUpdateEventTypeHandler func(*Client, *EventIntegrationUpdate)
+
+// Type returns the event type for IntegrationUpdate events.
+func (eventTypeHandler integrationUpdateEventTypeHandler) Type() string {
+	return integrationUpdateEventType
+}
+
+// New returns a new instance of IntegrationUpdate.
+func (eventTypeHandler integrationUpdateEventTypeHandler) New() interface{} {
+	return &EventIntegrationUpdate{}
+}
+
+// Handle is the handler for IntegrationUpdate events.
+func (eventTypeHandler integrationUpdateEventTypeHandler) Handle(c *Client, i interface{}) {
+	e := i.(*EventIntegrationUpdate)
+	err := c.onIntegrationUpdate(e)
 	if err != nil {
 		c.Log.Error(err)
 	}
@@ -893,6 +962,12 @@ func handlerForInterface(event interface{}) EventTypeHandler {
 		return guildUpdateEventTypeHandler(v)
 	case func(*Client, *EventHello):
 		return helloEventTypeHandler(v)
+	case func(*Client, *EventIntegrationCreate):
+		return integrationCreateEventTypeHandler(v)
+	case func(*Client, *EventIntegrationDelete):
+		return integrationDeleteEventTypeHandler(v)
+	case func(*Client, *EventIntegrationUpdate):
+		return integrationUpdateEventTypeHandler(v)
 	case func(*Client, *EventInviteCreate):
 		return inviteCreateEventTypeHandler(v)
 	case func(*Client, *EventInviteDelete):
@@ -968,6 +1043,9 @@ func AddEventTypeHandlers() {
 	addEventTypeHandler(guildRoleUpdateEventTypeHandler(nil))
 	addEventTypeHandler(guildUpdateEventTypeHandler(nil))
 	addEventTypeHandler(helloEventTypeHandler(nil))
+	addEventTypeHandler(integrationCreateEventTypeHandler(nil))
+	addEventTypeHandler(integrationDeleteEventTypeHandler(nil))
+	addEventTypeHandler(integrationUpdateEventTypeHandler(nil))
 	addEventTypeHandler(inviteCreateEventTypeHandler(nil))
 	addEventTypeHandler(inviteDeleteEventTypeHandler(nil))
 	addEventTypeHandler(messageCreateEventTypeHandler(nil))
