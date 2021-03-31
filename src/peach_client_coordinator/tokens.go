@@ -1,9 +1,11 @@
 package main
 
+import "context"
+
 var tokens []string
 
 func (c *clientCoordinator) gettokens() {
-	rows, err := db.dbconn.Query("SELECT token FROM tokens ORDER BY priority ASC")
+	rows, err := db.dbconn.Query(context.Background(), "SELECT token FROM tokens ORDER BY priority ASC")
 	if err != nil {
 		c.log.Fatal(err)
 	}

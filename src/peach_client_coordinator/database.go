@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"strings"
 	"time"
@@ -17,7 +18,7 @@ type database struct {
 
 func refreshconn() {
 	for {
-		if !db.dbconn.IsAlive() {
+		if db.dbconn.IsClosed() {
 			createdb(db.log)
 			break
 		}
@@ -44,7 +45,7 @@ func createdb(log *logrus.Logger) {
 	dsn = dsn + " port=" + port
 	dsn = dsn + " sslmode=require"
 
-	conncfg, err := pgx.ParseDSN(dsn)
+	conncfg, err := pgx.ParseConfig(dsn)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -52,7 +53,7 @@ func createdb(log *logrus.Logger) {
 	rp := map[string]string{"application_name": "peach-discord-client"}
 	conncfg.RuntimeParams = rp
 
-	db.dbconn, err = pgx.Connect(conncfg)
+	db.dbconn, err = pgx.ConnectConfig(context.Background(), conncfg)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -65,7 +66,7 @@ func createdb(log *logrus.Logger) {
 	}
 }
 
-func (d *database) buildSettings(rows *pgx.Rows) (*dbSettings, error) {
+func (d *database) buildSettings(rows pgx.Rows) (*dbSettings, error) {
 	settings := dbSettings{Extensions: map[string]dbExtension{}}
 	for rows.Next() {
 		values, err := d.buildMap(rows)
@@ -91,7 +92,7 @@ func (d *database) buildSettings(rows *pgx.Rows) (*dbSettings, error) {
 	return &settings, nil
 }
 
-func (d *database) buildMap(row *pgx.Rows) (map[string]interface{}, error) {
+func (d *database) buildMap(row pgx.Rows) (map[string]interface{}, error) {
 	values, err := row.Values()
 	if err != nil {
 		return nil, errors.Errorf("couldn't retrieve row values: %s", err)
@@ -102,14 +103,14 @@ func (d *database) buildMap(row *pgx.Rows) (map[string]interface{}, error) {
 
 	for i, desc := range descriptions {
 		v := values[i]
-		dvm[desc.Name] = v
+		dvm[string(desc.Name)] = v
 	}
 
 	return dvm, nil
 }
 
 func (d *database) getGuildSettings(guildID string) (*dbSettings, error) {
-	rows, err := d.dbconn.Query(fmt.Sprintf(`
+	rows, err := d.dbconn.Query(context.Background(), fmt.Sprintf(`
 	SELECT  "settingsDefaultGuild"."extID",
 	CASE
 		WHEN "settingsGuild"."guildID" IS NULL THEN
