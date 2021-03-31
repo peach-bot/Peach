@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -26,6 +28,11 @@ func (c *Client) getUserGuilds() (*[]Guild, error) {
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		c.Log.Debug(string(bodyBytes))
+		return nil, errors.New(fmt.Sprintf("Got unexpected response from Discord API: Want: 200 OK Got: %s", resp.Status))
 	}
 
 	var data []Guild

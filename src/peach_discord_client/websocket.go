@@ -158,6 +158,7 @@ func (c *Client) HandleEvent(e *Event) {
 		e.Struct = eventtypehandler.New()
 		if err := json.Unmarshal(e.RawData, &e.Struct); err != nil {
 			c.Log.Errorf("Websocket: Error unmarshalling %s event, %s", e.Type, err)
+			c.Log.Debugf(string(e.RawData))
 		}
 
 		eventtypehandler.Handle(c, e.Struct)
