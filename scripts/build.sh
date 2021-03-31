@@ -5,8 +5,13 @@ build () {
     fi
     printf "Building project\n"
     mkdir -p build || fail
+
+    printf "\nCopying files..."
+    cp launchcfg.json build/launchcfg.json
+    printf "done\n"
+
     builddiscordclient
-    # buildcoordinator
+    buildcoordinator
     buildlauncher
     printf "Build complete\n"
     if [[ $args == *"i"* ]]
@@ -20,11 +25,17 @@ build () {
 }
 
 hash () {
+    mkdir -p scripts/build || fail
     newhash=$(find ./src/$1 -type f -print0  | xargs -0 sha1sum)
     echo $newhash > scripts/build/$1_new.hash
     newhash=$(<scripts/build/$1_new.hash)
     rm scripts/build/$1_new.hash
-    oldhash=$(<scripts/build/$1.hash)
+    if [[ -f "scripts/build/$1.hash" ]];
+    then
+        oldhash=$(<scripts/build/$1.hash)
+    else
+        oldhash=""
+    fi
     if [[ "$oldhash" == "$newhash" ]];
     then
         retval=1
@@ -61,8 +72,6 @@ buildcoordinator() {
         return
     fi
 
-    # printf "\nCopying files"
-    # printf "done"
     if [[ $args == *"d"* ]]
     then
         printf "\nCollecting dependencies..."
@@ -71,11 +80,11 @@ buildcoordinator() {
         cd ../..
     fi
     printf "\nCompiling..."
-    go build -o build/coordinator ./src/peach_client_coordinator || fail
+    go build -o build/coordinator.exe ./src/peach_client_coordinator || fail
     if [[ $args == *"i"* ]]
     then
         waittillstopped
-        cp build/coordinator /usr/local/bin/peach/coordinator || fail
+        cp build/coordinator.exe /usr/local/bin/peach/coordinator || fail
         sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/coordinator || fail
     fi
     printf "\nDone building client coordinator\n"
@@ -92,8 +101,6 @@ builddiscordclient() {
         return
     fi
 
-    # printf "\nCopying files"
-    # printf "done"
     if [[ $args == *"d"* ]]
     then
         printf "\nCollecting dependencies..."
@@ -102,11 +109,11 @@ builddiscordclient() {
         cd ../..
     fi
     printf "\nCompiling..."
-    go build -o build/discordclient ./src/peach_discord_client || fail
+    go build -o build/discordclient.exe ./src/peach_discord_client || fail
     if [[ $args == *"i"* ]]
     then
         waittillstopped
-        cp build/discordclient /usr/local/bin/peach/discordclient || fail
+        cp build/discordclient.exe /usr/local/bin/peach/discordclient || fail
         sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/discordclient || fail
     fi
     printf "\nDone building discord client\n"
@@ -123,12 +130,6 @@ buildlauncher() {
         return
     fi
 
-
-    printf "\nCopying files"
-    
-    cp launchcfg.json build/launchcfg.json
-
-    printf "done"
     if [[ $args == *"d"* ]]
     then
         printf "\nCollecting dependencies..."
@@ -137,7 +138,7 @@ buildlauncher() {
         cd ../..
     fi
     printf "\nCompiling..."
-    go build -o build/launcher ./src/peach_launcher || fail
+    go build -o build/launcher.exe ./src/peach_launcher || fail
     if [[ $args == *"i"* ]]
     then
         waittillstopped

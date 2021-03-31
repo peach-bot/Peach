@@ -1,4 +1,4 @@
-./scripts/build.sh
+./scripts/build.sh $1
 
 function on_exit()
 {
