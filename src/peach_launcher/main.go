@@ -59,6 +59,7 @@ func (l *Launcher) runClient() {
 			fmt.Sprintf("--secret=%s", l.Config.Secret),
 		},
 		Stdout: os.Stdout,
+		Stderr: os.Stderr,
 	}
 	var c Client
 	c.Process = cmd.Process
