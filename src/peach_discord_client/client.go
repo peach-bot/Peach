@@ -16,6 +16,7 @@ import (
 
 // Client represents connection to discord.
 type Client struct {
+	UserAgent string
 
 	// Logger
 	Log *logrus.Logger
@@ -64,8 +65,10 @@ type Client struct {
 	wsMutex sync.Mutex
 	sync.RWMutex
 
-	// HTTP Client
-	httpClient *http.Client
+	// HTTP
+	Ratelimiter *Ratelimiter
+	httpClient  *http.Client
+	httpRetries int
 
 	// Cache
 	Guilds       *[]Guild
@@ -82,11 +85,6 @@ func (c *Client) Run() error {
 	c.Log.Info("Starting Websocket")
 
 	err := c.CreateWebsocket()
-	if err != nil {
-		return err
-	}
-
-	c.Guilds, err = c.getUserGuilds()
 	if err != nil {
 		return err
 	}
@@ -194,6 +192,7 @@ func CreateClient(log *logrus.Logger, sharded bool, ccURL string, secret string)
 	c = &Client{Sequence: new(int64), Log: log}
 	c.Starttime = time.Now()
 	c.Settings = make(map[string]cfgSettings)
+	c.Ratelimiter = CreateRatelimiter()
 
 	// Parse client coordinator for gateway url and shardID
 
@@ -248,14 +247,12 @@ func (c *Client) GetGuild(ID string) (g *Guild, err error) {
 // FetchAll retrieves all Guild settings from the database
 func (c *Client) FetchAll() (err error) {
 	if c.Guilds == nil {
-		c.Guilds, err = c.getUserGuilds()
+		c.Guilds, err = c.GetUserGuilds()
 		if err != nil {
 			return err
 		}
 
 	}
-
-	c.Log.Debug(*c.Guilds)
 
 	for _, guild := range *c.Guilds {
 		err = c.getGuildSettings(guild.ID)

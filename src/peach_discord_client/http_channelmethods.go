@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strconv"
 
@@ -15,26 +14,14 @@ import (
 func (c *Client) getChannel(channelid string) (*Channel, error) {
 
 	// Send Request
-	req, err := http.NewRequest("GET", EndpointChannel(channelid), *new(io.Reader))
+	_, body, err := c.Request("GET", EndpointChannel(channelid), nil)
 	if err != nil {
 		return nil, err
-	}
-
-	req = c.SetDefaultRequestHeaders(req)
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	// Decode Body
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
 	}
 
 	data := new(Channel)
 
-	err = json.Unmarshal(bodyBytes, data)
+	err = json.Unmarshal(body, data)
 	if err != nil {
 		return nil, err
 	}
@@ -62,26 +49,19 @@ func (c *Client) GetChannelMessages(channelid string, around string, before stri
 	}
 
 	// Send Request
-	req, err := http.NewRequest("GET", EndpointChannelMessages(channelid)+args, *new(io.Reader))
+	resp, body, err := c.Request("GET", EndpointChannelMessages(channelid)+args, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	req = c.SetDefaultRequestHeaders(req)
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	// Decode Body
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
+	if resp.StatusCode != http.StatusOK {
+		c.Log.Debugf("GetChannelMessages: %s", ErrUnexpectedStatus(http.StatusOK, resp.StatusCode).Error())
+		return nil, ErrUnexpectedStatus(http.StatusOK, resp.StatusCode)
 	}
 
 	data := new([]Message)
 
-	err = json.Unmarshal(bodyBytes, data)
+	err = json.Unmarshal(body, data)
 	if err != nil {
 		return nil, err
 	}
@@ -93,20 +73,13 @@ func (c *Client) GetChannelMessages(channelid string, around string, before stri
 func (c *Client) DeleteMessage(channelID, messageID string) error {
 
 	// Send Request
-	req, err := http.NewRequest("DELETE", EndpointChannelMessage(channelID, messageID), *new(io.Reader))
-	if err != nil {
-		return err
-	}
-
-	req = c.SetDefaultRequestHeaders(req)
-
-	resp, err := c.httpClient.Do(req)
+	resp, _, err := c.Request("DELETE", EndpointChannelMessage(channelID, messageID), *new(io.Reader))
 	if err != nil {
 		return err
 	}
 
 	if resp.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("BulkDeleteMessages: unexpected response code. Want: 204 No Content, Got: %s instead", resp.Status)
+		return fmt.Errorf("DeleteMessage: unexpected response code. Want: 204 No Content, Got: %s instead", resp.Status)
 	}
 
 	return nil
@@ -121,25 +94,18 @@ func (c *Client) SendMessage(channelid string, message NewMessage) (*Message, er
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", EndpointChannelMessages(channelid), bytes.NewBuffer(body))
+	resp, body, err := c.Request("POST", EndpointChannelMessages(channelid), bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
 	}
 
-	req = c.SetDefaultRequestHeaders(req)
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	// Decode Body
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
+	if resp.StatusCode != http.StatusCreated {
+		c.Log.Debugf("SendMessage: %s", ErrUnexpectedStatus(http.StatusCreated, resp.StatusCode).Error())
+		return nil, ErrUnexpectedStatus(http.StatusCreated, resp.StatusCode)
 	}
 
 	sentMessage := new(Message)
-	err = json.Unmarshal(bodyBytes, sentMessage)
+	err = json.Unmarshal(body, sentMessage)
 	if err != nil {
 		return nil, err
 	}
@@ -150,30 +116,26 @@ func (c *Client) SendMessage(channelid string, message NewMessage) (*Message, er
 // BulkDeleteMessages deletes a lot of messages in a single request, duh
 func (c *Client) BulkDeleteMessages(channelid string, messages []string) error {
 
-	bodystruct := struct {
+	if len(messages) == 0 {
+		return nil
+	}
+
+	if len(messages) == 1 {
+		return c.DeleteMessage(channelid, messages[0])
+	}
+
+	body := struct {
 		Messages []string `json:"messages"`
 	}{messages}
 
-	// Send Request
-	body, err := json.Marshal(bodystruct)
-	if err != nil {
-		return err
-	}
-
-	req, err := http.NewRequest("POST", EndpointChannelMessagesBulkDelete(channelid), bytes.NewBuffer(body))
-	if err != nil {
-		return err
-	}
-
-	req = c.SetDefaultRequestHeaders(req)
-
-	resp, err := c.httpClient.Do(req)
+	resp, _, err := c.Request("POST", EndpointChannelMessagesBulkDelete(channelid), body)
 	if err != nil {
 		return err
 	}
 
 	if resp.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("BulkDeleteMessages: unexpected response code. Want: 204 No Content, Got: %s instead", resp.Status)
+		c.Log.Debugf("BulkDeleteMessages: %s", ErrUnexpectedStatus(http.StatusNoContent, resp.StatusCode).Error())
+		return ErrUnexpectedStatus(http.StatusNoContent, resp.StatusCode)
 	}
 
 	return nil
