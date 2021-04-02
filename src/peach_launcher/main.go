@@ -49,9 +49,9 @@ type Config struct {
 
 func (l *Launcher) runClient() {
 	cmd := &exec.Cmd{
-		Path: "./discordclient",
+		Path: "./discordclient.exe",
 		Args: []string{
-			"./discordclient",
+			"./discordclient.exe",
 			fmt.Sprintf("--log=%s", l.Config.Clients.LogLevel),
 			fmt.Sprintf("--sharded=%t", l.Config.Clients.Sharded),
 			fmt.Sprintf("--token=%s", l.Config.Clients.Token),
@@ -74,9 +74,9 @@ func (l *Launcher) runClient() {
 
 func (l *Launcher) runCoordinator() {
 	cmd := &exec.Cmd{
-		Path: "./coordinator",
+		Path: "./coordinator.exe",
 		Args: []string{
-			"./coordinator",
+			"./coordinator.exe",
 			fmt.Sprintf("--secret=%s", l.Config.Secret),
 			fmt.Sprintf("--dbc=%s", l.Config.Clientcoordinator.DBCredentials),
 		},
