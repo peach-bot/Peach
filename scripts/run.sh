@@ -9,4 +9,4 @@ trap "on_exit" 2
 echo "Running launcher"
 
 cd build
-./launcher
+./launcher.exe
