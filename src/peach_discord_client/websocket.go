@@ -293,6 +293,7 @@ func (c *Client) Identify() error {
 	data.Token = c.TOKEN
 	data.Compress = c.Compress
 	data.LargeThreshold = c.LargeThreshold
+	data.Intents = 32767
 	data.Properties.OS = runtime.GOOS
 	data.Properties.Browser = "Peach" + VERSION
 	data.Properties.Device = "Peach" + VERSION

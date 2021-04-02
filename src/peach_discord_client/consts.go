@@ -107,3 +107,21 @@ const (
 	permissionManageWebhooks      = 0x20000000
 	permissionManageEmojis        = 0x40000000
 )
+
+const (
+	intentGuilds uint16 = 1 << iota
+	intentGuildMembers
+	intentGuildBans
+	intentGuildEmojis
+	intentGuildIntegrations
+	intentGuildWebhooks
+	intentGuildInvites
+	intentGuildVoiceStates
+	intentGuildPresences
+	intentGuildMessages
+	intentGuildMessageReactions
+	intentGuildMessageTyping
+	intentDirectMessages
+	intentDirectMessageReactions
+	intentDirectMessageTyping
+)

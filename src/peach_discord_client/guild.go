@@ -9,12 +9,10 @@ type Guild struct {
 	DiscoverySplash             string            `json:"discovery_splash"`
 	IsOwner                     bool              `json:"owner,omitempty"`
 	OwnerID                     string            `json:"owner_id"`
-	Permissions                 int               `json:"permissions,omitempty"`
+	Permissions                 string            `json:"permissions,omitempty"`
 	Region                      string            `json:"region"`
 	AFKChannelID                string            `json:"afk_channel_id"`
 	AFKTimeout                  int               `json:"afk_timeout"`
-	EmbedEnabled                bool              `json:"embed_enabled,omitempty"`
-	EmbedChannelID              string            `json:"embed_channel_id,omitempty"`
 	VerificationLevel           int               `json:"verification_level"`
 	DefaultMessageNotifications int               `json:"default_message_notifications"`
 	ExplicitContentFilter       int               `json:"explicit_content_filter"`

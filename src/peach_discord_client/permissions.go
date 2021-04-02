@@ -1,6 +1,9 @@
 package main
 
-import "time"
+import (
+	"strconv"
+	"time"
+)
 
 // Role represents a discord guild role
 type Role struct {
@@ -9,7 +12,7 @@ type Role struct {
 	Color       int     `json:"color"`
 	Hoist       bool    `json:"hoist"`
 	Position    int     `json:"position"`
-	Permissions int     `json:"permissions"`
+	Permissions string  `json:"permissions"`
 	Managed     bool    `json:"managed"`
 	Mentionable bool    `json:"mentionable"`
 	Tags        RoleTag `json:"tags,omitempty"`
@@ -46,16 +49,20 @@ func (c *Client) hasPermission(channelID string, author User, member GuildMember
 	}
 
 	for _, role := range guild.Roles {
+		intPerm, err := strconv.Atoi(role.Permissions)
+		if err != nil {
+			c.Log.Errorf("Major fucky wucky in c.hasPermission: %s", err.Error())
+		}
 
 		// @everone permissions
 		if role.ID == guild.ID {
-			permissions |= role.Permissions
+			permissions |= intPerm
 		}
 
 		// role permissions
 		for _, roleid := range member.Roles {
 			if role.ID == *roleid {
-				permissions |= role.Permissions
+				permissions |= intPerm
 			}
 		}
 	}
@@ -72,8 +79,16 @@ func (c *Client) hasPermission(channelID string, author User, member GuildMember
 	// @everyone overwrites
 	for _, overwrite := range channel.PermissionOverwrites {
 		if overwrite.ID == guild.ID {
-			permissions &= ^overwrite.Deny
-			permissions |= overwrite.Allow
+			intPerm, err := strconv.Atoi(overwrite.Deny)
+			if err != nil {
+				c.Log.Errorf("Major fucky wucky in c.hasPermission: %s", err.Error())
+			}
+			permissions &= ^intPerm
+			intPerm, err = strconv.Atoi(overwrite.Allow)
+			if err != nil {
+				c.Log.Errorf("Major fucky wucky in c.hasPermission: %s", err.Error())
+			}
+			permissions |= intPerm
 		}
 	}
 
@@ -81,8 +96,16 @@ func (c *Client) hasPermission(channelID string, author User, member GuildMember
 	for _, overwrite := range channel.PermissionOverwrites {
 		for _, roleid := range member.Roles {
 			if overwrite.ID == *roleid {
-				permissions &= ^overwrite.Deny
-				permissions |= overwrite.Allow
+				intPerm, err := strconv.Atoi(overwrite.Deny)
+				if err != nil {
+					c.Log.Errorf("Major fucky wucky in c.hasPermission: %s", err.Error())
+				}
+				permissions &= ^intPerm
+				intPerm, err = strconv.Atoi(overwrite.Allow)
+				if err != nil {
+					c.Log.Errorf("Major fucky wucky in c.hasPermission: %s", err.Error())
+				}
+				permissions |= intPerm
 			}
 		}
 	}
@@ -90,8 +113,16 @@ func (c *Client) hasPermission(channelID string, author User, member GuildMember
 	// member specific overwrites
 	for _, overwrite := range channel.PermissionOverwrites {
 		if overwrite.ID == member.User.ID {
-			permissions &= ^overwrite.Deny
-			permissions |= overwrite.Allow
+			intPerm, err := strconv.Atoi(overwrite.Deny)
+			if err != nil {
+				c.Log.Errorf("Major fucky wucky in c.hasPermission: %s", err.Error())
+			}
+			permissions &= ^intPerm
+			intPerm, err = strconv.Atoi(overwrite.Allow)
+			if err != nil {
+				c.Log.Errorf("Major fucky wucky in c.hasPermission: %s", err.Error())
+			}
+			permissions |= intPerm
 		}
 	}
 

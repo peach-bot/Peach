@@ -76,10 +76,10 @@ type ClientCoordinatorResponse struct {
 
 // UpdateStatus is sent by the client to indicate a presence or status update.
 type UpdateStatus struct {
-	Since    int      `json:"since"`  // unix time in ms or null
-	Activity Activity `json:"game"`   // the clients new activity or null
-	Status   string   `json:"status"` // the clients new status
-	AFK      bool     `json:"afk"`    // whether the client is afk or not
+	Since    int        `json:"since"`                // unix time in ms or null
+	Activity []Activity `json:"activities,omitempty"` // the clients new activity or null
+	Status   string     `json:"status"`               // the clients new status
+	AFK      bool       `json:"afk"`                  // whether the client is afk or not
 }
 
 // Activity represence a discord status activity
@@ -144,14 +144,10 @@ type ClientStatus struct {
 // PresenceUpdate represents an update to a user's current state on a guild
 type PresenceUpdate struct {
 	User         User         `json:"user"`
-	Roles        []string     `json:"roles"`
-	Game         Activity     `json:"game,omitempty"`
 	GuildID      string       `json:"guild_id"`
 	Status       string       `json:"status"`
 	Activities   []*Activity  `json:"activities"`
 	ClientStatus ClientStatus `json:"client_status"`
-	NitroSince   string       `json:"premium_since,omitempty"`
-	Nickname     string       `json:"nick,omitempty"`
 }
 
 // Event provides a basic initial struct for all websocket events.
