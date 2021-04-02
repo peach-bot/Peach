@@ -5,6 +5,7 @@ type Guild struct {
 	ID                          string            `json:"id"`
 	Name                        string            `json:"name"`
 	Icon                        string            `json:"icon"`
+	IconHash                    string            `json:"icon_hash"`
 	Splash                      string            `json:"splash"`
 	DiscoverySplash             string            `json:"discovery_splash"`
 	IsOwner                     bool              `json:"owner,omitempty"`
@@ -13,6 +14,8 @@ type Guild struct {
 	Region                      string            `json:"region"`
 	AFKChannelID                string            `json:"afk_channel_id"`
 	AFKTimeout                  int               `json:"afk_timeout"`
+	WidgetEnabled               bool              `json:"widget_enabled,omitempty"`
+	WidgetChannelID             string            `json:"widget_channel_id,omitempty"`
 	VerificationLevel           int               `json:"verification_level"`
 	DefaultMessageNotifications int               `json:"default_message_notifications"`
 	ExplicitContentFilter       int               `json:"explicit_content_filter"`
@@ -21,8 +24,6 @@ type Guild struct {
 	Features                    []string          `json:"features"`
 	MFALevel                    int               `json:"mfa_level"`
 	ApplicationID               string            `json:"application_id"`
-	WidgetEnabled               bool              `json:"widget_enabled,omitempty"`
-	WidgetChannelID             string            `json:"widget_channel_id,omitempty"`
 	SystemChannelID             string            `json:"system_channel_id"`
 	SystemChannelFlags          int               `json:"system_channel_flags"`
 	RulesChannelID              string            `json:"rules_channel_id"`
@@ -43,6 +44,22 @@ type Guild struct {
 	Boosts                      int               `json:"premium_subscription_count,omitempty"`
 	PreferredLanguage           string            `json:"preferred_locale"`
 	PublicUpdatesChannelID      string            `json:"public_updates_channel_id"`
+	MaxVideoChannelUsers        int               `json:"max_video_channel_users,omitempty"`
+	ApproximateMemberCount      int               `json:"approximate_member_count,omitempty"`
+	ApproximatePresenceCount    int               `json:"approximate_presence_count,omitempty"`
+	WelcomeScreen               WelcomeScreen     `json:"welcome_screen,omitempty"`
+}
+
+type WelcomeScreen struct {
+	Description     string            `json:"description"`
+	WelcomeChannels []*WelcomeChannel `json:"welcome_channels"`
+}
+
+type WelcomeChannel struct {
+	ChannelID   string `json:"channel_id"`
+	Description string `json:"description"`
+	EmojiID     string `json:"emoji_id"`
+	EmojiName   string `json:"emoji_name"`
 }
 
 // UnavailableGuild represents an Offline Guild, or a Guild whose information has
