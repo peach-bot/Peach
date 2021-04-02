@@ -46,23 +46,4 @@ To leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/
  - [ ] Twitch, YouTube, Mixer announcements (Lifestreams and videos)
  - [ ] Minecraft server showcase (ip, current players)
 
-## Contributors 
-
-These wonderful people helped realize this project ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore -->
-<table>
-  <tr>
-    <td align="center"><a href="https://yannickfricke.de"><img src="https://avatars2.githubusercontent.com/u/591450?v=4" width="100px;" alt="Yannick Fricke"/><br /><sub><b>Yannick Fricke</b></sub></a><br /><a href="#platform-YannickFricke" title="Packaging/porting to new platform">📦</a></td>
-    <td align="center"><a href="https://github.com/Square789"><img src="https://avatars0.githubusercontent.com/u/46634729?v=4" width="100px;" alt="Square789"/><br /><sub><b>Square789</b></sub></a><br /><a href="https://github.com/peach-bot/Peach/commits?author=Square789" title="Code">💻</a></td>
-  </tr>
-</table>
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
-
-##
-
 Discord client heavily inspired by [bwmarrin/discordgo](https://github.com/bwmarrin/discordgo).
