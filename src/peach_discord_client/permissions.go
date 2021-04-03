@@ -34,7 +34,7 @@ func (c *Client) hasPermission(channelID string, author User, member GuildMember
 	if err != nil {
 		return false, err
 	}
-	guild, err := c.getGuild(channel.GuildID)
+	guild, err := c.GetGuild(channel.GuildID)
 	if err != nil {
 		return false, err
 	}

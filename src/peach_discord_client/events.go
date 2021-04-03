@@ -103,33 +103,12 @@ type EventGuildIntegrationsUpdate struct {
 
 // EventIntegrationUpdate is sent when an integration is updated.
 type EventIntegrationUpdate struct {
-	User              User    `json:"user"`
-	Type              string  `json:"type"`
-	Syncing           bool    `json:"syncing"`
-	SyncedAt          string  `json:"synced_at"`
-	SubscriberCount   int     `json:"subscriber_count"`
-	RoleID            string  `json:"role_id"`
-	Revoked           bool    `json:"revoked"`
-	Name              string  `json:"name"`
-	ID                string  `json:"id"`
-	ExpireGracePeriod int     `json:"expire_grace_period"`
-	ExpireBehavior    int     `json:"expire_behavior"`
-	Enabled           bool    `json:"enabled"`
-	EnableEmoticons   bool    `json:"enable_emoticons"`
-	Account           Account `json:"account"`
-	GuildID           string  `json:"guild_id"`
+	*Integration
 }
 
 // EventIntegrationCreate is sent when an integration is created.
 type EventIntegrationCreate struct {
-	User        User        `json:"user"`
-	Type        string      `json:"type"`
-	Name        string      `json:"name"`
-	ID          string      `json:"id"`
-	Enabled     bool        `json:"enabled"`
-	Application Application `json:"application"`
-	Account     Account     `json:"account"`
-	GuildID     string      `json:"guild_id"`
+	*Integration
 }
 
 // EventIntegrationDelete is sent when an integration is deleted.
@@ -183,17 +162,17 @@ type EventGuildRoleDelete struct {
 
 // EventInviteCreate is sent when a new invite to a channel is created.
 type EventInviteCreate struct {
-	ChannelID      string `json:"channel_id"`
-	Code           string `json:"code"`
-	CreatedAt      int    `json:"created_at"`
-	GuildID        string `json:"guild_id,omitempty"`
-	Inviter        User   `json:"inviter,omitempty"`
-	MaxAge         int    `json:"max_age"`
-	MaxUses        int    `json:"max_uses"`
-	TargetUser     User   `json:"target_user,omitempty"`
-	TargetUserType int    `json:"target_user_type,omitempty"`
-	Temporary      bool   `json:"temporary"`
-	Uses           int    `json:"uses"`
+	ChannelID      string    `json:"channel_id"`
+	Code           string    `json:"code"`
+	CreatedAt      Timestamp `json:"created_at"`
+	GuildID        string    `json:"guild_id,omitempty"`
+	Inviter        User      `json:"inviter,omitempty"`
+	MaxAge         int       `json:"max_age"`
+	MaxUses        int       `json:"max_uses"`
+	TargetUser     User      `json:"target_user,omitempty"`
+	TargetUserType int       `json:"target_user_type,omitempty"`
+	Temporary      bool      `json:"temporary"`
+	Uses           int       `json:"uses"`
 }
 
 // EventInviteDelete is sent when an invite is deleted.

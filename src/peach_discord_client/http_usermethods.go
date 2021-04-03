@@ -15,8 +15,9 @@ func (c *Client) GetUserGuilds() (*[]Guild, error) {
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		c.Log.Debugf("GetUserGuilds: %s", ErrUnexpectedStatus(http.StatusOK, resp.StatusCode).Error())
-		return nil, ErrUnexpectedStatus(http.StatusOK, resp.StatusCode)
+		err = ErrUnexpectedStatus(http.StatusOK, resp.StatusCode)
+		c.Log.Debugf("GetUserGuilds: %s", err.Error())
+		return nil, err
 	}
 
 	var data []Guild

@@ -55,8 +55,9 @@ func (c *Client) GetChannelMessages(channelid string, around string, before stri
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		c.Log.Debugf("GetChannelMessages: %s", ErrUnexpectedStatus(http.StatusOK, resp.StatusCode).Error())
-		return nil, ErrUnexpectedStatus(http.StatusOK, resp.StatusCode)
+		err = ErrUnexpectedStatus(http.StatusOK, resp.StatusCode)
+		c.Log.Debugf("GetChannelMessages: %s", err.Error())
+		return nil, err
 	}
 
 	data := new([]Message)
@@ -100,8 +101,9 @@ func (c *Client) SendMessage(channelid string, message NewMessage) (*Message, er
 	}
 
 	if resp.StatusCode != http.StatusCreated {
-		c.Log.Debugf("SendMessage: %s", ErrUnexpectedStatus(http.StatusCreated, resp.StatusCode).Error())
-		return nil, ErrUnexpectedStatus(http.StatusCreated, resp.StatusCode)
+		err = ErrUnexpectedStatus(http.StatusCreated, resp.StatusCode)
+		c.Log.Debugf("SendMessage: %s", err.Error())
+		return nil, err
 	}
 
 	sentMessage := new(Message)
@@ -134,8 +136,9 @@ func (c *Client) BulkDeleteMessages(channelid string, messages []string) error {
 	}
 
 	if resp.StatusCode != http.StatusNoContent {
-		c.Log.Debugf("BulkDeleteMessages: %s", ErrUnexpectedStatus(http.StatusNoContent, resp.StatusCode).Error())
-		return ErrUnexpectedStatus(http.StatusNoContent, resp.StatusCode)
+		err = ErrUnexpectedStatus(http.StatusNoContent, resp.StatusCode)
+		c.Log.Debugf("BulkDeleteMessages: %s", err.Error())
+		return err
 	}
 
 	return nil

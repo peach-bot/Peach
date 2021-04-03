@@ -7,6 +7,7 @@ package main
 
 import (
 	"encoding/json"
+	"time"
 )
 
 // IdentifyPayload is used to create an identify message
@@ -87,7 +88,7 @@ type Activity struct {
 	Name          string             `json:"name"`
 	Type          activitytype       `json:"type"`
 	URL           string             `json:"url,omitempty"`
-	CreatedAt     int                `json:"created_at"`
+	CreatedAt     Timestamp          `json:"created_at"`
 	Timestamps    ActivityTimestamps `json:"timestamps,omitempty"`
 	ApplicationID string             `json:"application_id,omitempty"`
 	Details       string             `json:"details,omitempty"`
@@ -179,6 +180,12 @@ type NewMessage struct {
 type Account struct {
 	Name string `json:"name"`
 	ID   string `json:"id"`
+}
+
+type Timestamp string
+
+func (t Timestamp) Parse() (time.Time, error) {
+	return time.Parse(time.RFC3339, string(t))
 }
 
 // Application is another weird field in the undocumented INTEGRATION_CREATE event

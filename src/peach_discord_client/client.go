@@ -237,7 +237,7 @@ func (c *Client) GetGuild(ID string) (g *Guild, err error) {
 		guild := cachedGuild.(Guild)
 		g = &guild
 	} else {
-		g, err = c.getGuild(ID)
+		g, err = c.getGuild(ID, true)
 		return
 	}
 
