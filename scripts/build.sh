@@ -23,6 +23,7 @@ build () {
     printf "Build complete\n"
     if [[ $args == *"i"* ]]
     then
+        waittillstopped
         cp build/. /home/peach -r || fail
         cp peach.service /etc/systemd/system/peach.service
         sudo systemctl systemctl daemon-reload
@@ -83,12 +84,6 @@ buildcoordinator() {
 
     printf "\nCompiling..."
     go build -o build/coordinator.exe ./src/peach_client_coordinator || fail
-    if [[ $args == *"i"* ]]
-    then
-        waittillstopped
-        cp build/coordinator.exe /usr/local/bin/peach/coordinator || fail
-        sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/coordinator || fail
-    fi
     printf "\nDone building client coordinator\n"
 }
 
@@ -105,12 +100,6 @@ builddiscordclient() {
 
     printf "\nCompiling..."
     go build -o build/discordclient.exe ./src/peach_discord_client || fail
-    if [[ $args == *"i"* ]]
-    then
-        waittillstopped
-        cp build/discordclient.exe /usr/local/bin/peach/discordclient || fail
-        sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/discordclient || fail
-    fi
     printf "\nDone building discord client\n"
 }
 
@@ -127,12 +116,6 @@ buildlauncher() {
 
     printf "\nCompiling..."
     go build -o build/launcher.exe ./src/peach_launcher || fail
-    if [[ $args == *"i"* ]]
-    then
-        waittillstopped
-        cp build/launcher /usr/local/bin/peach/launcher || fail
-        sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/launcher || fail
-    fi
     printf "\nDone building launcher\n"
 }
 
