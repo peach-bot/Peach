@@ -2,14 +2,13 @@ package main
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
 )
 
 func (c *Client) GetUserGuilds() (*[]Guild, error) {
 
 	// Send Request
-	resp, body, err := c.Request("GET", EndpointUserGuilds("@me"), *new(io.Reader))
+	resp, body, err := c.Request("GET", EndpointUserGuilds("@me"), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -20,12 +19,12 @@ func (c *Client) GetUserGuilds() (*[]Guild, error) {
 		return nil, err
 	}
 
-	var data []Guild
+	guild := new([]Guild)
 
-	err = json.Unmarshal(body, &data)
+	err = json.Unmarshal(body, guild)
 	if err != nil {
 		return nil, err
 	}
 
-	return &data, nil
+	return guild, nil
 }
