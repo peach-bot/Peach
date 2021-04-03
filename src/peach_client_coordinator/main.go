@@ -35,6 +35,7 @@ func main() {
 
 	secret := flag.String("secret", "", "secret")
 	dbc := flag.String("dbc", "", "data base credentials string")
+	port := flag.String("port", "5000", "port the client coordinator should run on")
 	flag.Parse()
 	clustersecret = *secret
 
@@ -62,7 +63,7 @@ func main() {
 	// run
 	done := make(chan bool)
 
-	go http.ListenAndServe(":8080", r)
+	go http.ListenAndServe(":"+*port, r)
 
 	// log ready
 	l.Info("shard coordinator online")

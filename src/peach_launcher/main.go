@@ -41,7 +41,7 @@ type Config struct {
 	} `json:"clients"`
 	Clientcoordinator struct {
 		Launch        bool   `json:"launch"`
-		Port          int    `json:"port"`
+		Port          string `json:"port"`
 		DBCredentials string `json:"dbc"`
 	} `json:"clientcoordinator"`
 	Secret string `json:"secret"`
@@ -79,6 +79,7 @@ func (l *Launcher) runCoordinator() {
 			"./coordinator.exe",
 			fmt.Sprintf("--secret=%s", l.Config.Secret),
 			fmt.Sprintf("--dbc=%s", l.Config.Clientcoordinator.DBCredentials),
+			fmt.Sprintf("--port=%s", l.Config.Clientcoordinator.Port),
 		},
 		Stdout: os.Stdout,
 	}
