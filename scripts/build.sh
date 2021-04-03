@@ -24,6 +24,8 @@ build () {
     if [[ $args == *"i"* ]]
     then
         cp build/. /home/peach -r || fail
+        cp peach.service /etc/systemd/system/peach.service
+        sudo systemctl systemctl daemon-reload
     fi
     if [[ $args == *"r"* ]]
     then
