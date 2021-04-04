@@ -43,6 +43,8 @@ type Config struct {
 		Launch        bool   `json:"launch"`
 		Port          string `json:"port"`
 		DBCredentials string `json:"dbc"`
+		CertType      string `json:"certtype"`
+		Domain        string `json:"domain"`
 	} `json:"clientcoordinator"`
 	Secret string `json:"secret"`
 }
@@ -80,6 +82,8 @@ func (l *Launcher) runCoordinator() {
 			fmt.Sprintf("--secret=%s", l.Config.Secret),
 			fmt.Sprintf("--dbc=%s", l.Config.Clientcoordinator.DBCredentials),
 			fmt.Sprintf("--port=%s", l.Config.Clientcoordinator.Port),
+			fmt.Sprintf("--certtype=%s", l.Config.Clientcoordinator.CertType),
+			fmt.Sprintf("--domain=%s", l.Config.Clientcoordinator.Domain),
 		},
 		Stdout: os.Stdout,
 	}
