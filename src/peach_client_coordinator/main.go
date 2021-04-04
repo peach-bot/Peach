@@ -1,7 +1,6 @@
 package main
 
 import (
-	"crypto/tls"
 	"flag"
 	"net/http"
 	"os"
@@ -63,28 +62,22 @@ func main() {
 	api.HandleFunc("/heartbeat", c.pathHeartbeat).Methods(http.MethodGet)
 	api.HandleFunc("/guilds/{serverID}", c.pathGetServerSettings).Methods(http.MethodGet)
 
-	tlscon := tls.Config{}
-	var certPair tls.Certificate
-	switch *certType {
-	case "build":
-		certPair, err = tls.LoadX509KeyPair(*domain+".cert.pem", *domain+".key.pem")
-	case "letsencrypt":
-		certPair, err = tls.LoadX509KeyPair("/etc/letsencrypt/live/"+*domain+"/cert.pem", "/etc/letsencrypt/live/"+*domain+"/privkey.pem")
-	}
-	if err != nil {
-		c.log.Fatal(err)
-	}
-	tlscon.Certificates = append(tlscon.Certificates, certPair)
-
 	s := &http.Server{
-		Addr:      ":" + *port,
-		Handler:   r,
-		TLSConfig: &tlscon,
+		Addr:    ":" + *port,
+		Handler: r,
 	}
 
 	// run
 	done := make(chan bool)
-	go s.ListenAndServeTLS("", "")
+
+	switch *certType {
+	case "build":
+		go s.ListenAndServeTLS(*domain+".cert.pem", *domain+".key.pem")
+	case "letsencrypt":
+		go s.ListenAndServeTLS("/etc/letsencrypt/live/"+*domain+"/cert.pem", "/etc/letsencrypt/live/"+*domain+"/privkey.pem")
+	case "none":
+		go http.ListenAndServe(":"+*port, r)
+	}
 
 	// log ready
 	l.Info("shard coordinator online")

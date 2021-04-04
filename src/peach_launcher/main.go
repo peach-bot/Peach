@@ -86,6 +86,7 @@ func (l *Launcher) runCoordinator() {
 			fmt.Sprintf("--domain=%s", l.Config.Clientcoordinator.Domain),
 		},
 		Stdout: os.Stdout,
+		Stderr: os.Stderr,
 	}
 	var c Coordinator
 	c.Process = cmd.Process
