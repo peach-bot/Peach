@@ -74,7 +74,7 @@ func main() {
 	case "build":
 		go s.ListenAndServeTLS(*domain+".cert.pem", *domain+".key.pem")
 	case "letsencrypt":
-		go s.ListenAndServeTLS("/etc/letsencrypt/live/"+*domain+"/cert.pem", "/etc/letsencrypt/live/"+*domain+"/privkey.pem")
+		go s.ListenAndServeTLS("/etc/letsencrypt/live/"+*domain+"/fullchain.pem", "/etc/letsencrypt/live/"+*domain+"/privkey.pem")
 	case "none":
 		go http.ListenAndServe(":"+*port, r)
 	}
