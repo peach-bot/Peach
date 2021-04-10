@@ -14,36 +14,32 @@
 
 ## ✨ Features
 <img src=https://user-images.githubusercontent.com/45462701/67280986-b47c5c00-f4ce-11e9-8c9c-5ab70ec5e392.png width=12px></img>
-To leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/issues). Here is a list of features that are planned or already implemented:
+To leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/issues). 
+
+Here is a list of features that are planned or already implemented:
 
 #### Moderation
- - [ ] Moderation tools (Freeze, Kick, Ban, Mute, Jail)
+
+ - [ ] Blacklist words
+ - [ ] Warnings, timeouts and temporary bans
+ - [ ] Repsheets on previous bans, kicks, timeouts and warnings
+ - [ ] Clear messages
  - [ ] Raid & Spam protection
 
 #### Server Tools
  - [ ] Dynamic voice channels (always have a free voice channel for your members to join)
- - [ ] Fast channel configuring (create new sub only, announcement or secret channels with ease)
- - [ ] Reaction role (click a thing, get a role, ez)
- - [ ] Automatic role assignment
-
-#### Customization
- - [ ] Customizable prefixes
- - [ ] Custom commands
- - [ ] Funky text filters (make the bot speak fluent uwu)
-
-#### Fun Stuff
- - [ ] Raffles
- - [ ] Economy system
- - [ ] Minigames (Duels, Roulette, Lottery)
- - [ ] Leveling and ranking system
- - [ ] Member of the day
- - [ ] Urban Dictionary lookup
- - [ ] Spotify search
- - [ ] Quotes
+ - [ ] Automatic role assignment for new members, reaction role
+ - [ ] Archive and restore channels
 
 #### Other
- - [ ] Twitter annoucements (new tweet cool)
- - [ ] Twitch, YouTube, Mixer announcements (Lifestreams and videos)
- - [ ] Minecraft server showcase (ip, current players)
+ - [ ] Raffles
+ - [ ] Currency and level system
+ - [ ] Minigames (Duels, Roulette, Lottery)
+ - [ ] Server analytics
+ - [ ] Urban dictionary definitions
+ - [ ] Better spotify embeds
+ - [ ] Quotes and custom text commands
+ - [ ] Twitch, YouTube and Twitter announcements
+ - [ ] Minecraft server status widget (server adress, current players, version)
 
 Discord client heavily inspired by [bwmarrin/discordgo](https://github.com/bwmarrin/discordgo).
