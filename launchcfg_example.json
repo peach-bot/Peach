@@ -8,8 +8,10 @@
     },
     "clientcoordinator": {
         "launch": true,
-        "port": 8080,
-        "dbc": "database, user, password, host, port"
+        "port": "5000",
+        "dbc": "database, user, password, host, port",
+        "certtype": "letsencrypt",
+        "domain": "example.domain"
     },
     "secret": ""
 }

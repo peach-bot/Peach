@@ -69,7 +69,6 @@ func (c *Client) getGuildSettings(guildID string) error {
 
 	//cache the settings
 	c.Settings[guildID] = settings
-	c.Log.Debug(c.Settings[guildID].Extensions["bot"].Options["prefix"].OptionValue)
 
 	return nil
 }

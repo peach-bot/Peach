@@ -25,9 +25,9 @@ type Channel struct {
 // Overwrite represents an explicit permission overwrite for members or roles
 type Overwrite struct {
 	ID    string `json:"id"`
-	Type  string `json:"type"`
-	Allow int    `json:"allow"`
-	Deny  int    `json:"deny"`
+	Type  int    `json:"type"`
+	Allow string `json:"allow"`
+	Deny  string `json:"deny"`
 }
 
 // Message represents a discord message

@@ -14,3 +14,9 @@ jobs:
       - go mod download
       - go generate ./...
       - ./scripts/test.sh
+  - stage: build
+    script:
+      - go get golang.org/x/tools/cmd/stringer
+      - go mod download
+      - go generate ./...
+      - ./scripts/build.sh

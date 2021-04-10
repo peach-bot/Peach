@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -13,7 +14,7 @@ import (
 )
 
 // VERSION of Peach
-const VERSION = "v0.1.0"
+const VERSION = "v0.3.1-alpha"
 
 func createLog() *logrus.Logger {
 	// Set log format, output and level
@@ -24,6 +25,9 @@ func createLog() *logrus.Logger {
 		DisableTimestamp: false,
 		FullTimestamp:    true,
 		TimestampFormat:  "2006-01-02 15:04:05",
+		FieldMap: logrus.FieldMap{
+			logrus.FieldKeyMsg: "dc: @message",
+		},
 	})
 	l.SetOutput(os.Stdout)
 	l.SetLevel(logrus.InfoLevel)
@@ -74,6 +78,8 @@ func main() {
 	}
 	c.MissingHeartbeatAcks = 5
 	c.GatewayURL = c.GatewayURL + "?v=" + APIVersion + "&encoding=json"
+	c.UserAgent = fmt.Sprintf("DiscordBot (https://github.com/peach-bot/Peach, %s)", VERSION)
+	c.httpRetries = 5
 
 	for {
 

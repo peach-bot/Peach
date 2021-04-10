@@ -12,7 +12,7 @@ var errInvalidToken = errors.New("passed invalid token")
 
 func (c *clientCoordinator) getGatewayBot(token string) (*getgatewayresponse, error) {
 	var gwr getgatewayresponse
-	req, err := http.NewRequest("GET", "https://discord.com/api/v6/gateway/bot", nil)
+	req, err := http.NewRequest("GET", "https://discord.com/api/v8/gateway/bot", nil)
 	if err != nil {
 		return nil, err
 	}

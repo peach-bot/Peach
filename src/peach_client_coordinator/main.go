@@ -35,6 +35,9 @@ func main() {
 
 	secret := flag.String("secret", "", "secret")
 	dbc := flag.String("dbc", "", "data base credentials string")
+	port := flag.String("port", "5000", "port the client coordinator should run on")
+	certType := flag.String("certtype", "none", "build if cert is located in build folder, letsencrypt if cert is located under /etc/letsencrypt/live/")
+	domain := flag.String("domain", "none", "domain")
 	flag.Parse()
 	clustersecret = *secret
 
@@ -59,10 +62,22 @@ func main() {
 	api.HandleFunc("/heartbeat", c.pathHeartbeat).Methods(http.MethodGet)
 	api.HandleFunc("/guilds/{serverID}", c.pathGetServerSettings).Methods(http.MethodGet)
 
+	s := &http.Server{
+		Addr:    ":" + *port,
+		Handler: r,
+	}
+
 	// run
 	done := make(chan bool)
 
-	go http.ListenAndServe(":8080", r)
+	switch *certType {
+	case "build":
+		go s.ListenAndServeTLS(*domain+".cert.pem", *domain+".key.pem")
+	case "letsencrypt":
+		go s.ListenAndServeTLS("/etc/letsencrypt/live/"+*domain+"/fullchain.pem", "/etc/letsencrypt/live/"+*domain+"/privkey.pem")
+	case "none":
+		go http.ListenAndServe(":"+*port, r)
+	}
 
 	// log ready
 	l.Info("shard coordinator online")

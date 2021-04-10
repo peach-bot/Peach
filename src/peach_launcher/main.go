@@ -41,17 +41,19 @@ type Config struct {
 	} `json:"clients"`
 	Clientcoordinator struct {
 		Launch        bool   `json:"launch"`
-		Port          int    `json:"port"`
+		Port          string `json:"port"`
 		DBCredentials string `json:"dbc"`
+		CertType      string `json:"certtype"`
+		Domain        string `json:"domain"`
 	} `json:"clientcoordinator"`
 	Secret string `json:"secret"`
 }
 
 func (l *Launcher) runClient() {
 	cmd := &exec.Cmd{
-		Path: "./discordclient",
+		Path: "./discordclient.exe",
 		Args: []string{
-			"./discordclient",
+			"./discordclient.exe",
 			fmt.Sprintf("--log=%s", l.Config.Clients.LogLevel),
 			fmt.Sprintf("--sharded=%t", l.Config.Clients.Sharded),
 			fmt.Sprintf("--token=%s", l.Config.Clients.Token),
@@ -59,6 +61,7 @@ func (l *Launcher) runClient() {
 			fmt.Sprintf("--secret=%s", l.Config.Secret),
 		},
 		Stdout: os.Stdout,
+		Stderr: os.Stderr,
 	}
 	var c Client
 	c.Process = cmd.Process
@@ -73,13 +76,17 @@ func (l *Launcher) runClient() {
 
 func (l *Launcher) runCoordinator() {
 	cmd := &exec.Cmd{
-		Path: "./coordinator",
+		Path: "./coordinator.exe",
 		Args: []string{
-			"./coordinator",
+			"./coordinator.exe",
 			fmt.Sprintf("--secret=%s", l.Config.Secret),
 			fmt.Sprintf("--dbc=%s", l.Config.Clientcoordinator.DBCredentials),
+			fmt.Sprintf("--port=%s", l.Config.Clientcoordinator.Port),
+			fmt.Sprintf("--certtype=%s", l.Config.Clientcoordinator.CertType),
+			fmt.Sprintf("--domain=%s", l.Config.Clientcoordinator.Domain),
 		},
 		Stdout: os.Stdout,
+		Stderr: os.Stderr,
 	}
 	var c Coordinator
 	c.Process = cmd.Process

@@ -3,7 +3,7 @@ package main
 import "strconv"
 
 // APIVersion duh
-var APIVersion = "6"
+var APIVersion = "8"
 
 // Known Discord API Endpoints.
 var (
@@ -72,11 +72,14 @@ var (
 	EndpointUserConnections = func(useroleID string) string { return EndpointUsers + useroleID + "/connections" }
 	EndpointUserNotes       = func(useroleID string) string { return EndpointUsers + "@me/notes/" + useroleID }
 
-	EndpointGuild           = func(guildID string) string { return EndpointGuilds + guildID }
-	EndpointGuildChannels   = func(guildID string) string { return EndpointGuilds + guildID + "/channels" }
-	EndpointGuildMembers    = func(guildID string) string { return EndpointGuilds + guildID + "/members" }
-	EndpointGuildMember     = func(guildID, useroleID string) string { return EndpointGuilds + guildID + "/members/" + useroleID }
-	EndpointGuildMemberRole = func(guildID, useroleID, roleID string) string {
+	EndpointGuild             = func(guildID string) string { return EndpointGuilds + guildID }
+	EndpointGuildPreview      = func(guildID string) string { return EndpointGuilds + guildID + "/preview" }
+	EndpointGuildChannels     = func(guildID string) string { return EndpointGuilds + guildID + "/channels" }
+	EndpointGuildMembers      = func(guildID string) string { return EndpointGuilds + guildID + "/members" }
+	EndpointGuildVoiceRegions = func(guildID string) string { return EndpointGuilds + guildID + "/regions" }
+	EndpointGuildVanityURL    = func(guildID string) string { return EndpointGuilds + guildID + "/vanity-url" }
+	EndpointGuildMember       = func(guildID, useroleID string) string { return EndpointGuilds + guildID + "/members/" + useroleID }
+	EndpointGuildMemberRole   = func(guildID, useroleID, roleID string) string {
 		return EndpointGuilds + guildID + "/members/" + useroleID + "/roles/" + roleID
 	}
 	EndpointGuildBans         = func(guildID string) string { return EndpointGuilds + guildID + "/bans" }
@@ -91,7 +94,7 @@ var (
 	EndpointGuildRoles        = func(guildID string) string { return EndpointGuilds + guildID + "/roles" }
 	EndpointGuildRole         = func(guildID, roleID string) string { return EndpointGuilds + guildID + "/roles/" + roleID }
 	EndpointGuildInvites      = func(guildID string) string { return EndpointGuilds + guildID + "/invites" }
-	EndpointGuildEmbed        = func(guildID string) string { return EndpointGuilds + guildID + "/embed" }
+	EndpointGuildWidget       = func(guildID string) string { return EndpointGuilds + guildID + "/widget" }
 	EndpointGuildPrune        = func(guildID string) string { return EndpointGuilds + guildID + "/prune" }
 	EndpointGuildIcon         = func(guildID, hash string) string { return EndpointCDNIcons + guildID + "/" + hash + ".png" }
 	EndpointGuildIconAnimated = func(guildID, hash string) string { return EndpointCDNIcons + guildID + "/" + hash + ".gif" }
@@ -116,7 +119,7 @@ var (
 	EndpointChannelMessageAck = func(channelID, messageID string) string {
 		return EndpointChannels + channelID + "/messages/" + messageID + "/ack"
 	}
-	EndpointChannelMessagesBulkDelete = func(channelID string) string { return EndpointChannel(channelID) + "/messages/bulk-delete" }
+	EndpointChannelMessagesBulkDelete = func(channelID string) string { return EndpointChannel(channelID) + "/messages/bulk_delete" }
 	EndpointChannelMessagesPins       = func(channelID string) string { return EndpointChannel(channelID) + "/pins" }
 	EndpointChannelMessagePin         = func(channelID, messageID string) string {
 		return EndpointChannel(channelID) + "/pins/" + messageID
