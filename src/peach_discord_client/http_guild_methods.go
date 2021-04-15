@@ -46,6 +46,24 @@ func (c *Client) CreateGuild(args CreateGuildArgs) (*Guild, error) {
 	return guild, nil
 }
 
+// GetGuild retrieves the Guild object for a given ID
+func (c *Client) GetGuild(ID string) (g *Guild, err error) {
+
+	cachedGuild, cached := c.GuildCache.Get(ID)
+
+	if cached {
+		c.Log.Debugf("GetGuild: found %s in cache", ID)
+		guild := cachedGuild.(Guild)
+		g = &guild
+	} else {
+		c.Log.Debugf("GetGuild: could not find %s in cache, retrieving via API", ID)
+		g, err = c.getGuild(ID, true)
+		return
+	}
+
+	return
+}
+
 func (c *Client) getGuild(guildID string, withCounts bool) (*Guild, error) {
 
 	query := addURLArg("", "with_counts", strconv.FormatBool(withCounts))
@@ -168,14 +186,18 @@ func (c *Client) GetGuildChannels(guildID string) (*[]Channel, error) {
 		return nil, err
 	}
 
-	guild := new([]Channel)
+	channels := new([]Channel)
 
-	err = json.Unmarshal(body, guild)
+	err = json.Unmarshal(body, channels)
 	if err != nil {
 		return nil, err
 	}
 
-	return guild, nil
+	for _, channel := range *channels {
+		c.ChannelCache.Set(channel.ID, channel, cache.DefaultExpiration)
+	}
+
+	return channels, nil
 }
 
 type CreateGuildChannelArgs struct {
@@ -474,7 +496,7 @@ func (c *Client) RemoveGuildBan(guildID string, userID string) error {
 	return nil
 }
 
-func (c *Client) GetGuildRoles(guildID string) (*[]Channel, error) {
+func (c *Client) GetGuildRoles(guildID string) (*[]Role, error) {
 	resp, body, err := c.Request(http.MethodGet, EndpointGuildChannels(guildID), nil)
 	if err != nil {
 		return nil, err
@@ -486,14 +508,14 @@ func (c *Client) GetGuildRoles(guildID string) (*[]Channel, error) {
 		return nil, err
 	}
 
-	guild := new([]Channel)
+	roles := new([]Role)
 
-	err = json.Unmarshal(body, guild)
+	err = json.Unmarshal(body, roles)
 	if err != nil {
 		return nil, err
 	}
 
-	return guild, nil
+	return roles, nil
 }
 
 type CreateGuildRoleArgs struct {

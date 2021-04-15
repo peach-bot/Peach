@@ -20,6 +20,8 @@ type Channel struct {
 	ApplicationID        string       `json:"application_id,omitempty"`
 	ParentID             string       `json:"partent_id,omitempty"`
 	LastPinTimestamp     string       `json:"last_pin_timestamp,omitempty"`
+	RTCRegion            string       `json:"rtc_region,omitempty"`
+	VideoQualityMode     int          `json:"video_quality_mode,omitempty"`
 }
 
 // Overwrite represents an explicit permission overwrite for members or roles
