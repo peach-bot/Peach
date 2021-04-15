@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
+	"sync"
 	"syscall"
 	"time"
 
@@ -15,6 +16,7 @@ import (
 )
 
 type Launcher struct {
+	sync.Mutex
 	Log         *logrus.Logger
 	Stop        chan interface{}
 	Config      Config
@@ -50,28 +52,34 @@ type Config struct {
 }
 
 func (l *Launcher) runClient() {
-	cmd := &exec.Cmd{
-		Path: "./discordclient.exe",
-		Args: []string{
-			"./discordclient.exe",
-			fmt.Sprintf("--log=%s", l.Config.Clients.LogLevel),
-			fmt.Sprintf("--sharded=%t", l.Config.Clients.Sharded),
-			fmt.Sprintf("--token=%s", l.Config.Clients.Token),
-			fmt.Sprintf("--ccurl=%s", shellescape.Quote(l.Config.Clients.CoordinatorURL)),
-			fmt.Sprintf("--secret=%s", l.Config.Secret),
-		},
-		Stdout: os.Stdout,
-		Stderr: os.Stderr,
+	for {
+		cmd := &exec.Cmd{
+			Path: "./discordclient.exe",
+			Args: []string{
+				"./discordclient.exe",
+				fmt.Sprintf("--log=%s", l.Config.Clients.LogLevel),
+				fmt.Sprintf("--sharded=%t", l.Config.Clients.Sharded),
+				fmt.Sprintf("--token=%s", l.Config.Clients.Token),
+				fmt.Sprintf("--ccurl=%s", shellescape.Quote(l.Config.Clients.CoordinatorURL)),
+				fmt.Sprintf("--secret=%s", l.Config.Secret),
+			},
+			Stdout: os.Stdout,
+			Stderr: os.Stderr,
+		}
+		var c Client
+		c.Process = cmd.Process
+		c.Pos = len(l.Clients)
+		l.Lock()
+		l.Clients = append(l.Clients, c)
+		l.Unlock()
+		err := cmd.Run()
+		if err != nil {
+			l.Log.Error(err)
+		}
+		l.Lock()
+		l.Clients = append(l.Clients[:c.Pos], l.Clients[c.Pos+1:]...)
+		l.Unlock()
 	}
-	var c Client
-	c.Process = cmd.Process
-	c.Pos = len(l.Clients)
-	l.Clients = append(l.Clients, c)
-	err := cmd.Run()
-	if err != nil {
-		l.Log.Error(err)
-	}
-	l.Clients = append(l.Clients[:c.Pos], l.Clients[c.Pos+1:]...)
 }
 
 func (l *Launcher) runCoordinator() {
