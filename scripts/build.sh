@@ -99,6 +99,9 @@ builddiscordclient() {
     fi
 
     printf "\nCompiling..."
+    version=$(git describe --tags)
+    version=${version%-?-*}
+    printf "package main\n\nconst VERSION = \"$version\"" > src/peach_discord_client/version.go
     go build -o build/discordclient.exe ./src/peach_discord_client || fail
     printf "\nDone building discord client\n"
 }

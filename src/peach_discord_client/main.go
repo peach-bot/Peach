@@ -13,9 +13,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// VERSION of Peach
-const VERSION = "v0.3.1-alpha"
-
 func createLog() *logrus.Logger {
 	// Set log format, output and level
 	l := logrus.New()
