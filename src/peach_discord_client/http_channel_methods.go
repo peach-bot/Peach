@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -11,14 +10,102 @@ import (
 	"github.com/patrickmn/go-cache"
 )
 
-func (c *Client) getChannel(channelid string) (*Channel, error) {
+// GetChannel retrieves the Channel object for a given ID
+func (c *Client) GetChannel(ID string) (ch *Channel, err error) {
+
+	cachedChannel, cached := c.ChannelCache.Get(ID)
+
+	if cached {
+		c.Log.Debugf("GetChannel: found %s in cache", ID)
+		channel := cachedChannel.(Channel)
+		ch = &channel
+	} else {
+		c.Log.Debugf("GetChannel: could not find %s in cache, retrieving via API", ID)
+		ch, err = c.getChannel(ID)
+		return
+	}
+
+	return
+}
+
+func (c *Client) getChannel(channelID string) (*Channel, error) {
 
 	// Send Request
-	_, body, err := c.Request("GET", EndpointChannel(channelid), nil)
+	resp, body, err := c.Request("GET", EndpointChannel(channelID), nil)
 	if err != nil {
 		return nil, err
 	}
 
+	if resp.StatusCode != http.StatusOK {
+		err = ErrUnexpectedStatus(http.StatusOK, resp.StatusCode)
+		c.Log.Debugf("getChannel: %s", err.Error())
+		return nil, err
+	}
+
+	guild := new(Channel)
+
+	err = json.Unmarshal(body, guild)
+	if err != nil {
+		return nil, err
+	}
+
+	c.ChannelCache.Set(channelID, *guild, cache.DefaultExpiration)
+
+	return guild, nil
+}
+
+type ModifyChannelArgs struct {
+	Name                 string       `json:"string,omitempty"`
+	Type                 int          `json:"type,omitempty"`
+	Position             int          `json:"position,omitempty"`
+	Topic                string       `json:"topic,omitempty"`
+	NSFW                 bool         `json:"nsfw,omitempty"`
+	RateLimitPerUser     int          `json:"rate_limit_per_user,omitempty"`
+	Bitrate              int          `json:"bitrate,omitempty"`
+	UserLimit            int          `json:"user_limit,omitempty"`
+	PermissionOverwrites []*Overwrite `json:"permission_overwrites,omitempty"`
+	ParentID             string       `json:"partent_id,omitempty"`
+	RTCRegion            string       `json:"rtc_region,omitempty"`
+	VideoQualityMode     int          `json:"video_quality_mode,omitempty"`
+}
+
+func (c *Client) ModifyChannel(guildID string, args ModifyChannelArgs) (*Channel, error) {
+
+	resp, body, err := c.Request(http.MethodPatch, EndpointGuild(guildID), args)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		err = ErrUnexpectedStatus(http.StatusOK, resp.StatusCode)
+		c.Log.Debugf("ModifyGuild: %s", err.Error())
+		return nil, err
+	}
+
+	channel := new(Channel)
+
+	err = json.Unmarshal(body, channel)
+	if err != nil {
+		return nil, err
+	}
+
+	c.ChannelCache.Set(channel.ID, *channel, cache.DefaultExpiration)
+
+	return channel, nil
+}
+
+func (c *Client) DeleteChannel(channelID string, withCounts bool) (*Channel, error) {
+
+	resp, body, err := c.Request(http.MethodDelete, EndpointGuild(channelID), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != http.StatusNoContent {
+		err = ErrUnexpectedStatus(http.StatusNoContent, resp.StatusCode)
+		c.Log.Debugf("DeleteChannel: %s", err.Error())
+		return nil, err
+	}
 	data := new(Channel)
 
 	err = json.Unmarshal(body, data)
@@ -26,13 +113,13 @@ func (c *Client) getChannel(channelid string) (*Channel, error) {
 		return nil, err
 	}
 
-	c.ChannelCache.Set(channelid, *data, cache.DefaultExpiration)
+	c.ChannelCache.Delete(channelID)
 
 	return data, nil
 }
 
 // GetChannelMessages returns an array containing a channels messages
-func (c *Client) GetChannelMessages(channelid string, around string, before string, after string, limit int) (*[]Message, error) {
+func (c *Client) GetChannelMessages(channelID string, around string, before string, after string, limit int) (*[]Message, error) {
 
 	var args string
 	if around != "" {
@@ -49,7 +136,7 @@ func (c *Client) GetChannelMessages(channelid string, around string, before stri
 	}
 
 	// Send Request
-	resp, body, err := c.Request("GET", EndpointChannelMessages(channelid)+args, nil)
+	resp, body, err := c.Request("GET", EndpointChannelMessages(channelID)+args, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -70,6 +157,30 @@ func (c *Client) GetChannelMessages(channelid string, around string, before stri
 	return data, nil
 }
 
+func (c *Client) GetChannelMessage(channelID string, messageID string) (*Message, error) {
+
+	// Send Request
+	resp, body, err := c.Request("GET", EndpointChannelMessage(channelID, messageID), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		err = ErrUnexpectedStatus(http.StatusOK, resp.StatusCode)
+		c.Log.Debugf("GetChannelMessage: %s", err.Error())
+		return nil, err
+	}
+
+	message := new(Message)
+
+	err = json.Unmarshal(body, message)
+	if err != nil {
+		return nil, err
+	}
+
+	return message, nil
+}
+
 // DeleteMessage deletes a specific message with a given ID from a specific channel
 func (c *Client) DeleteMessage(channelID, messageID string) error {
 
@@ -87,21 +198,15 @@ func (c *Client) DeleteMessage(channelID, messageID string) error {
 }
 
 // SendMessage posts a message to a guild text or DM channel.
-func (c *Client) SendMessage(channelid string, message NewMessage) (*Message, error) {
+func (c *Client) SendMessage(channelID string, message NewMessage) (*Message, error) {
 
-	// Send Request
-	body, err := json.Marshal(message)
+	resp, body, err := c.Request("POST", EndpointChannelMessages(channelID), message)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, body, err := c.Request("POST", EndpointChannelMessages(channelid), bytes.NewBuffer(body))
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode != http.StatusCreated {
-		err = ErrUnexpectedStatus(http.StatusCreated, resp.StatusCode)
+	if resp.StatusCode != http.StatusOK {
+		err = ErrUnexpectedStatus(http.StatusOK, resp.StatusCode)
 		c.Log.Debugf("SendMessage: %s", err.Error())
 		return nil, err
 	}
@@ -116,21 +221,23 @@ func (c *Client) SendMessage(channelid string, message NewMessage) (*Message, er
 }
 
 // BulkDeleteMessages deletes a lot of messages in a single request, duh
-func (c *Client) BulkDeleteMessages(channelid string, messages []string) error {
+func (c *Client) BulkDeleteMessages(channelID string, messages []string) error {
 
 	if len(messages) == 0 {
 		return nil
 	}
 
 	if len(messages) == 1 {
-		return c.DeleteMessage(channelid, messages[0])
+		return c.DeleteMessage(channelID, messages[0])
 	}
 
 	body := struct {
 		Messages []string `json:"messages"`
 	}{messages}
 
-	resp, _, err := c.Request("POST", EndpointChannelMessagesBulkDelete(channelid), body)
+	c.Log.Debug(body)
+
+	resp, _, err := c.Request("POST", EndpointChannelMessagesBulkDelete(channelID), body)
 	if err != nil {
 		return err
 	}

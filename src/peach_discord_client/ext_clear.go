@@ -44,18 +44,17 @@ func (c *Client) extClearOnMessage(ctx *EventMessageCreate, args []string) error
 		messageIDs = append(messageIDs, message.ID)
 	}
 
-	lolplural := ""
+	pluralS := ""
 	if amount > 1 {
-		err = c.BulkDeleteMessages(ctx.ChannelID, messageIDs)
-		if err != nil {
-			return err
-		}
-		lolplural = "s"
-	} else {
-		err = c.DeleteMessage(ctx.ChannelID, messageIDs[0])
+		pluralS = "s"
 	}
 
-	success, err := c.SendMessage(ctx.ChannelID, NewMessage{fmt.Sprintf("Deleted %s message%s for you :slight_smile:", args[0], lolplural), false, nil})
+	err = c.BulkDeleteMessages(ctx.ChannelID, messageIDs)
+	if err != nil {
+		return err
+	}
+
+	success, err := c.SendMessage(ctx.ChannelID, NewMessage{fmt.Sprintf("Deleted %s message%s for you :slight_smile:", args[0], pluralS), false, nil})
 	if err != nil {
 		return err
 	}

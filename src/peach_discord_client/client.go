@@ -212,38 +212,6 @@ func CreateClient(log *logrus.Logger, sharded bool, ccURL string, secret string)
 	return
 }
 
-// GetChannel retrieves the Channel object for a given ID
-func (c *Client) GetChannel(ID string) (ch *Channel, err error) {
-
-	cachedChannel, cached := c.ChannelCache.Get(ID)
-
-	if cached {
-		channel := cachedChannel.(Channel)
-		ch = &channel
-	} else {
-		ch, err = c.getChannel(ID)
-		return
-	}
-
-	return
-}
-
-// GetGuild retrieves the Guild object for a given ID
-func (c *Client) GetGuild(ID string) (g *Guild, err error) {
-
-	cachedGuild, cached := c.GuildCache.Get(ID)
-
-	if cached {
-		guild := cachedGuild.(Guild)
-		g = &guild
-	} else {
-		g, err = c.getGuild(ID, true)
-		return
-	}
-
-	return
-}
-
 // FetchAll retrieves all Guild settings from the database
 func (c *Client) FetchAll() (err error) {
 	if c.Guilds == nil {

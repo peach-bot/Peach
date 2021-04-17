@@ -74,6 +74,8 @@ func (c *Client) Listen() {
 				return
 			default:
 				c.Log.Errorf("Websocket: was unable to read message: %v", err)
+				c.Reconnect <- nil
+				c.Connected <- nil
 				return
 			}
 		} else {
@@ -185,10 +187,15 @@ func (c *Client) Heartbeat() {
 		c.wsMutex.Unlock()
 
 		if err != nil {
-			c.Log.Errorf("Websocket: was unable to send heartbeat: %v", err)
+			c.Log.Fatalf("Websocket: was unable to send heartbeat: %v", err)
+			c.Reconnect <- nil
+			c.Connected <- nil
 			return
 		} else if time.Now().Sub(c.LastHeartbeatAck) > c.HeartbeatInterval*c.MissingHeartbeatAcks {
 			c.Log.Errorf("Websocket: did not receive a hearbeat acknowledgement for the last %v heartbeats", c.MissingHeartbeatAcks)
+			c.Reconnect <- nil
+			c.Connected <- nil
+			return
 		}
 		c.Log.Debug("Websocket: sent heartbeat to Discord")
 

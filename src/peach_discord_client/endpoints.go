@@ -119,7 +119,7 @@ var (
 	EndpointChannelMessageAck = func(channelID, messageID string) string {
 		return EndpointChannels + channelID + "/messages/" + messageID + "/ack"
 	}
-	EndpointChannelMessagesBulkDelete = func(channelID string) string { return EndpointChannel(channelID) + "/messages/bulk_delete" }
+	EndpointChannelMessagesBulkDelete = func(channelID string) string { return EndpointChannel(channelID) + "/messages/bulk-delete" }
 	EndpointChannelMessagesPins       = func(channelID string) string { return EndpointChannel(channelID) + "/pins" }
 	EndpointChannelMessagePin         = func(channelID, messageID string) string {
 		return EndpointChannel(channelID) + "/pins/" + messageID
