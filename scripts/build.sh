@@ -35,14 +35,14 @@ build () {
 }
 
 hash () {
-    mkdir -p scripts/build || fail
+    mkdir -p scripts/hash || fail
     newhash=$(find ./src/$1 -type f -print0  | xargs -0 sha1sum)
-    echo $newhash > scripts/build/$1_new.hash
-    newhash=$(<scripts/build/$1_new.hash)
-    rm scripts/build/$1_new.hash
-    if [[ -f "scripts/build/$1.hash" ]];
+    echo $newhash > scripts/hash/$1_new.hash
+    newhash=$(<scripts/hash/$1_new.hash)
+    rm scripts/hash/$1_new.hash
+    if [[ -f "scripts/hash/$1.hash" ]];
     then
-        oldhash=$(<scripts/build/$1.hash)
+        oldhash=$(<scripts/hash/$1.hash)
     else
         oldhash=""
     fi
@@ -51,9 +51,13 @@ hash () {
         retval=1
     else
         retval=0
-        echo $newhash > scripts/build/$1.hash
     fi
     return "$retval"
+}
+
+storehash () {
+    newhash=$(find ./src/$1 -type f -print0  | xargs -0 sha1sum)
+    echo $newhash > scripts/hash/$1.hash
 }
 
 waittillstopped() {
@@ -85,6 +89,7 @@ buildcoordinator() {
     printf "\nCompiling..."
     go build -o build/coordinator.exe ./src/peach_client_coordinator || fail
     printf "\nDone building client coordinator\n"
+    storehash "peach_client_coordinator"
 }
 
 builddiscordclient() {
@@ -100,10 +105,18 @@ builddiscordclient() {
 
     printf "\nCompiling..."
     version=$(git describe --tags)
+    branch=$(git branch --show-current)
+    if [[ "$branch" == "master" ]]; then
+        branch=""
+    else
+        branch="-$branch"
+    fi
     version=${version%-?-*}
+    version="$version$branch"
     printf "package main\n\nconst VERSION = \"$version\"" > src/peach_discord_client/version.go
     go build -o build/discordclient.exe ./src/peach_discord_client || fail
     printf "\nDone building discord client\n"
+    storehash "peach_discord_client"
 }
 
 buildlauncher() {
@@ -120,6 +133,7 @@ buildlauncher() {
     printf "\nCompiling..."
     go build -o build/launcher.exe ./src/peach_launcher || fail
     printf "\nDone building launcher\n"
+    storehash "peach_launcher"
 }
 
 fail() {

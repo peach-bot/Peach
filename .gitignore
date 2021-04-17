@@ -5,6 +5,7 @@ devsecrets
 vendor
 *.exe
 build
+scripts/hash
 node_modules
 launchcfg.json
 scripts/getguildsettings.sql
