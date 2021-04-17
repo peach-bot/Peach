@@ -111,7 +111,7 @@ builddiscordclient() {
     else
         branch="-$branch"
     fi
-    version=${version%-?-*}
+    version=${version%-*-*}
     version="$version$branch"
     printf "package main\n
 // VERSION represents the release the bot is currently running on.
