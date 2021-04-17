@@ -105,7 +105,7 @@ builddiscordclient() {
 
     printf "\nCompiling..."
     version=$(git describe --tags)
-    branch=$(git branch --show-current)
+    branch=$(git rev-parse --abbrev-ref HEAD)
     if [[ "$branch" == "master" ]]; then
         branch=""
     else
