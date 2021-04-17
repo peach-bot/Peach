@@ -79,6 +79,9 @@ func (l *Launcher) runClient() {
 		l.Lock()
 		l.Clients = append(l.Clients[:c.Pos], l.Clients[c.Pos+1:]...)
 		l.Unlock()
+
+		// Delay before trying to restart
+		time.Sleep(5 * time.Second)
 	}
 }
 
