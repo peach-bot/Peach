@@ -1,5 +1,7 @@
 package main
 
+import "time"
+
 var aliasMap = map[string]string{
 	"clear":   "clear",
 	"c":       "clear",
@@ -23,4 +25,23 @@ func (c *Client) runOnMessage(invoke string, args []string, ctx *EventMessageCre
 		err = nil
 	}
 	return err
+}
+
+func (c *Client) handleNoPermission(m *Message) error {
+	sorry, err := c.SendMessage(m.ChannelID, NewMessage{":no_entry: It seems like you do not have the permissions to use this command.", false, nil})
+	if err != nil {
+		return err
+	}
+
+	time.Sleep(5 * time.Second)
+
+	err = sorry.Delete(c)
+	if err != nil {
+		return err
+	}
+	err = m.Delete(c)
+	if err != nil {
+		return err
+	}
+	return nil
 }

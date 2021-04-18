@@ -59,9 +59,12 @@ type Message struct {
 	Flags            int                `json:"flags,omitempty"`
 }
 
-func (m Message) delete(c *Client) error {
+func (m *Message) Delete(c *Client) error {
 	return c.DeleteMessage(m.ChannelID, m.ID)
+}
 
+func (m *Message) Edit(c *Client, args EditMessageArgs) (*Message, error) {
+	return c.EditMessage(m.ChannelID, m.ID, args)
 }
 
 // Attachment represents a Discord message's attachment
@@ -173,3 +176,18 @@ type EmbedField struct {
 	Value  string `json:"value"`
 	Inline bool   `json:"inline,omitempty"`
 }
+
+type AllowedMentions struct {
+	MentionTypes       []MentionType `json:"parse"`
+	RoleIDs            []string      `json:"roles"`
+	UserIDs            []string      `json:"users"`
+	MentionRepliedUser bool          `json:"replied_user"`
+}
+
+type MentionType string
+
+const (
+	MentionRoles    MentionType = "roles"
+	MentionUsers                = "users"
+	MentionEveryone             = "everyone"
+)

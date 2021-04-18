@@ -30,7 +30,7 @@ func (c *Client) extClearOnMessage(ctx *EventMessageCreate, args []string) error
 		return nil
 	}
 
-	err = ctx.delete(c)
+	err = ctx.Delete(c)
 	if err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func (c *Client) extClearOnMessage(ctx *EventMessageCreate, args []string) error
 
 	time.Sleep(5 * time.Second)
 
-	err = success.delete(c)
+	err = success.Delete(c)
 	if err != nil {
 		return err
 	}

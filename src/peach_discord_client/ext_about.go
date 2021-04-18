@@ -34,7 +34,7 @@ func (c *Client) extAboutOnMessage(ctx *EventMessageCreate) error {
 		return err
 	}
 
-	err = ctx.delete(c)
+	err = ctx.Delete(c)
 	if err != nil {
 		return err
 	}
