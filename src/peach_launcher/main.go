@@ -40,6 +40,8 @@ type Config struct {
 		Token               string `json:"token"`
 		LogLevel            string `json:"log_level"`
 		CoordinatorURL      string `json:"coordinator"`
+		SpotifyClientID     string `json:"spotify_client_id"`
+		SpotifyClientSecret string `json:"spotify_client_secret"`
 	} `json:"clients"`
 	Clientcoordinator struct {
 		Launch        bool   `json:"launch"`
@@ -63,6 +65,8 @@ func (l *Launcher) runClient() {
 				fmt.Sprintf("--token=%s", l.Config.Clients.Token),
 				fmt.Sprintf("--ccurl=%s", shellescape.Quote(l.Config.Clients.CoordinatorURL)),
 				fmt.Sprintf("--secret=%s", l.Config.Secret),
+				fmt.Sprintf("--spotifyid=%s", l.Config.Clients.SpotifyClientID),
+				fmt.Sprintf("--spotifysecret=%s", l.Config.Clients.SpotifyClientSecret),
 				fmt.Sprintf("--redactsensitive=%t", l.Config.RedactSensitive),
 			},
 			Stdout: os.Stdout,

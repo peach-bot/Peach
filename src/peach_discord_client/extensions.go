@@ -4,7 +4,7 @@ import "time"
 
 type Extensions struct {
 	Bot        *Client
-	"c":       "clear",
+	Spotify    extSpotify
 	Moderation extModeration
 	Internal   extInternal
 	AliasMap   map[string]string
@@ -23,6 +23,7 @@ func (x *Extensions) setup(bot *Client, spotifyid, spotifysecret string) error {
 	}
 
 	// run extension setups
+	x.Spotify.Setup(spotifyid, spotifysecret, x.Bot)
 	x.Moderation.Setup(x.Bot)
 	x.Internal.Setup(x.Bot)
 

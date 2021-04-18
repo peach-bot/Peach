@@ -5,6 +5,8 @@
         "token": "",
         "log_level": "info",
         "coordinator": "http://localhost:8080/api/",
+        "spotify_client_id": "2ih14ihojk21hjko312kjh",
+        "spotify_client_secret": "3iuhj4i2huuih4oj32uhio423"
     },
     "clientcoordinator": {
         "launch": true,
