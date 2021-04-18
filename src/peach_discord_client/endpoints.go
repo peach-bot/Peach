@@ -110,11 +110,15 @@ var (
 	EndpointChannelPermission  = func(channelID, overwriteID string) string {
 		return EndpointChannels + channelID + "/permissions/" + overwriteID
 	}
-	EndpointChannelInvites  = func(channelID string) string { return EndpointChannels + channelID + "/invites" }
-	EndpointChannelTyping   = func(channelID string) string { return EndpointChannels + channelID + "/typing" }
-	EndpointChannelMessages = func(channelID string) string { return EndpointChannels + channelID + "/messages" }
-	EndpointChannelMessage  = func(channelID, messageID string) string {
+	EndpointChannelInvites   = func(channelID string) string { return EndpointChannels + channelID + "/invites" }
+	EndpointChannelTyping    = func(channelID string) string { return EndpointChannels + channelID + "/typing" }
+	EndpointChannelFollowers = func(channelID string) string { return EndpointChannels + channelID + "/followers" }
+	EndpointChannelMessages  = func(channelID string) string { return EndpointChannels + channelID + "/messages" }
+	EndpointChannelMessage   = func(channelID, messageID string) string {
 		return EndpointChannels + channelID + "/messages/" + messageID
+	}
+	EndpointChannelCrosspostMessage = func(channelID, messageID string) string {
+		return EndpointChannels + channelID + "/messages/" + messageID + "/crosspost"
 	}
 	EndpointChannelMessageAck = func(channelID, messageID string) string {
 		return EndpointChannels + channelID + "/messages/" + messageID + "/ack"
