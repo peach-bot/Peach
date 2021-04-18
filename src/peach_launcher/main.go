@@ -35,20 +35,21 @@ type Coordinator struct {
 
 type Config struct {
 	Clients struct {
-		Sharded        bool   `json:"sharded"`
-		Shards         int    `json:"shards"`
-		Token          string `json:"token"`
-		LogLevel       string `json:"loglevel"`
-		CoordinatorURL string `json:"coordinator"`
+		Sharded             bool   `json:"sharded"`
+		Shards              int    `json:"shards"`
+		Token               string `json:"token"`
+		LogLevel            string `json:"log_level"`
+		CoordinatorURL      string `json:"coordinator"`
 	} `json:"clients"`
 	Clientcoordinator struct {
 		Launch        bool   `json:"launch"`
 		Port          string `json:"port"`
 		DBCredentials string `json:"dbc"`
-		CertType      string `json:"certtype"`
+		CertType      string `json:"cert_type"`
 		Domain        string `json:"domain"`
 	} `json:"clientcoordinator"`
-	Secret string `json:"secret"`
+	Secret          string `json:"secret"`
+	RedactSensitive bool   `json:"redact_sensitive"`
 }
 
 func (l *Launcher) runClient() {
@@ -62,6 +63,7 @@ func (l *Launcher) runClient() {
 				fmt.Sprintf("--token=%s", l.Config.Clients.Token),
 				fmt.Sprintf("--ccurl=%s", shellescape.Quote(l.Config.Clients.CoordinatorURL)),
 				fmt.Sprintf("--secret=%s", l.Config.Secret),
+				fmt.Sprintf("--redactsensitive=%t", l.Config.RedactSensitive),
 			},
 			Stdout: os.Stdout,
 			Stderr: os.Stderr,
