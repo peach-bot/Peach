@@ -227,13 +227,13 @@ func (c *Client) CrosspostMessage(channelID, messageID string) (*Message, error)
 	return message, nil
 }
 
-func (c *Client) CreateReaction(channelID, messageID, emoji string, customEmoji Emoji) error {
+func (c *Client) CreateReaction(channelID, messageID, emoji string, customEmoji *Emoji) error {
 
 	if emoji == "" {
 		emoji = customEmoji.Name + ":" + customEmoji.ID
 	}
 
-	resp, _, err := c.Request(http.MethodPost, EndpointMessageReaction(channelID, messageID, url.QueryEscape(emoji), "@me"), nil)
+	resp, _, err := c.Request(http.MethodPut, EndpointMessageReaction(channelID, messageID, url.QueryEscape(emoji), "@me"), nil)
 	if err != nil {
 		return err
 	}
@@ -247,7 +247,7 @@ func (c *Client) CreateReaction(channelID, messageID, emoji string, customEmoji 
 	return nil
 }
 
-func (c *Client) DeleteBotReaction(channelID, messageID, emoji string, customEmoji Emoji) error {
+func (c *Client) DeleteBotReaction(channelID, messageID, emoji string, customEmoji *Emoji) error {
 
 	if emoji == "" {
 		emoji = customEmoji.Name + ":" + customEmoji.ID
@@ -267,7 +267,7 @@ func (c *Client) DeleteBotReaction(channelID, messageID, emoji string, customEmo
 	return nil
 }
 
-func (c *Client) DeleteUserReaction(channelID, messageID, emoji string, customEmoji Emoji, userID string) error {
+func (c *Client) DeleteUserReaction(channelID, messageID, emoji string, customEmoji *Emoji, userID string) error {
 
 	if emoji == "" {
 		emoji = customEmoji.Name + ":" + customEmoji.ID
@@ -287,7 +287,7 @@ func (c *Client) DeleteUserReaction(channelID, messageID, emoji string, customEm
 	return nil
 }
 
-func (c *Client) GetReactions(channelID, messageID, emoji string, customEmoji Emoji) (*[]User, error) {
+func (c *Client) GetReactions(channelID, messageID, emoji string, customEmoji *Emoji) (*[]User, error) {
 
 	if emoji == "" {
 		emoji = customEmoji.Name + ":" + customEmoji.ID
@@ -332,7 +332,7 @@ func (c *Client) DeleteAllReactions(channelID, messageID string) error {
 	return nil
 }
 
-func (c *Client) DeleteEmojiReactions(channelID, messageID, emoji string, customEmoji Emoji) error {
+func (c *Client) DeleteEmojiReactions(channelID, messageID, emoji string, customEmoji *Emoji) error {
 
 	if emoji == "" {
 		emoji = customEmoji.Name + ":" + customEmoji.ID
