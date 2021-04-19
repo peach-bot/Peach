@@ -24,6 +24,7 @@ func addURLArg(query string, key string, value string) string {
 
 func (c *Client) request(method string, endpointURL string, routeid string, body []byte, attempt int) (*http.Response, []byte, error) {
 	c.Log.Debugf("Sending %s request to %s. Ratelimiter routeid: %s, Attempt #%d", method, endpointURL, routeid, attempt)
+	c.Log.Debugf("Body: %s", body)
 	route := c.Ratelimiter.PrepareRoute(routeid)
 
 	req, err := http.NewRequest(method, endpointURL, bytes.NewBuffer(body))

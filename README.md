@@ -32,12 +32,12 @@ Here is a list of features that are planned or already implemented:
  - [ ] Archive and restore channels
 
 #### Other
- - [ ] Raffles
+ - [ ] Raffles and giveaways
  - [ ] Currency and level system
  - [ ] Minigames (Duels, Roulette, Lottery)
  - [ ] Server analytics
  - [ ] Urban dictionary definitions
- - [ ] Better spotify embeds
+ - [x] Better spotify embeds
  - [ ] Quotes and custom text commands
  - [ ] Twitch, YouTube and Twitter announcements
  - [ ] Minecraft server status widget (server adress, current players, version)
