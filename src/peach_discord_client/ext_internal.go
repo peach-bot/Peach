@@ -6,7 +6,15 @@ import (
 	"github.com/hako/durafmt"
 )
 
-func (c *Client) extAboutOnMessage(ctx *EventMessageCreate) error {
+type extInternal struct {
+	Bot *Client
+}
+
+func (e *extInternal) Setup(bot *Client) {
+	e.Bot = bot
+}
+
+func (e *extInternal) About(ctx *EventMessageCreate) error {
 	m := NewMessage{
 		Embed: Embed{
 			Description: "Need help with something? Join the [support server](https://discord.gg/HfrjV3ybEs)!",
@@ -18,7 +26,7 @@ func (c *Client) extAboutOnMessage(ctx *EventMessageCreate) error {
 				},
 				{
 					Name:   "Uptime",
-					Value:  durafmt.Parse(time.Now().Sub(c.Starttime)).LimitFirstN(2).String(),
+					Value:  durafmt.Parse(time.Now().Sub(e.Bot.Starttime)).LimitFirstN(2).String(),
 					Inline: true,
 				},
 			},
@@ -29,12 +37,12 @@ func (c *Client) extAboutOnMessage(ctx *EventMessageCreate) error {
 			},
 		},
 	}
-	_, err := c.SendMessage(ctx.ChannelID, m)
+	_, err := e.Bot.SendMessage(ctx.ChannelID, m)
 	if err != nil {
 		return err
 	}
 
-	err = ctx.delete(c)
+	err = ctx.Delete(e.Bot)
 	if err != nil {
 		return err
 	}

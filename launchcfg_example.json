@@ -3,15 +3,18 @@
         "sharded": true,
         "shards": 2,
         "token": "",
-        "loglevel": "info",
-        "coordinator": "http://localhost:8080/api/"
+        "log_level": "info",
+        "coordinator": "http://localhost:8080/api/",
+        "spotify_client_id": "2ih14ihojk21hjko312kjh",
+        "spotify_client_secret": "3iuhj4i2huuih4oj32uhio423"
     },
     "clientcoordinator": {
         "launch": true,
         "port": "5000",
         "dbc": "database, user, password, host, port",
-        "certtype": "letsencrypt",
+        "cert_type": "letsencrypt",
         "domain": "example.domain"
     },
-    "secret": ""
+    "secret": "somethingsomething",
+    "redact_sensitive": true
 }

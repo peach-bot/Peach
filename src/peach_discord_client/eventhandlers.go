@@ -125,27 +125,32 @@ func (c *Client) onInviteDelete(ctx *EventInviteDelete) error {
 
 func (c *Client) onMessageCreate(ctx *EventMessageCreate) error {
 
-	if ctx.Author.ID != c.User.ID {
-		c.Log.WithFields(logrus.Fields{
-			"author":   ctx.Author.Username,
-			"message":  ctx.Content,
-			"serverid": ctx.GuildID,
-		}).Debug("Websocket: received message")
-	}
+	c.Log.WithFields(logrus.Fields{
+		"author":   ctx.Author.Username,
+		"message":  ctx.Content,
+		"serverid": ctx.GuildID,
+	}).Debug("Websocket: received message")
 
+	// Do nothing for messages sent by applications
 	if ctx.WebhookID != "" || ctx.Author.Bot {
 		return nil
 	}
 
+	// Search for commands and execute if found
 	prefix := c.getSetting(ctx.GuildID, "bot", "prefix")
 	if strings.HasPrefix(ctx.Content, prefix) && len(ctx.Content) > 1 {
 		noPrefix := ctx.Content[1:]
 		invoke := strings.Fields(noPrefix)[0]
 		args := strings.Fields(noPrefix)[1:]
-		err := c.runOnMessage(invoke, args, ctx)
+		err := c.Extensions.runCommand(invoke, args, ctx)
 		if err != nil {
 			return fmt.Errorf("Couldn't execute command: %s", err)
 		}
+	}
+
+	err := c.Extensions.Spotify.OnMessage(ctx.Message)
+	if err != nil {
+		c.Log.Error(err)
 	}
 
 	return nil
@@ -160,6 +165,11 @@ func (c *Client) onMessageDeleteBulk(ctx *EventMessageDeleteBulk) error {
 }
 
 func (c *Client) onMessageReactionAdd(ctx *EventMessageReactionAdd) error {
+	if ctx.UserID == c.User.ID {
+		return nil
+	}
+
+	c.Extensions.Spotify.OnReact(ctx)
 	return nil
 }
 
@@ -186,7 +196,7 @@ func (c *Client) onPresenceUpdate(ctx *EventPresenceUpdate) error {
 func (c *Client) onReady(ctx *EventReady) error {
 
 	//Cache User object
-	c.User = ctx.User
+	c.User = &ctx.User
 
 	//Store session ID
 	c.SessionID = ctx.SessionID
@@ -221,7 +231,7 @@ func (c *Client) onTypingStart(ctx *EventTypingStart) error {
 
 func (c *Client) onUserUpdate(ctx *EventUserUpdate) error {
 
-	c.User = ctx.User
+	c.User = &ctx.User
 
 	return nil
 }

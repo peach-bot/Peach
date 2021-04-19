@@ -210,11 +210,6 @@ func (c *Client) Heartbeat() {
 	}
 }
 
-// Dispatch runs events through the plugin system
-func (c *Client) Dispatch(event *Event) {
-
-}
-
 // Hello handles the initial Hello event
 func (c *Client) Hello() error {
 

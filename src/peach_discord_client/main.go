@@ -13,6 +13,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var redactSensitive bool
+
 func createLog() *logrus.Logger {
 	// Set log format, output and level
 	l := logrus.New()
@@ -41,8 +43,13 @@ func main() {
 	loglevel := flag.String("log", "info", "declares how verbose the logging should be ('debug', 'info', 'error')")
 	ccURL := flag.String("ccurl", "", "url of the client coordinator")
 	secret := flag.String("secret", "", "secret for communicating with the client coordinator")
+	spotifyid := flag.String("spotifyid", "", "Spotify client id for spotify extension")
+	spotifysecret := flag.String("spotifysecret", "", "Spotify client secret for spotify extension")
+	redactSensitiveFlag := flag.Bool("redactsensitive", true, "Set to true to sensitive tokens and secrets from logs")
 	flag.Parse()
 	log.Infof("Sharded: %t, LogLevel: %s, coordinator URL: %s", *sharded, *loglevel, *ccURL)
+
+	redactSensitive = *redactSensitiveFlag
 
 	switch *loglevel {
 	case "debug":
@@ -84,6 +91,7 @@ func main() {
 		c.httpClient = &http.Client{}
 		c.GuildCache = cache.New(120*time.Minute, 5*time.Minute)
 		c.ChannelCache = cache.New(120*time.Minute, 5*time.Minute)
+		c.Extensions.setup(c, *spotifyid, *spotifysecret)
 
 		err = c.Run()
 		if err != nil {

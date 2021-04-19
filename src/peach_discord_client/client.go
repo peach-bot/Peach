@@ -52,7 +52,7 @@ type Client struct {
 	Sequence  *int64
 
 	// User
-	User User
+	User *User
 
 	// Heartbeat
 	HeartbeatInterval    time.Duration // Interval in which client should sent heartbeats
@@ -75,6 +75,9 @@ type Client struct {
 	GuildCache   *cache.Cache
 	ChannelCache *cache.Cache
 	Settings     map[string]cfgSettings // Map guildIDs to settings and cache that shit
+
+	// Extensions
+	Extensions Extensions
 
 	// Starttime
 	Starttime time.Time
@@ -121,11 +124,16 @@ func CCLogin(c *Client) error {
 	if err != nil {
 		return err
 	}
-	c.TOKEN = ClientCoordinator.Token
 	c.ShardCount = ClientCoordinator.TotalShards
 	c.ShardID = ClientCoordinator.ShardID
 	c.GatewayURL = ClientCoordinator.GatewayURL
 	c.CCHeartbeatInterval = ClientCoordinator.HeartbeatInterval
+	c.TOKEN = ClientCoordinator.Token
+
+	if redactSensitive {
+		ClientCoordinator.Token = "[REDACTED]"
+	}
+
 	c.Log.Debugf("Websocket: Received from client coordinator: %v", ClientCoordinator)
 	return nil
 }
