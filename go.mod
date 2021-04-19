@@ -14,6 +14,6 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/zmb3/spotify v1.1.2
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
-	golang.org/x/text v0.3.5 // indirect
+	golang.org/x/text v0.3.5
 	gopkg.in/alessio/shellescape.v1 v1.0.0-20170105083845-52074bc9df61
 )

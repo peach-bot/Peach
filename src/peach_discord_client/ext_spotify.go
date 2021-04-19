@@ -4,11 +4,15 @@ import (
 	"context"
 	"fmt"
 	"regexp"
+	"strings"
+	"sync"
 	"time"
 
 	"github.com/hako/durafmt"
 	"github.com/zmb3/spotify"
 	"golang.org/x/oauth2/clientcredentials"
+	"golang.org/x/text/language"
+	"golang.org/x/text/message"
 )
 
 type extSpotify struct {
@@ -17,6 +21,8 @@ type extSpotify struct {
 	ClientID      string
 	ClientSecret  string
 	SpotifyClient spotify.Client
+	Responses     []string
+	sync.Mutex
 }
 
 func (e *extSpotify) Setup(clientid, clientsecret string, bot *Client) error {
@@ -49,19 +55,61 @@ func (e *extSpotify) OnMessage(ctx *Message) error {
 	spotifytype := s[1]
 	spotifyid := spotify.ID(s[2])
 
+	var msg *Message = nil
+
 	switch spotifytype {
 	case "album":
-		_, err := e.SpotifyClient.GetAlbum(spotifyid)
+		album, err := e.SpotifyClient.GetAlbum(spotifyid)
 		if err != nil {
 			return err
 		}
+
+		var playtime int
+		for _, track := range album.Tracks.Tracks {
+			playtime += track.Duration
+		}
+
+		msg, err = e.Bot.SendMessage(ctx.ChannelID, NewMessage{
+			Embed: Embed{
+				Author: EmbedAuthor{
+					Name:    "Spotify",
+					IconURL: "https://assets.ifttt.com/images/channels/51464135/icons/large.png",
+				},
+				Thumbnail:   EmbedThumbnail{URL: album.Images[0].URL},
+				Color:       1947988,
+				Title:       album.Name,
+				URL:         album.ExternalURLs["spotify"],
+				Description: "by " + album.Artists[0].Name,
+				Fields: []*EmbedField{
+					{
+						Name:   "Release Date",
+						Value:  album.ReleaseDate,
+						Inline: true,
+					},
+					{
+						Name:   "Tracks",
+						Value:  fmt.Sprint(album.Tracks.Total),
+						Inline: true,
+					},
+					{
+						Name:   "Length",
+						Value:  durafmt.Parse(time.Duration(playtime * int(time.Millisecond))).LimitFirstN(2).String(),
+						Inline: false,
+					},
+				},
+			},
+		})
+		if err != nil {
+			return err
+		}
+
 	case "track":
 		track, err := e.SpotifyClient.GetTrack(spotifyid)
 		if err != nil {
 			return err
 		}
 
-		_, err = e.Bot.SendMessage(ctx.ChannelID, NewMessage{
+		msg, err = e.Bot.SendMessage(ctx.ChannelID, NewMessage{
 			Embed: Embed{
 				Author: EmbedAuthor{
 					Name:    "Spotify",
@@ -94,7 +142,85 @@ func (e *extSpotify) OnMessage(ctx *Message) error {
 		if err != nil {
 			return err
 		}
+
+	case "artist":
+		artist, err := e.SpotifyClient.GetArtist(spotifyid)
+		if err != nil {
+			return err
+		}
+
+		p := message.NewPrinter(language.English)
+
+		var genreLabel string = "Genre"
+		var genre string = "None"
+		if len(artist.Genres) > 0 {
+			if len(artist.Genres) >= 3 {
+				genreLabel = "Genres"
+				genre = fmt.Sprintf("%s, %s, %s", artist.Genres[0], artist.Genres[1], artist.Genres[2])
+			} else {
+				genre = fmt.Sprintf("%s", artist.Genres[0])
+			}
+		}
+
+		popularity := artist.Popularity / 20
+
+		msg, err = e.Bot.SendMessage(ctx.ChannelID, NewMessage{
+			Embed: Embed{
+				Author: EmbedAuthor{
+					Name:    "Spotify",
+					IconURL: "https://assets.ifttt.com/images/channels/51464135/icons/large.png",
+				},
+				Thumbnail: EmbedThumbnail{URL: artist.Images[0].URL},
+				Color:     1947988,
+				Title:     artist.Name,
+				URL:       artist.ExternalURLs["spotify"],
+				Fields: []*EmbedField{
+					{
+						Name:   "Followers",
+						Value:  p.Sprint(artist.Followers.Count),
+						Inline: true,
+					},
+					{
+						Name:   "Popularity",
+						Value:  strings.Repeat("★", popularity) + strings.Repeat("☆", 5-popularity),
+						Inline: true,
+					},
+					{
+						Name:   genreLabel,
+						Value:  genre,
+						Inline: false,
+					},
+				},
+			},
+		})
+		if err != nil {
+			return err
+		}
+
 	}
 
+	if msg == nil {
+		return nil
+	}
+
+	err := e.Bot.CreateReaction(msg.ChannelID, msg.ID, "🗑", nil)
+	if err != nil {
+		return err
+	}
+
+	e.Lock()
+	e.Responses = append(e.Responses, msg.ID)
+	e.Unlock()
+
 	return nil
+}
+
+func (e *extSpotify) OnReact(ctx *EventMessageReactionAdd) {
+	e.Bot.Log.Debug(ctx.Emoji.Name)
+	if sliceContains(e.Responses, ctx.MessageID) && ctx.Emoji.Name == "🗑" {
+		e.Bot.DeleteMessage(ctx.ChannelID, ctx.MessageID)
+		e.Lock()
+		e.Responses = sliceRemove(e.Responses, ctx.MessageID)
+		e.Unlock()
+	}
 }

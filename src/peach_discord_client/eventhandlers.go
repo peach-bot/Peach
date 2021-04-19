@@ -165,6 +165,11 @@ func (c *Client) onMessageDeleteBulk(ctx *EventMessageDeleteBulk) error {
 }
 
 func (c *Client) onMessageReactionAdd(ctx *EventMessageReactionAdd) error {
+	if ctx.UserID == c.User.ID {
+		return nil
+	}
+
+	c.Extensions.Spotify.OnReact(ctx)
 	return nil
 }
 
