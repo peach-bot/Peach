@@ -56,18 +56,18 @@ func (c *Client) getChannel(channelID string) (*Channel, error) {
 }
 
 type ModifyChannelArgs struct {
-	Name                 string       `json:"string,omitempty"`
-	Type                 int          `json:"type,omitempty"`
-	Position             int          `json:"position,omitempty"`
-	Topic                string       `json:"topic,omitempty"`
-	NSFW                 bool         `json:"nsfw,omitempty"`
-	RateLimitPerUser     int          `json:"rate_limit_per_user,omitempty"`
-	Bitrate              int          `json:"bitrate,omitempty"`
-	UserLimit            int          `json:"user_limit,omitempty"`
-	PermissionOverwrites []*Overwrite `json:"permission_overwrites,omitempty"`
-	ParentID             string       `json:"partent_id,omitempty"`
-	RTCRegion            string       `json:"rtc_region,omitempty"`
-	VideoQualityMode     int          `json:"video_quality_mode,omitempty"`
+	Name                 string        `json:"string,omitempty"`
+	Type                 *int          `json:"type,omitempty"`
+	Position             *int          `json:"position,omitempty"`
+	Topic                string        `json:"topic,omitempty"`
+	NSFW                 *bool         `json:"nsfw,omitempty"`
+	RateLimitPerUser     *int          `json:"rate_limit_per_user,omitempty"`
+	Bitrate              *int          `json:"bitrate,omitempty"`
+	UserLimit            *int          `json:"user_limit,omitempty"`
+	PermissionOverwrites *[]*Overwrite `json:"permission_overwrites,omitempty"`
+	ParentID             string        `json:"partent_id,omitempty"`
+	RTCRegion            string        `json:"rtc_region,omitempty"`
+	VideoQualityMode     *int          `json:"video_quality_mode,omitempty"`
 }
 
 func (c *Client) ModifyChannel(guildID string, args ModifyChannelArgs) (*Channel, error) {
@@ -354,10 +354,10 @@ func (c *Client) DeleteEmojiReactions(channelID, messageID, emoji string, custom
 }
 
 type EditMessageArgs struct {
-	Content         string          `json:"content,omitempty"`
-	Embed           Embed           `json:"embed,omitempty"`
-	Flags           int             `json:"flags,omitempty"`
-	AllowedMentions AllowedMentions `json:"allowed_mentions,omitempty"`
+	Content         string           `json:"content,omitempty"`
+	Embed           *Embed           `json:"embed,omitempty"`
+	Flags           *int             `json:"flags,omitempty"`
+	AllowedMentions *AllowedMentions `json:"allowed_mentions,omitempty"`
 }
 
 // SendMessage posts a message to a guild text or DM channel.
@@ -475,11 +475,11 @@ func (c *Client) GetChannelInvites(channelID string) (*[]Invite, error) {
 }
 
 type CreateChannelInviteArgs struct {
-	MaxAge              int    `json:"max_age,omitempty"`
-	MaxUses             int    `json:"max_uses,omitempty"`
-	Temporary           bool   `json:"temporary,omitempty"`
-	Unique              bool   `json:"unique,omitempty"`
-	TargetType          int    `json:"target_type,omitempty"`
+	MaxAge              *int   `json:"max_age,omitempty"`
+	MaxUses             *int   `json:"max_uses,omitempty"`
+	Temporary           *bool  `json:"temporary,omitempty"`
+	Unique              *bool  `json:"unique,omitempty"`
+	TargetType          *int   `json:"target_type,omitempty"`
 	TargetUserID        string `json:"target_user_id,omitempty"`
 	TargetApplicationID string `json:"target_application_id,omitempty"`
 }

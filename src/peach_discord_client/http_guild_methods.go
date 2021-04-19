@@ -11,17 +11,17 @@ import (
 )
 
 type CreateGuildArgs struct {
-	Name                        string     `json:"name"`
-	Region                      string     `json:"region,omitempty"`
-	Icon                        string     `json:"icon,omitempty"`
-	VerificationLevel           int        `json:"verification_level,omitempty"`
-	DefaultMessageNotifications int        `json:"default_message_notifications,omitempty"`
-	ExplicitContentFilter       int        `json:"explicit_content_filter,omitempty"`
-	Roles                       []*Role    `json:"roles,omitempty"`
-	Channels                    []*Channel `json:"channels,omitempty"`
-	AFKChannelID                string     `json:"afk_channel_id,omitempty"`
-	AFKTimeout                  int        `json:"afk_timeout,omitempty"`
-	SystemChannelID             string     `json:"system_channel_id,omitempty"`
+	Name                        string      `json:"name"`
+	Region                      string      `json:"region,omitempty"`
+	Icon                        string      `json:"icon,omitempty"`
+	VerificationLevel           *int        `json:"verification_level,omitempty"`
+	DefaultMessageNotifications *int        `json:"default_message_notifications,omitempty"`
+	ExplicitContentFilter       *int        `json:"explicit_content_filter,omitempty"`
+	Roles                       *[]*Role    `json:"roles,omitempty"`
+	Channels                    *[]*Channel `json:"channels,omitempty"`
+	AFKChannelID                string      `json:"afk_channel_id,omitempty"`
+	AFKTimeout                  *int        `json:"afk_timeout,omitempty"`
+	SystemChannelID             string      `json:"system_channel_id,omitempty"`
 }
 
 // CreateGuild creates a new guild. If args is nil the name will be used. If args are provided the name has to be part of the args object.
@@ -120,10 +120,10 @@ type ModifyGuildArgs struct {
 	OwnerID                     string `json:"owner_id,omitempty"`
 	Region                      string `json:"region,omitempty"`
 	AFKChannelID                string `json:"afk_channel_id,omitempty"`
-	AFKTimeout                  int    `json:"afk_timeout,omitempty"`
-	VerificationLevel           int    `json:"verification_level,omitempty"`
-	DefaultMessageNotifications int    `json:"default_message_notifications,omitempty"`
-	ExplicitContentFilter       int    `json:"explicit_content_filter,omitempty"`
+	AFKTimeout                  *int   `json:"afk_timeout,omitempty"`
+	VerificationLevel           *int   `json:"verification_level,omitempty"`
+	DefaultMessageNotifications *int   `json:"default_message_notifications,omitempty"`
+	ExplicitContentFilter       *int   `json:"explicit_content_filter,omitempty"`
 	SystemChannelID             string `json:"system_channel_id,omitempty"`
 	RulesChannelID              string `json:"rules_channel_id,omitempty"`
 	Banner                      string `json:"banner,omitempty,omitempty"`
@@ -201,16 +201,16 @@ func (c *Client) GetGuildChannels(guildID string) (*[]Channel, error) {
 }
 
 type CreateGuildChannelArgs struct {
-	Name                 string       `json:"name"`
-	Type                 int          `json:"type,omitempty"`
-	Topic                string       `json:"topic,omitempty"`
-	Bitrate              int          `json:"bitrate,omitempty"`
-	UserLimit            int          `json:"user_limit,omitempty"`
-	SlowModeRateLimit    int          `json:"rate_limit_per_user,omitempty"`
-	Position             int          `json:"position,omitempty"`
-	PermissionOverwrites []*Overwrite `json:"permission_overwrites,omitempty"`
-	ParentId             string       `json:"parent_id,omitempty"`
-	NSFW                 bool         `json:"nsfw,omitempty"`
+	Name                 string        `json:"name"`
+	Type                 *int          `json:"type,omitempty"`
+	Topic                string        `json:"topic,omitempty"`
+	Bitrate              *int          `json:"bitrate,omitempty"`
+	UserLimit            *int          `json:"user_limit,omitempty"`
+	SlowModeRateLimit    *int          `json:"rate_limit_per_user,omitempty"`
+	Position             *int          `json:"position,omitempty"`
+	PermissionOverwrites *[]*Overwrite `json:"permission_overwrites,omitempty"`
+	ParentId             string        `json:"parent_id,omitempty"`
+	NSFW                 *bool         `json:"nsfw,omitempty"`
 }
 
 func (c *Client) CreateGuildChannel(guildID string, args CreateGuildArgs) (*Channel, error) {
@@ -236,7 +236,7 @@ func (c *Client) CreateGuildChannel(guildID string, args CreateGuildArgs) (*Chan
 
 type ModifyGuildChannelPositionsArgs struct {
 	ChannelID string `json:"id"`
-	Position  int    `json:"position,omitempty"`
+	Position  *int   `json:"position,omitempty"`
 }
 
 func (c *Client) ModifyGuildChannelPositions(guildID string, args []ModifyGuildChannelPositionsArgs) error {
@@ -309,9 +309,9 @@ func (c *Client) GetGuildMembers(guildID string, limit int, afterid string) (*[]
 
 type ModifyGuildMemberArgs struct {
 	Nick      string    `json:"nick,omitempty"`
-	Roles     []*string `json:"roles,omitempty"`
-	Mute      bool      `json:"mute,omitempty"`
-	Deaf      bool      `json:"deaf,omitempty"`
+	Roles     *[]string `json:"roles,omitempty"`
+	Mute      *bool     `json:"mute,omitempty"`
+	Deaf      *bool     `json:"deaf,omitempty"`
 	ChannelID string    `json:"channel_id,omitempty"`
 }
 
@@ -462,7 +462,7 @@ func (c *Client) GetGuildBan(guildID string, userID string) (*Ban, error) {
 }
 
 type CreateGuildBanArgs struct {
-	DeleteMessageDays int    `json:"delete_message_days,omitempty"`
+	DeleteMessageDays *int   `json:"delete_message_days,omitempty"`
 	Reason            string `json:"reason,omitempty"`
 }
 
@@ -521,9 +521,9 @@ func (c *Client) GetGuildRoles(guildID string) (*[]Role, error) {
 type CreateGuildRoleArgs struct {
 	Name        string `json:"name,omitempty"`
 	Permissions string `json:"permissions,omitempty"`
-	Color       int    `json:"color,omitempty"`
-	Hoist       bool   `json:"hoist,omitempty"`
-	Mentionable bool   `json:"mentionable,omitempty"`
+	Color       *int   `json:"color,omitempty"`
+	Hoist       *bool  `json:"hoist,omitempty"`
+	Mentionable *bool  `json:"mentionable,omitempty"`
 }
 
 func (c *Client) CreateGuildRole(guildID string, args CreateGuildRoleArgs) (*Role, error) {
@@ -547,7 +547,7 @@ func (c *Client) CreateGuildRole(guildID string, args CreateGuildRoleArgs) (*Rol
 
 type ModifyGuildRolePositionsArgs struct {
 	RoleID   string `json:"id"`
-	Position int    `json:"position,omitempty"`
+	Position *int   `json:"position,omitempty"`
 }
 
 func (c *Client) ModifyGuildRolePositions(guildID string, args []ModifyGuildRolePositionsArgs) (*[]Role, error) {
@@ -576,9 +576,9 @@ func (c *Client) ModifyGuildRolePositions(guildID string, args []ModifyGuildRole
 type ModifyGuildRoleArgs struct {
 	Name        string `json:"name,omitempty"`
 	Permissions string `json:"permissions,omitempty"`
-	Color       int    `json:"color,omitempty"`
-	Hoist       bool   `json:"hoist,omitempty"`
-	Mentionable bool   `json:"mentionable,omitempty"`
+	Color       *int   `json:"color,omitempty"`
+	Hoist       *bool  `json:"hoist,omitempty"`
+	Mentionable *bool  `json:"mentionable,omitempty"`
 }
 
 func (c *Client) ModifyGuildRole(guildID string, roleID string, args ModifyGuildRoleArgs) (*Role, error) {
@@ -643,9 +643,9 @@ func (c *Client) GetGuildPruneCount(guildID string, days int, includeRoles []str
 }
 
 type GuildPruneArgs struct {
-	Days         int
-	ReturnAmount bool
-	IncludeRoles []string
+	Days         *int
+	ReturnAmount *bool
+	IncludeRoles *[]string
 }
 
 func (c *Client) GuildPrune(guildID string, args GuildPruneArgs) (*int, error) {
@@ -657,7 +657,7 @@ func (c *Client) GuildPrune(guildID string, args GuildPruneArgs) (*int, error) {
 		return nil, err
 	}
 
-	if !args.ReturnAmount {
+	if !*args.ReturnAmount {
 		return nil, nil
 	}
 
@@ -765,9 +765,9 @@ func (c *Client) CreateGuildIntegration(guildID string, args CreateGuildIntegrat
 }
 
 type ModifyGuildIntegrationArgs struct {
-	EnableEmoticons   bool `json:"enable_emoticons,omitempty"`
-	ExpireBehavior    int  `json:"expire_behavior,omitempty"`
-	ExpireGracePeriod int  `json:"expire_grace_period,omitempty"`
+	EnableEmoticons   *bool `json:"enable_emoticons,omitempty"`
+	ExpireBehavior    *int  `json:"expire_behavior,omitempty"`
+	ExpireGracePeriod *int  `json:"expire_grace_period,omitempty"`
 }
 
 func (c *Client) ModifyGuildIntegration(guildID string, integrationID string, args ModifyGuildIntegrationArgs) error {
