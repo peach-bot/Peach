@@ -21,16 +21,20 @@ type extSpotify struct {
 	ClientID      string
 	ClientSecret  string
 	SpotifyClient spotify.Client
-	Responses     []string
+	Responses     map[string]string
 	sync.Mutex
 }
 
 func (e *extSpotify) Setup(clientid, clientsecret string, bot *Client) error {
+
+	// constructor
 	e.ClientID = clientid
 	e.ClientSecret = clientsecret
 	e.Bot = bot
+	e.Responses = make(map[string]string)
 	e.URLRegex = regexp.MustCompile(`https:\/\/open\.spotify\.com\/(album|track|artist)\/(\w{22})`)
 
+	// Authorize spotify client
 	config := &clientcredentials.Config{
 		ClientID:     clientid,
 		ClientSecret: clientsecret,
@@ -47,16 +51,29 @@ func (e *extSpotify) Setup(clientid, clientsecret string, bot *Client) error {
 
 func (e *extSpotify) OnMessage(ctx *Message) error {
 
+	// See if message contains spotify url
 	s := e.URLRegex.FindStringSubmatch(ctx.Content)
 	if len(s) == 0 {
 		return nil
 	}
 
+	// Suppress discord embed
+	flags := new(int)
+	*flags = MessageFlagSuppressEmbeds
+	_, err := e.Bot.EditMessage(ctx.ChannelID, ctx.ID, EditMessageArgs{
+		Flags:           flags,
+		Content:         "",
+		Embed:           nil,
+		AllowedMentions: nil,
+	})
+
+	// extract information
 	spotifytype := s[1]
 	spotifyid := spotify.ID(s[2])
 
 	var msg *Message = nil
 
+	// send message with embed for type and id
 	switch spotifytype {
 	case "album":
 		album, err := e.SpotifyClient.GetAlbum(spotifyid)
@@ -196,20 +213,21 @@ func (e *extSpotify) OnMessage(ctx *Message) error {
 		if err != nil {
 			return err
 		}
-
 	}
 
 	if msg == nil {
 		return nil
 	}
 
-	err := e.Bot.CreateReaction(msg.ChannelID, msg.ID, "🗑", nil)
+	// Add delete reaction
+	err = e.Bot.CreateReaction(msg.ChannelID, msg.ID, "🗑", nil)
 	if err != nil {
 		return err
 	}
 
+	// Add response to cache
 	e.Lock()
-	e.Responses = append(e.Responses, msg.ID)
+	e.Responses[msg.ID] = ctx.Author.ID
 	e.Unlock()
 
 	return nil
@@ -217,10 +235,13 @@ func (e *extSpotify) OnMessage(ctx *Message) error {
 
 func (e *extSpotify) OnReact(ctx *EventMessageReactionAdd) {
 	e.Bot.Log.Debug(ctx.Emoji.Name)
-	if sliceContains(e.Responses, ctx.MessageID) && ctx.Emoji.Name == "🗑" {
-		e.Bot.DeleteMessage(ctx.ChannelID, ctx.MessageID)
-		e.Lock()
-		e.Responses = sliceRemove(e.Responses, ctx.MessageID)
-		e.Unlock()
+	if userID, ok := e.Responses[ctx.MessageID]; ok {
+		if ctx.UserID == userID && ctx.Emoji.Name == "🗑" {
+			e.Bot.DeleteMessage(ctx.ChannelID, ctx.MessageID)
+			e.Lock()
+			delete(e.Responses, ctx.MessageID)
+			e.Unlock()
+		}
 	}
+
 }

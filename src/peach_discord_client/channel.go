@@ -59,6 +59,16 @@ type Message struct {
 	Flags            int                `json:"flags,omitempty"`
 }
 
+const (
+	MessageFlagCrossposted = 1 << iota
+	MessageFlagIsCrossposted
+	MessageFlagSuppressEmbeds
+	MessageFlagSourceMessageDeleted
+	MessageFlagUrgent
+	MessageFlagEphemeral
+	MessageFlagLoading
+)
+
 func (m *Message) Delete(c *Client) error {
 	return c.DeleteMessage(m.ChannelID, m.ID)
 }
