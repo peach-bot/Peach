@@ -34,19 +34,33 @@ func (e *extSpotify) Setup(clientid, clientsecret string, bot *Client) error {
 	e.Responses = make(map[string]string)
 	e.URLRegex = regexp.MustCompile(`https:\/\/open\.spotify\.com\/(album|track|artist)\/(\w{22})`)
 
-	// Authorize spotify client
-	config := &clientcredentials.Config{
-		ClientID:     clientid,
-		ClientSecret: clientsecret,
-		TokenURL:     spotify.TokenURL,
-	}
-	token, err := config.Token(context.Background())
-	if err != nil {
-		return err
-	}
-	e.SpotifyClient = spotify.Authenticator{}.NewClient(token)
+	go e.RefreshToken()
 
 	return nil
+}
+
+func (e *extSpotify) RefreshToken() {
+	ticker := time.NewTicker(time.Hour)
+	for {
+		// Authorize spotify client
+		config := &clientcredentials.Config{
+			ClientID:     e.ClientID,
+			ClientSecret: e.ClientSecret,
+			TokenURL:     spotify.TokenURL,
+		}
+		token, err := config.Token(context.Background())
+		if err != nil {
+			e.Bot.Log.Fatal(err)
+		}
+		e.SpotifyClient = spotify.Authenticator{}.NewClient(token)
+		e.Bot.Log.Debug("Refreshed Spotify token")
+
+		// Loop
+		select {
+		case <-ticker.C:
+		case <-e.Bot.Connected:
+		}
+	}
 }
 
 func (e *extSpotify) OnMessage(ctx *Message) error {

@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"runtime"
 	"syscall"
 	"time"
 
@@ -18,14 +19,15 @@ var redactSensitive bool
 func createLog() *logrus.Logger {
 	// Set log format, output and level
 	l := logrus.New()
+	l.SetReportCaller(true)
 	l.SetFormatter(&logrus.TextFormatter{
 		ForceColors:      true,
 		QuoteEmptyFields: true,
 		DisableTimestamp: false,
 		FullTimestamp:    true,
 		TimestampFormat:  "2006-01-02 15:04:05",
-		FieldMap: logrus.FieldMap{
-			logrus.FieldKeyMsg: "dc: @message",
+		CallerPrettyfier: func(f *runtime.Frame) (string, string) {
+			return " Client", ""
 		},
 	})
 	l.SetOutput(os.Stdout)
