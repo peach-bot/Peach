@@ -59,6 +59,7 @@ func (e *extSpotify) RefreshToken() {
 		select {
 		case <-ticker.C:
 		case <-e.Bot.Connected:
+			return
 		}
 	}
 }
