@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
+	"runtime"
 	"sync"
 	"syscall"
 	"time"
@@ -163,12 +164,16 @@ func (l *Launcher) SetupCloseHandler() {
 func createLog() *logrus.Logger {
 	// Set log format, output and level
 	l := logrus.New()
+	l.SetReportCaller(true)
 	l.SetFormatter(&logrus.TextFormatter{
 		ForceColors:      true,
 		QuoteEmptyFields: true,
 		DisableTimestamp: false,
 		FullTimestamp:    true,
 		TimestampFormat:  "2006-01-02 15:04:05",
+		CallerPrettyfier: func(f *runtime.Frame) (string, string) {
+			return " Launch", ""
+		},
 	})
 	l.SetOutput(os.Stdout)
 	l.SetLevel(logrus.InfoLevel)
