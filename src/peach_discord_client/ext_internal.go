@@ -25,7 +25,7 @@ func (e *extInternal) About(ctx *EventMessageCreate) error {
 					Inline: true,
 				},
 				{
-					Name:   "Uptime",
+					Name:   "Node Uptime",
 					Value:  durafmt.Parse(time.Now().Sub(e.Bot.Starttime)).LimitFirstN(2).String(),
 					Inline: true,
 				},

@@ -65,7 +65,8 @@ func main() {
 	api.HandleFunc("/ready", c.pathReady).Methods(http.MethodGet)
 	api.HandleFunc("/shards", c.pathGetShards).Methods(http.MethodGet)
 	api.HandleFunc("/heartbeat", c.pathHeartbeat).Methods(http.MethodGet)
-	api.HandleFunc("/guilds/{serverID}", c.pathGetServerSettings).Methods(http.MethodGet)
+	api.HandleFunc("/guilds/{guildID}", c.pathGetGuildSettings).Methods(http.MethodGet)
+	api.HandleFunc("/users/{userID}", c.pathGetUserSettings).Methods(http.MethodGet)
 
 	s := &http.Server{
 		Addr:    ":" + *port,
