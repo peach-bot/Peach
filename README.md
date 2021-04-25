@@ -6,14 +6,13 @@
  <a href="https://travis-ci.com/peach-bot/Peach/branches"><img src="https://img.shields.io/travis/com/peach-bot/Peach/master?style=flat-square" alt="Build Status"></img></a>
  <a href="https://github.com/peach-bot/Peach/blob/master/LICENSE"><img src="https://img.shields.io/github/license/peach-bot/Peach?color=brightgreen&style=flat-square" alt="License"></img></a>
  <a href="#contributors"><img src="https://img.shields.io/github/contributors/peach-bot/Peach?style=flat-square" alt="Contributors"></img></a>
- <a href="https://github.com/peach-bot/Peach/issues"><img src="https://img.shields.io/github/issues-raw/peach-bot/peach?style=flat-square" alt="Open Issues"></img></a>
- <a href="https://github.com/peach-bot/Peach/issues"><img src="https://img.shields.io/github/issues-closed-raw/peach-bot/peach?color=brightgreen&style=flat-square" alt="Closed Issues"></img></a><br><br>
+ <a href="https://github.com/peach-bot/Peach/issues"><img src="https://img.shields.io/github/issues-raw/peach-bot/peach?style=flat-square" alt="Open Issues"></img></a><br><br>
 </p>
 
 <!--[**Try all features today and for free**](http://bit.ly/peachbot)-->
 
-## ✨ Features
-<img src=https://user-images.githubusercontent.com/45462701/67280986-b47c5c00-f4ce-11e9-8c9c-5ab70ec5e392.png width=12px></img>
+## 🍑 Features
+<img src=https://raw.githubusercontent.com/peach-bot/Peach/master/assets/issues.png width=12px></img>
 To leave suggestions visit the [issues page](https://github.com/peach-bot/Peach/issues). 
 
 Here is a list of features that are planned or already implemented:

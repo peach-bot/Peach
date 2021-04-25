@@ -25,26 +25,31 @@ func (c *clientCoordinator) verifyBotShard(w http.ResponseWriter, r *http.Reques
 
 	botID := r.Header.Get("bot_id")
 	if botID == "" {
+		w.WriteHeader(http.StatusUnauthorized)
 		return nil, nil, errors.New("Header missing bot_id")
 	}
 
 	sid := r.Header.Get("shard_id")
 	if sid == "" {
+		w.WriteHeader(http.StatusUnauthorized)
 		return nil, nil, errors.New("Header missing shard_id")
 	}
 
 	shardID, err := strconv.Atoi(sid)
 	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
 		return nil, nil, errors.New("invalid shard_id")
 	}
 
 	bot := c.Bots[botID]
 	if bot == nil {
+		w.WriteHeader(http.StatusUnauthorized)
 		return nil, nil, errors.New("invalid bot_id")
 	}
 
 	shard := bot.Shards[shardID]
 	if shard == nil {
+		w.WriteHeader(http.StatusUnauthorized)
 		return nil, nil, errors.New("invalid shard_id")
 	}
 
@@ -55,7 +60,6 @@ func (c *clientCoordinator) pathLogin(w http.ResponseWriter, r *http.Request) {
 	c.log.Debug("GET called api/login")
 	err := c.verifyAuth(w, r)
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
 		c.log.Infof("GET 401 api/login: %s", err)
 		return
 	}
@@ -69,10 +73,12 @@ func (c *clientCoordinator) pathLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go c.shardManager(bot, shard)
+
 	response := fmt.Sprintf(`{"token": "%s", "total_shards": %d, "assigned_shard": %d, "gateway_url": "%s", "heartbeat_interval": "%s"}`, bot.Token, bot.ShardCount, shard.ShardID, c.GatewayURL, c.heartbeatInterval)
 	shard.Reserved = true
 	shard.LastHeartbeat = time.Now()
-	go c.shardManager(bot, shard)
+
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(response))
 	c.log.Info("GET 200 api/login")
@@ -81,13 +87,11 @@ func (c *clientCoordinator) pathLogin(w http.ResponseWriter, r *http.Request) {
 func (c *clientCoordinator) pathReady(w http.ResponseWriter, r *http.Request) {
 	err := c.verifyAuth(w, r)
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
 		c.log.Info("GET 401 api/ready")
 		return
 	}
 	_, shard, err := c.verifyBotShard(w, r)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte(err.Error()))
 		c.log.Info("GET 404 api/ready")
 		return
@@ -98,6 +102,7 @@ func (c *clientCoordinator) pathReady(w http.ResponseWriter, r *http.Request) {
 		c.log.Info("GET 403 api/ready")
 		return
 	}
+
 	shard.Active = true
 	w.WriteHeader(http.StatusOK)
 	c.log.Info("GET 200 api/ready")
@@ -106,13 +111,11 @@ func (c *clientCoordinator) pathReady(w http.ResponseWriter, r *http.Request) {
 func (c *clientCoordinator) pathHeartbeat(w http.ResponseWriter, r *http.Request) {
 	err := c.verifyAuth(w, r)
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
 		c.log.Info("GET 401 api/heartbeat")
 		return
 	}
 	_, shard, err := c.verifyBotShard(w, r)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte(err.Error()))
 		c.log.Info("GET 404 api/heartbeat")
 		return
@@ -123,37 +126,66 @@ func (c *clientCoordinator) pathHeartbeat(w http.ResponseWriter, r *http.Request
 	c.log.Info("GET 200 api/heartbeat")
 }
 
-func (c *clientCoordinator) pathGetServerSettings(w http.ResponseWriter, r *http.Request) {
+func (c *clientCoordinator) pathGetGuildSettings(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	err := c.verifyAuth(w, r)
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		c.log.Infof("GET 401 api/guilds/%s", vars["serverID"])
+		c.log.Infof("GET 401 api/guilds/%s", vars["guildID"])
 		return
 	}
 	_, _, err = c.verifyBotShard(w, r)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte(err.Error()))
-		c.log.Infof("GET 404 api/guilds/%s", vars["serverID"])
+		c.log.Infof("GET 404 api/guilds/%s", vars["guildID"])
 		return
 	}
 
-	s, err := db.getGuildSettings(vars["serverID"])
+	s, err := db.getGuildSettings(vars["guildID"])
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		c.log.Errorf("GET 500 api/guilds/%s: %s", vars["serverID"], err)
+		c.log.Errorf("GET 500 api/guilds/%s: %s", vars["guildID"], err)
 		return
 	}
 
 	jsons, err := json.Marshal(*s)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		c.log.Errorf("GET 500 api/guilds/%s: %s", vars["serverID"], err)
+		c.log.Errorf("GET 500 api/guilds/%s: %s", vars["guildID"], err)
 		return
 	}
 	w.Write(jsons)
-	c.log.Infof("GET 200 api/guilds/%s", vars["serverID"])
+	c.log.Infof("GET 200 api/guilds/%s", vars["guildID"])
+}
+
+func (c *clientCoordinator) pathGetUserSettings(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	err := c.verifyAuth(w, r)
+	if err != nil {
+		c.log.Infof("GET 401 api/users/%s", vars["userID"])
+		return
+	}
+	_, _, err = c.verifyBotShard(w, r)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+		c.log.Infof("GET 404 api/users/%s", vars["userID"])
+		return
+	}
+
+	s, err := db.getUserSettings(vars["userID"])
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		c.log.Errorf("GET 500 api/users/%s: %s", vars["userID"], err)
+		return
+	}
+
+	jsons, err := json.Marshal(*s)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		c.log.Errorf("GET 500 api/users/%s: %s", vars["userID"], err)
+		return
+	}
+	w.Write(jsons)
+	c.log.Infof("GET 200 api/users/%s", vars["userID"])
 }
 
 func (c *clientCoordinator) pathGetShards(w http.ResponseWriter, r *http.Request) {

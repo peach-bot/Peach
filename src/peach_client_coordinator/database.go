@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	"time"
 
@@ -110,36 +109,23 @@ func (d *database) buildMap(row pgx.Rows) (map[string]interface{}, error) {
 }
 
 func (d *database) getGuildSettings(guildID string) (*dbSettings, error) {
-	rows, err := d.dbconn.Query(context.Background(), fmt.Sprintf(`
-	SELECT  "settingsDefaultGuild"."extID",
-	CASE
-		WHEN "settingsGuild"."guildID" IS NULL THEN
-		'%s'
-		ELSE "settingsGuild"."guildID"
-	END AS "guildID",
-	"settingsDefaultGuild"."optionID",
-	"settingsDefaultGuild"."optionPos",
-	CASE
-		WHEN "settingsGuild"."optionValue" IS NULL THEN
-		"settingsDefaultGuild"."optionValue"
-		ELSE "settingsGuild"."optionValue"
-	END AS "optionValue",
-	"settingsDefaultGuild"."type",
-	"settingsDefaultGuild"."experimental",
-	"settingsDefaultGuild"."beta",
-	CASE
-		WHEN "settingsGuild"."hidden" IS NULL THEN
-		"settingsDefaultGuild"."hidden"
-		ELSE "settingsGuild"."hidden"
-	END AS hidden
-	FROM    "settingsDefaultGuild"
-	LEFT JOIN (SELECT "extID", "guildID", "optionID", "optionValue", "hidden"
-		FROM    "settingsGuild"
-		WHERE   "guildID" = '%s') "settingsGuild"
-			ON  "settingsDefaultGuild"."extID" = "settingsGuild"."extID"
-				AND "settingsDefaultGuild"."optionID" = "settingsGuild"."optionID"
-	ORDER   BY  "extID",
-	"optionPos"`, guildID, guildID))
+	rows, err := d.dbconn.Query(context.Background(), QueryGuildSettings(guildID))
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	settings, err := d.buildSettings(rows)
+	if err != nil {
+		return nil, errors.Errorf("building settings failed: %s", err)
+	}
+
+	return settings, nil
+}
+
+func (d *database) getUserSettings(userID string) (*dbSettings, error) {
+	rows, err := d.dbconn.Query(context.Background(), QueryUserSettings(userID))
 	if err != nil {
 		return nil, err
 	}
