@@ -28,6 +28,6 @@ jobs:
       file: build/*
       cleanup: false
       skip_cleanup: true
-      draft: true
+      draft: false
       on:
         tags: true

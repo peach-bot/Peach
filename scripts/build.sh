@@ -162,4 +162,8 @@ fi
 version=${version%-*-*}
 version="$version$branch"
 
+if [[ "$TRAVIS_TAG" != "" ]]; then
+    version="$TRAVIS_TAG"
+fi
+
 build
