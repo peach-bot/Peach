@@ -3,7 +3,7 @@ module github.com/peach-bot/Peach
 go 1.13
 
 require (
-	github.com/alessio/shellescape v1.4.1 // indirect
+	github.com/alessio/shellescape v1.4.1
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/websocket v1.4.2
 	github.com/hako/durafmt v0.0.0-20210316092057-3a2c319c1acd

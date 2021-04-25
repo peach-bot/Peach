@@ -14,9 +14,19 @@ jobs:
       - go mod download
       - go generate ./...
       - ./scripts/test.sh
-  - stage: build
+  - stage: deploy
     script:
       - go get golang.org/x/tools/cmd/stringer
       - go mod download
       - go generate ./...
       - ./scripts/build.sh
+    deploy:
+      provider: releases
+      api_key: 
+        secure: "DNgg/LRUScAXCIBAAbGEb0RwFkjT+5ph2xm+MqZsBaC3ImfoGUPPfZaCtRl12TGdCOrkpWB0H3I+TMebiiVoaqcRiye8hrCjFCxBeh/WtvHpE2pAp7j8N8HgsiBdeLpev4O3Bn1QMks67YKmIAZdTL3PDpS6B/x3uS7eodYTFGiKSforAeNWp7RnePngoL6vIR1LuMoI1YxDnq4aIVj8loMnj9RJBsENoUx1cTsQ5kBTDs1TEUYbQBWHkLLrRbzzgDulOWfUAM4x1ccfWMXkNxJhLIgLqx04qZ47UJ5z3QS93tfI6RQLtOlDsVZ5T3cVCKzIDIK8WzRLkhSQ8Y65+R5bDmNUMrnBaUvPlT4aMDsuN9hV6ZMIkrgAd4h4RvXIQfqxTF1UoHqIpI49bXupEfzRVPeelnS7ENKb+SOsfQGX/K0KsexB1FfG6Sthsh7cdbqrlaYbVWge9aYsQ+1O/JC0ATNoR67exd2+rLyULfMN9a79pYunVID97i+52EBAOg15+q9nboB13X/XJ17klaEG2dFNcZJiSRIlEEa4iEAq4t0DDqD7VCz9xw2WO7/0aFrhaodtw8USdyG0b+brXSlttPSxzBn9/ap8ZaF7fSUJRyEjCGm1B/3jyPc0+bPULY/9W4rlsTPXst5hx4QYQxaWi2k7KbHfABgI/53wp4A="
+      file_glob: true
+      file: build/*
+      skip_cleanup: true
+      draft: true
+      on:
+        tags: true

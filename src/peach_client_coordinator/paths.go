@@ -23,34 +23,36 @@ func (c *clientCoordinator) verifyAuth(w http.ResponseWriter, r *http.Request) e
 
 func (c *clientCoordinator) verifyBotShard(w http.ResponseWriter, r *http.Request) (*Bot, *Shard, error) {
 
-	w.WriteHeader(http.StatusUnauthorized)
-
 	botID := r.Header.Get("bot_id")
 	if botID == "" {
+		w.WriteHeader(http.StatusUnauthorized)
 		return nil, nil, errors.New("Header missing bot_id")
 	}
 
 	sid := r.Header.Get("shard_id")
 	if sid == "" {
+		w.WriteHeader(http.StatusUnauthorized)
 		return nil, nil, errors.New("Header missing shard_id")
 	}
 
 	shardID, err := strconv.Atoi(sid)
 	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
 		return nil, nil, errors.New("invalid shard_id")
 	}
 
 	bot := c.Bots[botID]
 	if bot == nil {
+		w.WriteHeader(http.StatusUnauthorized)
 		return nil, nil, errors.New("invalid bot_id")
 	}
 
 	shard := bot.Shards[shardID]
 	if shard == nil {
+		w.WriteHeader(http.StatusUnauthorized)
 		return nil, nil, errors.New("invalid shard_id")
 	}
 
-	w.WriteHeader(http.StatusOK)
 	return bot, shard, nil
 }
 
