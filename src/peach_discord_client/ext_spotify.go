@@ -72,16 +72,6 @@ func (e *extSpotify) OnMessage(ctx *Message) error {
 		return nil
 	}
 
-	// Suppress discord embed
-	flags := new(int)
-	*flags = MessageFlagSuppressEmbeds
-	_, err := e.Bot.EditMessage(ctx.ChannelID, ctx.ID, EditMessageArgs{
-		Flags:           flags,
-		Content:         "",
-		Embed:           nil,
-		AllowedMentions: nil,
-	})
-
 	// extract information
 	spotifytype := s[1]
 	spotifyid := spotify.ID(s[2])
@@ -234,29 +224,37 @@ func (e *extSpotify) OnMessage(ctx *Message) error {
 		return nil
 	}
 
-	// Add delete reaction
-	err = e.Bot.CreateReaction(msg.ChannelID, msg.ID, "🗑", nil)
-	if err != nil {
-		return err
-	}
+	// // Add delete reaction
+	// err := e.Bot.CreateReaction(msg.ChannelID, msg.ID, "🗑", nil)
+	// if err != nil {
+	// 	return err
+	// }
 
-	// Add response to cache
-	e.Lock()
-	e.Responses[msg.ID] = ctx.Author.ID
-	e.Unlock()
+	// Suppress discord embed
+	flags := new(int)
+	*flags = MessageFlagSuppressEmbeds
+	_, err := e.Bot.EditMessage(ctx.ChannelID, ctx.ID, EditMessageArgs{
+		Flags:           flags,
+		Content:         "",
+		Embed:           nil,
+		AllowedMentions: nil,
+	})
 
-	return nil
+	// // Add response to cache
+	// e.Lock()
+	// e.Responses[msg.ID] = ctx.Author.ID
+	// e.Unlock()
+
+	return err
 }
 
 func (e *extSpotify) OnReact(ctx *EventMessageReactionAdd) {
-	e.Bot.Log.Debug(ctx.Emoji.Name)
-	if userID, ok := e.Responses[ctx.MessageID]; ok {
-		if ctx.UserID == userID && ctx.Emoji.Name == "🗑" {
-			e.Bot.DeleteMessage(ctx.ChannelID, ctx.MessageID)
-			e.Lock()
-			delete(e.Responses, ctx.MessageID)
-			e.Unlock()
-		}
-	}
-
+	// if userID, ok := e.Responses[ctx.MessageID]; ok {
+	// 	if ctx.UserID == userID && ctx.Emoji.Name == "🗑" {
+	// 		e.Bot.DeleteMessage(ctx.ChannelID, ctx.MessageID)
+	// 		e.Lock()
+	// 		delete(e.Responses, ctx.MessageID)
+	// 		e.Unlock()
+	// 	}
+	// }
 }
