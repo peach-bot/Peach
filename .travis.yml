@@ -9,9 +9,13 @@ go:
 jobs:
   include:
   - stage: Test
-    script: ./scripts/test.sh
+    script: 
+      - ./scripts/test.sh
+      - ./scripts/build.sh
   - stage: Deploy
-    script: ./scripts/build.sh
+    if: branch = master
+    script: 
+      - ./scripts/build.sh
     deploy:
       provider: releases
       token: 
