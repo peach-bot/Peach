@@ -11,12 +11,10 @@ jobs:
   - stage: Test
     script:
       - go mod download
-      - go generate ./...
       - ./scripts/test.sh
   - stage: Deploy
     script:
       - go mod download
-      - go generate ./...
       - ./scripts/build.sh
     deploy:
       provider: releases
