@@ -10,13 +10,11 @@ jobs:
   include:
   - stage: Test
     script:
-      - go get golang.org/x/tools/cmd/stringer
       - go mod download
       - go generate ./...
       - ./scripts/test.sh
   - stage: Deploy
     script:
-      - go get golang.org/x/tools/cmd/stringer
       - go mod download
       - go generate ./...
       - ./scripts/build.sh
