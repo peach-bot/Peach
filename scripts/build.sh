@@ -35,7 +35,7 @@ build () {
     then
         waittillstopped
         cp build/. /home/peach -r || fail
-        cp peach.service /etc/systemd/system/peach.service
+        cp build/peach.service /etc/systemd/system/peach.service
         sudo systemctl daemon-reload
     fi
     if [[ $args == *"r"* ]]
