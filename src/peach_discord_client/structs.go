@@ -66,8 +66,8 @@ type HeartbeatPayload struct {
 	Data   int64 `json:"d"`
 }
 
-// ClientCoordinatorResponse is used to unmarshal the client coordinator response
-type ClientCoordinatorResponse struct {
+// CoordinatorResponse is used to unmarshal the coordinator response
+type CoordinatorResponse struct {
 	Token             string `json:"token"`
 	TotalShards       int    `json:"total_shards"`
 	ShardID           int    `json:"assigned_shard"`

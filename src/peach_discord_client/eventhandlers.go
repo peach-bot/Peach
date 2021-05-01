@@ -201,15 +201,15 @@ func (c *Client) onReady(ctx *EventReady) error {
 	//Store session ID
 	c.SessionID = ctx.SessionID
 
-	//If sharded start heartbeat and tell client coordinator that client is running
+	//If sharded start heartbeat and tell coordinator that client is running
 	if c.Sharded {
 
-		err := CCReady(c)
+		err := c.CoordinatorLogin()
 		if err != nil {
 			return err
 		}
 
-		go c.CCHeartbeat()
+		go c.CoordinatorHeartbeat()
 	}
 
 	err := c.FetchAll()

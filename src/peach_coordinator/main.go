@@ -4,7 +4,6 @@ import (
 	"flag"
 	"net/http"
 	"os"
-	"runtime"
 
 	"github.com/gorilla/mux"
 
@@ -24,9 +23,6 @@ func createlog() *logrus.Logger {
 		DisableTimestamp: false,
 		FullTimestamp:    true,
 		TimestampFormat:  "2006-01-02 15:04:05",
-		CallerPrettyfier: func(f *runtime.Frame) (string, string) {
-			return " CCoord", ""
-		},
 	})
 	l.SetOutput(os.Stdout)
 	l.SetLevel(logrus.DebugLevel)
@@ -40,7 +36,7 @@ func main() {
 
 	secret := flag.String("secret", "", "secret")
 	dbc := flag.String("dbc", "", "data base credentials string")
-	port := flag.String("port", "5000", "port the client coordinator should run on")
+	port := flag.String("port", "5000", "port the coordinator should run on")
 	certType := flag.String("certtype", "none", "build if cert is located in build folder, letsencrypt if cert is located under /etc/letsencrypt/live/")
 	domain := flag.String("domain", "none", "domain")
 	flag.Parse()

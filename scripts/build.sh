@@ -5,6 +5,8 @@ build () {
     fi
 
     printf "Building project\n"
+
+    # make directories for build and hash files
     mkdir -p build || fail
     mkdir -p scripts/hash || fail
     if [[ $args == *"f"* ]]
@@ -15,9 +17,14 @@ build () {
 
     printf "Copying files..."
     cp launchcfg.json build/launchcfg.json
+
+    # generate service files
     echo "s/\${version}/$version/" > ./scripts/replace.txt
-    sed -f ./scripts/replace.txt ./scripts/service_template.txt > build/peach.service
+    sed -f ./scripts/replace.txt ./scripts/launcher_service_template.txt > build/peach_launcher.service
+    sed -f ./scripts/replace.txt ./scripts/coordinator_service_template.txt > build/peach_coordinator.service
     rm ./scripts/replace.txt
+
+
     printf "done\n"
 
     printf "Collecting dependencies..."
@@ -85,10 +92,10 @@ waittillstopped() {
 }
 
 buildcoordinator() {
-    printf "Building client coordinator"
+    printf "Building coordinator"
 
     #check hash
-    hash "peach_client_coordinator"
+    hash "peach_coordinator"
     h=$?
     if [[ "$h" == "1" ]]; then 
         printf "\nSkipping. No changes were made.\n"
@@ -96,9 +103,9 @@ buildcoordinator() {
     fi
 
     printf "\nCompiling..."
-    go build -o build/coordinator-$version.exe ./src/peach_client_coordinator || fail
-    printf "\nDone building client coordinator\n"
-    storehash "peach_client_coordinator"
+    go build -o build/coordinator-$version.exe ./src/peach_coordinator || fail
+    printf "\nDone building coordinator\n"
+    storehash "peach_coordinator"
 }
 
 builddiscordclient() {

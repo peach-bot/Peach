@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 User=peach
-ExecStart=/home/peach/${version}-launcher.exe
+ExecStart=/home/peach/coordinator-${version}.exe
 Restart=always
 WorkingDirectory=/home/peach
 
