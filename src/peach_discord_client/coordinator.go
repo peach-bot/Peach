@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// CoordinatorLogin registeres the client in the coordinator and reserves a shard
+// CoordinatorLogin registers the client in the coordinator and reserves a shard
 func (c *Client) CoordinatorLogin() error {
 
 	tempClient := &http.Client{}
