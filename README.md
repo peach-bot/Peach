@@ -4,6 +4,7 @@
  A Discord server management and chat bot with loads of handy features<br><br>
  <a href="https://github.com/peach-bot/Peach/releases"><img src="https://img.shields.io/github/v/release/peach-bot/peach?color=brightgreen&include_prereleases&style=flat-square" alt="GitHub version"></img></a>
  <a href="https://travis-ci.com/peach-bot/Peach/branches"><img src="https://img.shields.io/travis/com/peach-bot/Peach/master?style=flat-square" alt="Build Status"></img></a>
+ <a href="https://goreportcard.com/report/github.com/peach-bot/Peach"><img src="https://img.shields.io/badge/go%20report-A+-brightgreen.svg?style=flat-square" alt="Go Report"></img></a>
  <a href="https://github.com/peach-bot/Peach/blob/master/LICENSE"><img src="https://img.shields.io/github/license/peach-bot/Peach?color=brightgreen&style=flat-square" alt="License"></img></a>
  <a href="#contributors"><img src="https://img.shields.io/github/contributors/peach-bot/Peach?style=flat-square" alt="Contributors"></img></a>
  <a href="https://github.com/peach-bot/Peach/issues"><img src="https://img.shields.io/github/issues-raw/peach-bot/peach?style=flat-square" alt="Open Issues"></img></a><br><br>
