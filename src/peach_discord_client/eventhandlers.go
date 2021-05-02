@@ -204,7 +204,7 @@ func (c *Client) onReady(ctx *EventReady) error {
 	//If sharded start heartbeat and tell coordinator that client is running
 	if c.Sharded {
 
-		err := c.CoordinatorLogin()
+		err := c.CoordinatorReady()
 		if err != nil {
 			return err
 		}

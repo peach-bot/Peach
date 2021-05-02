@@ -45,8 +45,6 @@ func main() {
 	loglevel := flag.String("log", "info", "declares how verbose the logging should be ('debug', 'info', 'error')")
 	ccURL := flag.String("ccurl", "", "url of the coordinator")
 	secret := flag.String("secret", "", "secret for communicating with the coordinator")
-	spotifyid := flag.String("spotifyid", "", "Spotify client id for spotify extension")
-	spotifysecret := flag.String("spotifysecret", "", "Spotify client secret for spotify extension")
 	redactSensitiveFlag := flag.Bool("redactsensitive", true, "Set to true to sensitive tokens and secrets from logs")
 	flag.Parse()
 	log.Infof("Sharded: %t, LogLevel: %s, coordinator URL: %s", *sharded, *loglevel, *ccURL)
@@ -65,7 +63,7 @@ func main() {
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGTERM)
 
-	c, err := CreateClient(log, *sharded, *ccURL, *secret)
+	c, spotifyid, spotifysecret, err := CreateClient(log, *sharded, *ccURL, *secret)
 	if err != nil {
 		log.Fatal(err, "\nUnable to create new client, exiting...")
 	}

@@ -11,17 +11,17 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func (c *clientCoordinator) verifyAuth(w http.ResponseWriter, r *http.Request) error {
+func (c *Coordinator) verifyAuth(w http.ResponseWriter, r *http.Request) error {
 	w.Header().Set("Content-Type", "application/json")
 	authsecret := r.Header.Get("authorization")
-	if authsecret != clustersecret {
+	if authsecret != c.Config.Secret {
 		w.WriteHeader(http.StatusUnauthorized)
 		return errors.New(("Auth code didn't match cluster secret"))
 	}
 	return nil
 }
 
-func (c *clientCoordinator) verifyBotShard(w http.ResponseWriter, r *http.Request) (*Bot, *Shard, error) {
+func (c *Coordinator) verifyBotShard(w http.ResponseWriter, r *http.Request) (*Bot, *Shard, error) {
 
 	botID := r.Header.Get("bot_id")
 	if botID == "" {
@@ -56,35 +56,67 @@ func (c *clientCoordinator) verifyBotShard(w http.ResponseWriter, r *http.Reques
 	return bot, shard, nil
 }
 
-func (c *clientCoordinator) pathLogin(w http.ResponseWriter, r *http.Request) {
+func (c *Coordinator) pathLogin(w http.ResponseWriter, r *http.Request) {
 	c.log.Debug("GET called api/login")
+
+	// verify Authentication
 	err := c.verifyAuth(w, r)
 	if err != nil {
 		c.log.Infof("GET 401 api/login: %s", err)
 		return
 	}
 
-	c.lock.Lock()
-	defer c.lock.Unlock()
-	bot, shard := c.nextShard()
-	if bot == nil || shard == nil {
-		w.WriteHeader(http.StatusNoContent)
-		c.log.Info("GET 204 api/ready: all shards assigned")
-		return
+	switch r.Header.Get("type") {
+	case "client":
+		// Allocate shard
+		c.lock.Lock()
+		defer c.lock.Unlock()
+
+		bot, shard := c.nextShard()
+		if bot == nil || shard == nil {
+			w.WriteHeader(http.StatusNoContent)
+			c.log.Info("GET 204 api/login: all shards assigned")
+			return
+		}
+		go c.shardManager(bot, shard)
+		shard.Reserved = true
+		shard.LastHeartbeat = time.Now()
+
+		// send response to client
+		response := fmt.Sprintf(`{"token": "%s", "total_shards": %d, "assigned_shard": %d, "gateway_url": "%s", "heartbeat_interval": "%s", "spotify_client_id": "%s", "spotify_client_secret": "%s"}`, bot.Token, bot.ShardCount, shard.ShardID, c.GatewayURL, c.heartbeatInterval, c.Config.Coordinator.SpotifyClientID, c.Config.Coordinator.SpotifyClientSecret)
+		w.Write([]byte(response))
+
+	case "launcher":
+
+		c.lock.Lock()
+		defer c.lock.Unlock()
+
+		id := r.Header.Get("id")
+
+		l := new(Launcher)
+		l.ActiveClients = 0
+		l.ID = id
+		maxc := r.Header.Get("max_clients")
+		maxClients, err := strconv.Atoi(maxc)
+		if err != nil {
+			w.WriteHeader(http.StatusForbidden)
+			w.Write([]byte("Invalid max_clients"))
+		}
+		l.MaxClients = maxClients
+		c.Launchers[id] = l
+
+		// send response to launcher
+		response := fmt.Sprintf(`{"heartbeat_interval": "%s"}`, c.heartbeatInterval)
+		w.Write([]byte(response))
+
 	}
 
-	go c.shardManager(bot, shard)
-
-	response := fmt.Sprintf(`{"token": "%s", "total_shards": %d, "assigned_shard": %d, "gateway_url": "%s", "heartbeat_interval": "%s"}`, bot.Token, bot.ShardCount, shard.ShardID, c.GatewayURL, c.heartbeatInterval)
-	shard.Reserved = true
-	shard.LastHeartbeat = time.Now()
-
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(response))
 	c.log.Info("GET 200 api/login")
+
 }
 
-func (c *clientCoordinator) pathReady(w http.ResponseWriter, r *http.Request) {
+func (c *Coordinator) pathReady(w http.ResponseWriter, r *http.Request) {
 	err := c.verifyAuth(w, r)
 	if err != nil {
 		c.log.Info("GET 401 api/ready")
@@ -108,25 +140,30 @@ func (c *clientCoordinator) pathReady(w http.ResponseWriter, r *http.Request) {
 	c.log.Info("GET 200 api/ready")
 }
 
-func (c *clientCoordinator) pathHeartbeat(w http.ResponseWriter, r *http.Request) {
+func (c *Coordinator) pathHeartbeat(w http.ResponseWriter, r *http.Request) {
 	err := c.verifyAuth(w, r)
 	if err != nil {
 		c.log.Info("GET 401 api/heartbeat")
 		return
 	}
-	_, shard, err := c.verifyBotShard(w, r)
-	if err != nil {
-		w.Write([]byte(err.Error()))
-		c.log.Info("GET 404 api/heartbeat")
-		return
+
+	switch r.Header.Get("type") {
+	case "client":
+		_, shard, err := c.verifyBotShard(w, r)
+		if err != nil {
+			w.Write([]byte(err.Error()))
+			c.log.Info("GET 404 api/heartbeat")
+			return
+		}
+		shard.LastHeartbeat = time.Now()
+		shard.MissedHeartbeats = 0
 	}
-	shard.LastHeartbeat = time.Now()
-	shard.MissedHeartbeats = 0
+
 	w.WriteHeader(http.StatusOK)
 	c.log.Info("GET 200 api/heartbeat")
 }
 
-func (c *clientCoordinator) pathGetGuildSettings(w http.ResponseWriter, r *http.Request) {
+func (c *Coordinator) pathGetGuildSettings(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	err := c.verifyAuth(w, r)
 	if err != nil {
@@ -140,7 +177,7 @@ func (c *clientCoordinator) pathGetGuildSettings(w http.ResponseWriter, r *http.
 		return
 	}
 
-	s, err := db.getGuildSettings(vars["guildID"])
+	s, err := c.DB.getGuildSettings(vars["guildID"])
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		c.log.Errorf("GET 500 api/guilds/%s: %s", vars["guildID"], err)
@@ -157,7 +194,7 @@ func (c *clientCoordinator) pathGetGuildSettings(w http.ResponseWriter, r *http.
 	c.log.Infof("GET 200 api/guilds/%s", vars["guildID"])
 }
 
-func (c *clientCoordinator) pathGetUserSettings(w http.ResponseWriter, r *http.Request) {
+func (c *Coordinator) pathGetUserSettings(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	err := c.verifyAuth(w, r)
 	if err != nil {
@@ -171,7 +208,7 @@ func (c *clientCoordinator) pathGetUserSettings(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	s, err := db.getUserSettings(vars["userID"])
+	s, err := c.DB.getUserSettings(vars["userID"])
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		c.log.Errorf("GET 500 api/users/%s: %s", vars["userID"], err)
@@ -188,7 +225,7 @@ func (c *clientCoordinator) pathGetUserSettings(w http.ResponseWriter, r *http.R
 	c.log.Infof("GET 200 api/users/%s", vars["userID"])
 }
 
-func (c *clientCoordinator) pathGetShards(w http.ResponseWriter, r *http.Request) {
+func (c *Coordinator) pathGetShards(w http.ResponseWriter, r *http.Request) {
 	err := c.verifyAuth(w, r)
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)

@@ -11,4 +11,4 @@ echo "Running launcher"
 version=$(./scripts/version.sh)
 
 cd build
-./launcher-$version.exe
+./launcher-$version.exe & ./coordinator-$version.exe && fg

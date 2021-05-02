@@ -10,7 +10,7 @@ import (
 
 var errInvalidToken = errors.New("passed invalid token")
 
-func (c *clientCoordinator) getGatewayBot(token string) (*getgatewayresponse, error) {
+func (c *Coordinator) getGatewayBot(token string) (*getgatewayresponse, error) {
 	var gwr getgatewayresponse
 	req, err := http.NewRequest("GET", "https://discord.com/api/v8/gateway/bot", nil)
 	if err != nil {
@@ -35,7 +35,7 @@ func (c *clientCoordinator) getGatewayBot(token string) (*getgatewayresponse, er
 	return &gwr, nil
 }
 
-func (c *clientCoordinator) create() error {
+func (c *Coordinator) create() error {
 	c.httpClient = new(http.Client)
 	c.gettokens()
 	c.Bots = make(map[string]*Bot)
@@ -58,12 +58,13 @@ func (c *clientCoordinator) create() error {
 		bot.Shards = make(map[int]*Shard)
 		for i := 0; i < gwr.Shards; i++ {
 			bot.Shards[i] = &Shard{i, false, false, time.Now(), 0}
+			c.RequiredClients++
 		}
 	}
 	return nil
 }
 
-func (c *clientCoordinator) getUser(token string) (*User, error) {
+func (c *Coordinator) getUser(token string) (*User, error) {
 	var user User
 	req, err := http.NewRequest("GET", "https://discord.com/api/users/@me", nil)
 	if err != nil {
@@ -86,7 +87,7 @@ func (c *clientCoordinator) getUser(token string) (*User, error) {
 	return &user, nil
 }
 
-func (c *clientCoordinator) nextShard() (*Bot, *Shard) {
+func (c *Coordinator) nextShard() (*Bot, *Shard) {
 	for _, bot := range c.Bots {
 		for _, shard := range bot.Shards {
 			if !shard.Reserved {
@@ -97,7 +98,7 @@ func (c *clientCoordinator) nextShard() (*Bot, *Shard) {
 	return nil, nil
 }
 
-func (c *clientCoordinator) shardManager(bot *Bot, shard *Shard) {
+func (c *Coordinator) shardManager(bot *Bot, shard *Shard) {
 	interval, err := time.ParseDuration(c.heartbeatInterval)
 	if err != nil {
 		c.log.Fatal(err)

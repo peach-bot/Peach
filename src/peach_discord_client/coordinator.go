@@ -10,7 +10,8 @@ import (
 )
 
 // CoordinatorLogin registers the client in the coordinator and reserves a shard
-func (c *Client) CoordinatorLogin() error {
+func (c *Client) CoordinatorLogin() (*string, *string, error) {
+	c.Log.Debug("Attempting to register with the coordinator")
 
 	tempClient := &http.Client{}
 	req, err := http.NewRequest("GET", c.CoordinatorURL+"login", nil)
@@ -18,25 +19,26 @@ func (c *Client) CoordinatorLogin() error {
 		time.Sleep(time.Second * 5)
 		return c.CoordinatorLogin()
 	} else if err != nil {
-		return err
+		return nil, nil, err
 	}
 	req.Header.Add("authorization", c.CLUSTERSECRET)
+	req.Header.Add("type", "client")
 	resp, err := tempClient.Do(req)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusNoContent {
-		return errors.New("Requesting ShardID failed - all shards assigned")
+		return nil, nil, errors.New("Requesting ShardID failed - all shards assigned")
 	} else if resp.StatusCode != http.StatusOK {
-		return errors.New(fmt.Sprintf("ClientCoordinator sent unexpected response: Want 200Ok Got %s", resp.Status))
+		return nil, nil, errors.New(fmt.Sprintf("ClientCoordinator sent unexpected response: Want 200 Ok Got %s", resp.Status))
 	}
 
 	coordresp := CoordinatorResponse{}
 	err = json.NewDecoder(resp.Body).Decode(&coordresp)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	c.ShardCount = coordresp.TotalShards
 	c.ShardID = coordresp.ShardID
@@ -49,19 +51,22 @@ func (c *Client) CoordinatorLogin() error {
 	}
 
 	c.Log.Debugf("Websocket: Received from coordinator: %v", coordresp)
-	return nil
+	return &coordresp.SpotifyID, &coordresp.SpotifySecret, nil
 }
 
 func (c *Client) setCoordinatorRequestHeaders(req *http.Request) *http.Request {
 	req.Header.Add("authorization", c.CLUSTERSECRET)
 	req.Header.Add("bot_id", c.User.ID)
 	req.Header.Add("shard_id", strconv.Itoa(c.ShardID))
+	req.Header.Add("type", "client")
 	req.Close = true
 	return req
 }
 
-// CCReady asdasd
-func (c *Client) CoordiantorReady() error {
+// CCReady sends a request to the coordinator signaling that the client is up and running
+func (c *Client) CoordinatorReady() error {
+	c.Log.Debug("Sending ready to coordinator")
+
 	tempClient := &http.Client{}
 	req, err := http.NewRequest("GET", c.CoordinatorURL+"ready", nil)
 	if err != nil {
@@ -79,7 +84,7 @@ func (c *Client) CoordiantorReady() error {
 	return nil
 }
 
-// CCHeartbeat stfu
+// CCHeartbeat periodically sends a heartbeat to the coordinator to signal that the client is still up and running
 func (c *Client) CoordinatorHeartbeat() {
 	c.Log.Info("Started sending heartbeat to coordinator.")
 	interval, err := time.ParseDuration(c.CoordinatorHeartbeatInterval)

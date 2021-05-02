@@ -27,13 +27,24 @@ type getgatewayresponse struct {
 	}
 }
 
-type clientCoordinator struct {
+type Launcher struct {
+	ID            string
+	MaxClients    int
+	ActiveClients int
+}
+
+type Coordinator struct {
+	DB                Database
+	Config            Config
 	httpClient        *http.Client
 	log               *logrus.Logger
 	GatewayURL        string
-	Bots              map[string]*Bot `json:"bots"`
+	Bots              map[string]*Bot      `json:"bots"`
+	Launchers         map[string]*Launcher `json:"launchers"`
 	lock              sync.Mutex
 	heartbeatInterval string
+	RequiredClients   int
+	ActiveClients     int
 }
 
 // Bot shutup compiler

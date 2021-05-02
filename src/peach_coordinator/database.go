@@ -2,34 +2,34 @@ package main
 
 import (
 	"context"
+	"log"
 	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 )
 
-type database struct {
-	log    *logrus.Logger
-	dbconn *pgx.Conn
+type Database struct {
+	C      *Coordinator
+	DBConn *pgx.Conn
 }
 
-func refreshconn(dbcstring string) {
+func (c *Coordinator) refreshDBConn(dbcstring string) {
 	for {
-		if db.dbconn.IsClosed() {
-			createdb(db.log, dbcstring)
+		if c.DB.DBConn.IsClosed() {
+			c.createdb(dbcstring)
 			break
 		}
 		time.Sleep(5)
 	}
 }
 
-func createdb(log *logrus.Logger, dbcstring string) {
+func (c *Coordinator) createdb(dbcstring string) {
 	// dbc := strings.Split(os.Getenv("DATABASE"), ", ")
 	dbc := strings.Split(dbcstring, ", ")
 
-	db = database{log, nil}
+	c.DB = Database{c, nil}
 
 	dsn := ""
 	dbname := dbc[0]
@@ -52,20 +52,15 @@ func createdb(log *logrus.Logger, dbcstring string) {
 	rp := map[string]string{"application_name": "peach-discord-client"}
 	conncfg.RuntimeParams = rp
 
-	db.dbconn, err = pgx.ConnectConfig(context.Background(), conncfg)
+	c.DB.DBConn, err = pgx.ConnectConfig(context.Background(), conncfg)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	go refreshconn(dbcstring)
-
-	err = db.prepare()
-	if err != nil {
-		db.log.Fatal(err)
-	}
+	go c.refreshDBConn(dbcstring)
 }
 
-func (d *database) buildSettings(rows pgx.Rows) (*dbSettings, error) {
+func (d *Database) buildSettings(rows pgx.Rows) (*dbSettings, error) {
 	settings := dbSettings{Extensions: map[string]dbExtension{}}
 	for rows.Next() {
 		values, err := d.buildMap(rows)
@@ -91,7 +86,7 @@ func (d *database) buildSettings(rows pgx.Rows) (*dbSettings, error) {
 	return &settings, nil
 }
 
-func (d *database) buildMap(row pgx.Rows) (map[string]interface{}, error) {
+func (d *Database) buildMap(row pgx.Rows) (map[string]interface{}, error) {
 	values, err := row.Values()
 	if err != nil {
 		return nil, errors.Errorf("couldn't retrieve row values: %s", err)
@@ -108,8 +103,8 @@ func (d *database) buildMap(row pgx.Rows) (map[string]interface{}, error) {
 	return dvm, nil
 }
 
-func (d *database) getGuildSettings(guildID string) (*dbSettings, error) {
-	rows, err := d.dbconn.Query(context.Background(), QueryGuildSettings(guildID))
+func (d *Database) getGuildSettings(guildID string) (*dbSettings, error) {
+	rows, err := d.DBConn.Query(context.Background(), QueryGuildSettings(guildID))
 	if err != nil {
 		return nil, err
 	}
@@ -124,8 +119,8 @@ func (d *database) getGuildSettings(guildID string) (*dbSettings, error) {
 	return settings, nil
 }
 
-func (d *database) getUserSettings(userID string) (*dbSettings, error) {
-	rows, err := d.dbconn.Query(context.Background(), QueryUserSettings(userID))
+func (d *Database) getUserSettings(userID string) (*dbSettings, error) {
+	rows, err := d.DBConn.Query(context.Background(), QueryUserSettings(userID))
 	if err != nil {
 		return nil, err
 	}

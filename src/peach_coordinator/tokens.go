@@ -4,8 +4,8 @@ import "context"
 
 var tokens []string
 
-func (c *clientCoordinator) gettokens() {
-	rows, err := db.dbconn.Query(context.Background(), "SELECT token FROM tokens ORDER BY priority ASC")
+func (c *Coordinator) gettokens() {
+	rows, err := c.DB.DBConn.Query(context.Background(), QueryTokens)
 	if err != nil {
 		c.log.Fatal(err)
 	}

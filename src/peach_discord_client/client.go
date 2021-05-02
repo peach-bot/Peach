@@ -92,7 +92,7 @@ func (c *Client) Run() error {
 }
 
 // CreateClient creates a new discord client
-func CreateClient(log *logrus.Logger, sharded bool, coordiantorURL string, secret string) (c *Client, err error) {
+func CreateClient(log *logrus.Logger, sharded bool, coordiantorURL string, secret string) (c *Client, spotifyID *string, spotifySecret *string, err error) {
 
 	c = &Client{Sequence: new(int64), Log: log}
 	c.Starttime = time.Now()
@@ -105,9 +105,9 @@ func CreateClient(log *logrus.Logger, sharded bool, coordiantorURL string, secre
 		c.CoordinatorURL = coordiantorURL
 		c.CLUSTERSECRET = secret
 
-		err = c.CoordinatorLogin()
+		spotifyID, spotifySecret, err = c.CoordinatorLogin()
 		if err != nil {
-			return nil, err
+			return nil, nil, nil, err
 		}
 	}
 

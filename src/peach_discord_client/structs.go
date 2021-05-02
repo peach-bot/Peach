@@ -73,6 +73,8 @@ type CoordinatorResponse struct {
 	ShardID           int    `json:"assigned_shard"`
 	GatewayURL        string `json:"gateway_url"`
 	HeartbeatInterval string `json:"heartbeat_interval"`
+	SpotifyID         string `json:"spotify_client_id"`
+	SpotifySecret     string `json:"spotify_client_secret"`
 }
 
 // UpdateStatus is sent by the client to indicate a presence or status update.
