@@ -95,7 +95,7 @@ func (e *extSpotify) OnMessage(ctx *Message) error {
 			Embed: Embed{
 				Author: EmbedAuthor{
 					Name:    "Spotify",
-					IconURL: "https://assets.ifttt.com/images/channels/51464135/icons/large.png",
+					IconURL: "https://cdn.discordapp.com/attachments/706946272539443202/856495809344176138/spotify_green_white_transparent_64px.png",
 				},
 				Thumbnail:   EmbedThumbnail{URL: album.Images[0].URL},
 				Color:       1947988,
@@ -135,7 +135,7 @@ func (e *extSpotify) OnMessage(ctx *Message) error {
 			Embed: Embed{
 				Author: EmbedAuthor{
 					Name:    "Spotify",
-					IconURL: "https://assets.ifttt.com/images/channels/51464135/icons/large.png",
+					IconURL: "https://cdn.discordapp.com/attachments/706946272539443202/856495809344176138/spotify_green_white_transparent_64px.png",
 				},
 				Thumbnail:   EmbedThumbnail{URL: track.Album.Images[0].URL},
 				Color:       1947988,
@@ -190,7 +190,7 @@ func (e *extSpotify) OnMessage(ctx *Message) error {
 			Embed: Embed{
 				Author: EmbedAuthor{
 					Name:    "Spotify",
-					IconURL: "https://assets.ifttt.com/images/channels/51464135/icons/large.png",
+					IconURL: "https://cdn.discordapp.com/attachments/706946272539443202/856495809344176138/spotify_green_white_transparent_64px.png",
 				},
 				Thumbnail: EmbedThumbnail{URL: artist.Images[0].URL},
 				Color:     1947988,
