@@ -4,16 +4,22 @@ go 1.13
 
 require (
 	github.com/alessio/shellescape v1.4.1
+	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/websocket v1.4.2
 	github.com/hako/durafmt v0.0.0-20210316092057-3a2c319c1acd
+	github.com/jackc/pgproto3/v2 v2.0.7 // indirect
 	github.com/jackc/pgx/v4 v4.11.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.7.0
 	github.com/zmb3/spotify v1.1.2
-	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
-	golang.org/x/text v0.3.5
-	gopkg.in/alessio/shellescape.v1 v1.0.0-20170105083845-52074bc9df61
+	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b // indirect
+	golang.org/x/net v0.0.0-20210423184538-5f58ad60dda6 // indirect
+	golang.org/x/oauth2 v0.0.0-20210413134643-5e61552d6c78
+	golang.org/x/sys v0.0.0-20210426230700-d19ff857e887 // indirect
+	golang.org/x/text v0.3.6
+	google.golang.org/appengine v1.6.7 // indirect
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )

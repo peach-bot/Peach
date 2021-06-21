@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"net/http"
 	"os"
 	"runtime"
@@ -10,9 +9,6 @@ import (
 
 	"github.com/sirupsen/logrus"
 )
-
-var clustersecret string
-var db database
 
 func createlog() *logrus.Logger {
 	// Set log format, output and level
@@ -25,7 +21,7 @@ func createlog() *logrus.Logger {
 		FullTimestamp:    true,
 		TimestampFormat:  "2006-01-02 15:04:05",
 		CallerPrettyfier: func(f *runtime.Frame) (string, string) {
-			return " CCoord", ""
+			return " Coord ", ""
 		},
 	})
 	l.SetOutput(os.Stdout)
@@ -38,18 +34,10 @@ func main() {
 	l := createlog()
 	l.Info("shard coordinator starting...")
 
-	secret := flag.String("secret", "", "secret")
-	dbc := flag.String("dbc", "", "data base credentials string")
-	port := flag.String("port", "5000", "port the client coordinator should run on")
-	certType := flag.String("certtype", "none", "build if cert is located in build folder, letsencrypt if cert is located under /etc/letsencrypt/live/")
-	domain := flag.String("domain", "none", "domain")
-	flag.Parse()
-	clustersecret = *secret
-
-	createdb(l, *dbc)
-
-	c := new(clientCoordinator)
+	c := new(Coordinator)
+	c.loadJson()
 	c.log = l
+	c.createdb(c.Config.Coordinator.DBCredentials)
 
 	c.heartbeatInterval = "10000ms"
 
@@ -69,20 +57,20 @@ func main() {
 	api.HandleFunc("/users/{userID}", c.pathGetUserSettings).Methods(http.MethodGet)
 
 	s := &http.Server{
-		Addr:    ":" + *port,
+		Addr:    ":" + c.Config.Coordinator.Port,
 		Handler: r,
 	}
 
 	// run
 	done := make(chan bool)
 
-	switch *certType {
+	switch c.Config.Coordinator.CertType {
 	case "build":
-		go s.ListenAndServeTLS(*domain+".cert.pem", *domain+".key.pem")
+		go s.ListenAndServeTLS(c.Config.Coordinator.Domain+".cert.pem", c.Config.Coordinator.Domain+".key.pem")
 	case "letsencrypt":
-		go s.ListenAndServeTLS("/etc/letsencrypt/live/"+*domain+"/fullchain.pem", "/etc/letsencrypt/live/"+*domain+"/privkey.pem")
+		go s.ListenAndServeTLS("/etc/letsencrypt/live/"+c.Config.Coordinator.Domain+"/fullchain.pem", "/etc/letsencrypt/live/"+c.Config.Coordinator.Domain+"/privkey.pem")
 	case "none":
-		go http.ListenAndServe(":"+*port, r)
+		go http.ListenAndServe(":"+c.Config.Coordinator.Port, r)
 	}
 
 	// log ready

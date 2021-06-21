@@ -1,0 +1,13 @@
+[Unit]
+Description=Peach Discord Bot
+After=network.target
+
+[Service]
+Type=simple
+User=peach
+ExecStart=/home/peach/launcher-${version}.exe
+Restart=always
+WorkingDirectory=/home/peach
+
+[Install]
+WantedBy=default.target

@@ -1,9 +1,5 @@
 package main
 
-func (d *database) prepare() error {
-	return nil
-}
-
 var (
 	QueryGuildSettings = func(guildID string) string {
 		return `
@@ -77,4 +73,5 @@ var (
 		ORDER  BY "extID",
 				"optionPos" `
 	}
+	QueryTokens = "SELECT token FROM tokens ORDER BY priority ASC"
 )

@@ -44,6 +44,9 @@ func (c *Client) request(method string, endpointURL string, routeid string, body
 	defer resp.Body.Close()
 
 	err = route.Release(resp.Header)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	respbody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

@@ -37,11 +37,11 @@ func (c *Client) getGuildSettings(guildID string) error {
 		guildID = fmt.Sprintf(guildID, "")
 	}
 
-	req, err := http.NewRequest("GET", c.ClientCoordinatorURL+"guilds/"+guildID, nil)
+	req, err := http.NewRequest("GET", c.CoordinatorURL+"guilds/"+guildID, nil)
 	if err != nil {
 		return err
 	}
-	req = setCCRequestHeaders(c, req)
+	req = c.setCoordinatorRequestHeaders(req)
 
 	r := http.Response{}
 	resp := &r
@@ -58,7 +58,7 @@ func (c *Client) getGuildSettings(guildID string) error {
 
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("Websocket received unexpected response from client coordinator. Expected Status 200 OK got %s instead", resp.Status)
+		return fmt.Errorf("Websocket received unexpected response from coordinator. Expected Status 200 OK got %s instead", resp.Status)
 	}
 
 	settings := cfgSettings{}

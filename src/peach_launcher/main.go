@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"math/rand"
 	"os"
 	"runtime"
 	"time"
@@ -34,8 +36,11 @@ func createLog() *logrus.Logger {
 }
 
 func main() {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
 	var l Launcher
 	l.Log = createLog()
+	l.ID = fmt.Sprint(r.Int())
 
 	err := l.loadJson()
 	if err != nil {
@@ -49,14 +54,10 @@ func main() {
 
 	go keepAlive()
 
-	if l.Config.Clientcoordinator.Launch {
-		go l.runCoordinator()
-	}
-
-	for i := 0; i < l.Config.Clients.Shards; i++ {
-		time.Sleep(5 * time.Second)
-		go l.runClient()
-	}
+	// for i := 0; i < l.Config.Clients.Shards; i++ {
+	go l.runClient()
+	time.Sleep(1 * time.Second)
+	// }
 
 	select {
 	case <-l.Stop:

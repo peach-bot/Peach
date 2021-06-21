@@ -9,16 +9,12 @@ go:
 jobs:
   include:
   - stage: Test
-    script:
-      - go get golang.org/x/tools/cmd/stringer
-      - go mod download
-      - go generate ./...
+    script: 
       - ./scripts/test.sh
+      - ./scripts/build.sh
   - stage: Deploy
-    script:
-      - go get golang.org/x/tools/cmd/stringer
-      - go mod download
-      - go generate ./...
+    if: branch = master
+    script: 
       - ./scripts/build.sh
     deploy:
       provider: releases

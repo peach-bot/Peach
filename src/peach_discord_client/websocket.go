@@ -213,13 +213,13 @@ func (c *Client) Heartbeat() {
 // Hello handles the initial Hello event
 func (c *Client) Hello() error {
 
-	// Retreive Hello message
+	// Retrieve Hello message
 	messageType, message, err := c.wsConn.ReadMessage()
 	if err != nil {
 		return err
 	}
 
-	// Retreive event out of message
+	// Retrieve event out of message
 	event, err := c.DecodeMessage(messageType, message, false)
 	if err != nil {
 		return err
